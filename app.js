@@ -56,8 +56,9 @@
   }
 
   /* ---------- Graphe : colonnes, une série, base zéro ---------- */
-  var bulle;
+  var bulle, derniere = null;
   function montrerBulle(evt, html, conteneur) {
+    derniere = { html: html, conteneur: conteneur };
     bulle.innerHTML = html;
     bulle.hidden = false;
     var r = conteneur.getBoundingClientRect();
@@ -366,7 +367,14 @@
   }
 
   bulle = $("bulle");
-  document.addEventListener("scroll", cacherBulle, { passive: true });
+  // Au défilement : la bulle suit la barre qui a le focus clavier, sinon elle se ferme.
+  document.addEventListener("scroll", function () {
+    if (derniere && document.activeElement === derniere.conteneur) {
+      montrerBulle({}, derniere.html, derniere.conteneur);
+    } else {
+      cacherBulle();
+    }
+  }, { passive: true });
   var params = new URLSearchParams(location.search);
   var code = params.get("c");
   Promise.all([charger("profil.json"), charger("entreprises.json"), charger("journal.json"), charger("candidatures.json")])
