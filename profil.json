@@ -1,0 +1,55 @@
+{
+ "_note": "Contenu de la page. Titres de poste repris mot pour mot du CV « CV CDG.pdf » (14/09/2026) : ne jamais les modifier.",
+ "nom": "Paul Delahousse",
+ "role": "Contrôle de gestion & données",
+ "accroche": "5 ans de terrain commercial en grande consommation. Aujourd'hui je pilote la performance par les chiffres.",
+ "sous_accroche": "Je fais le lien entre la performance commerciale et les coûts. Excel avancé, Power BI, SQL.",
+ "email": "paul.delahousse@outlook.com",
+ "linkedin": "https://www.linkedin.com/in/paul-delahousse",
+ "cv": "CV_Paul_Delahousse_controle_de_gestion.pdf",
+ "parcours": [
+  {
+   "poste": "Chef de secteur",
+   "entreprise": "Tricotage des Vosges / Olympia & Bleuforêt",
+   "periode": "2023 – 2025",
+   "fait": "70 comptes BtoB sur 13 départements ; suivi du budget de secteur et analyse des écarts réalisé / objectif."
+  },
+  {
+   "poste": "Chef de secteur",
+   "entreprise": "Mondelez International",
+   "periode": "2021 – 2023",
+   "fait": "23 comptes grands clients, 8,4 M€ de CA géré ; rentabilité par compte, reporting mensuel."
+  },
+  {
+   "poste": "Assistant Catman",
+   "entreprise": "Buitoni / Mondelez",
+   "periode": "2021",
+   "fait": "Business reviews trimestrielles avec Carrefour et Auchan : compte de résultat promotionnel, rentabilité par segment."
+  }
+ ],
+ "offres": {
+  "immersion": {
+   "afficher": true,
+   "titre": "Commencer par une immersion, sans coût pour vous",
+   "texte": "Je peux démarrer par une période de mise en situation en milieu professionnel (PMSMP), encadrée par France Travail : vous me voyez travailler sur vos chiffres avant toute embauche, sans coût pour l'entreprise."
+  },
+  "diagnostic_48h": {
+   "afficher": true,
+   "titre": "Un diagnostic sous 48 heures",
+   "texte": "Envoyez-moi un extrait anonymisé de votre reporting. Sous 48 heures, je vous renvoie ce que j'y lis, ce qui n'y apparaît pas et les trois questions que je poserais. Des questions, pas un jugement."
+  }
+ },
+ "mission_association": {
+  "afficher": false,
+  "titre": "Mission bénévole en contrôle de gestion",
+  "texte": "",
+  "attestation": ""
+ },
+ "certifications": [
+  "Power BI — DataCamp (2026)",
+  "Data Analyst DA101/DA201 — DataCamp (2025)",
+  "PSM I — Scrum.org (2025)",
+  "dbt Fundamentals (2025)"
+ ],
+ "telephone": "06 60 43 78 27"
+}

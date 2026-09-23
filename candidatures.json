@@ -1,0 +1,8 @@
+{
+ "_note": "Un code par candidature : lien https://<domaine>/?c=CODE. La phrase s'affiche sous le bandeau ; « entreprise » (slug) présélectionne une analyse. Aucune donnée n'est collectée.",
+ "exemple": {
+  "destinataire": "Exemple SA",
+  "phrase": "Votre annonce parle de marge par client : c'est ce que j'ai suivi pendant cinq ans sur le terrain.",
+  "entreprise": "artenay-bars"
+ }
+}

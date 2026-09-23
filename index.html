@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Paul Delahousse — contrôle de gestion</title>
+<meta name="description" content="Contrôle de gestion et données : analyse des comptes publics de six entreprises du Loiret, chaque chiffre relié à sa source.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+
+  <!-- 1. Bandeau : le terrain commercial d'abord -->
+  <header class="bandeau">
+    <h1 id="nom">Paul Delahousse</h1>
+    <p class="role" id="role"></p>
+    <p class="accroche" id="accroche"></p>
+    <p class="muted" id="sous-accroche"></p>
+    <ul class="parcours" id="parcours" aria-label="Parcours"></ul>
+    <p class="contact-ligne" id="contact-haut"></p>
+    <p class="perso" id="perso" hidden></p>
+  </header>
+
+  <!-- 2. L'offre, visible sans défiler -->
+  <section id="offre" aria-labelledby="t-offre">
+    <h2 id="t-offre">Pour commencer sans risque</h2>
+    <div class="offres" id="offres"></div>
+  </section>
+
+  <!-- 3. Analyse sur comptes publics -->
+  <section id="analyse" aria-labelledby="t-analyse">
+    <h2 id="t-analyse">Six entreprises du Loiret, lues dans leurs comptes publics</h2>
+    <p class="muted small">Comptes déposés au greffe, trois exercices. Chaque montant a été saisi avec sa page, chaque ratio est recalculé par script. Une donnée absente est affichée « non publiée », jamais estimée. Des questions, pas de jugement.</p>
+    <div class="choix" id="choix" role="group" aria-label="Choisir une entreprise"></div>
+    <div id="fiche" aria-live="polite"></div>
+  </section>
+
+  <!-- 4. Journal des erreurs de l'IA -->
+  <section id="ia" aria-labelledby="t-ia">
+    <h2 id="t-ia">L'IA se trompe : voici où, et comment je l'ai vu</h2>
+    <p class="muted small">J'utilise l'IA pour aller vite, jamais sans contrôle. Ces erreurs sont réelles : elles viennent d'un projet de CRM construit sur données fictives, et de l'analyse ci-dessus. Pour chacune : le contexte, ce qui était faux, comment c'est repéré, ce qui a changé.</p>
+    <div class="journal" id="journal"></div>
+  </section>
+
+  <!-- 5. Mission association : masquée tant qu'elle n'existe pas -->
+  <section id="mission" aria-labelledby="t-mission" hidden>
+    <h2 id="t-mission"></h2>
+    <p id="mission-texte"></p>
+    <p id="mission-attestation"></p>
+  </section>
+
+  <!-- 6. Cas pratiques : sous-page, données fictives -->
+  <section id="cas" aria-labelledby="t-cas">
+    <h2 id="t-cas">Cas pratiques</h2>
+    <p>Quatre cas construits de bout en bout. <span class="tag">données fictives</span></p>
+    <p><a href="cas-pratiques.html">Voir les cas pratiques</a></p>
+  </section>
+
+  <!-- 7. CV + contact -->
+  <footer id="contact">
+    <p><a class="bouton" id="lien-cv" href="#">Télécharger mon CV (PDF)</a></p>
+    <p id="contact-bas"></p>
+    <p class="small" id="certifs"></p>
+    <p class="small">Aucun cookie, aucun traceur. Sources des comptes : dépôts au greffe consultés via Pappers ; contrôle croisé avec les ratios INPI publiés sur data.economie.gouv.fr.</p>
+  </footer>
+</div>
+<div class="bulle" id="bulle" role="tooltip" hidden></div>
+<script src="app.js"></script>
+</body>
+</html>
