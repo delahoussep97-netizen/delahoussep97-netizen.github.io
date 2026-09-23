@@ -362,6 +362,7 @@
     s.onload = function () {
       if (!window.goatcounter || !window.goatcounter.count) return;
       window.goatcounter.count({ path: location.pathname });
+      if (window.goatcounter.bind_events) window.goatcounter.bind_events();   // clics CV, email, téléphone…
       if (codeCandidature && window.goatcounter && window.goatcounter.count) {
         window.goatcounter.count({ path: "candidature-" + codeCandidature, title: "Candidature " + codeCandidature, event: true });
       }
