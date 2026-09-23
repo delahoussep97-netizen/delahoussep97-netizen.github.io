@@ -342,6 +342,29 @@
     selectionner(slugInitial);
   }
 
+  /* Compteur de visites sans cookie (GoatCounter) : pages vues, code de candidature, clics utiles. */
+  function compteur(codeGC, codeCandidature) {
+    if (!codeGC) return;
+    var marquer = function (sel, nom) {
+      document.querySelectorAll(sel).forEach(function (a) { a.setAttribute("data-goatcounter-click", nom); });
+    };
+    marquer('a[href^="mailto:"]', "clic-email");
+    marquer('a[href^="tel:"]', "clic-telephone");
+    marquer('a[href*="linkedin.com"]', "clic-linkedin");
+    marquer('a[href$=".pdf"], #lien-cv', "clic-cv");
+    marquer('a[href="cas-pratiques.html"]', "clic-cas-pratiques");
+    var s = document.createElement("script");
+    s.async = true;
+    s.src = "https://gc.zgo.at/count.js";
+    s.setAttribute("data-goatcounter", "https://" + codeGC + ".goatcounter.com/count");
+    s.onload = function () {
+      if (codeCandidature && window.goatcounter && window.goatcounter.count) {
+        window.goatcounter.count({ path: "candidature-" + codeCandidature, title: "Candidature " + codeCandidature, event: true });
+      }
+    };
+    document.body.appendChild(s);
+  }
+
   bulle = $("bulle");
   document.addEventListener("scroll", cacherBulle, { passive: true });
   var params = new URLSearchParams(location.search);
@@ -352,6 +375,7 @@
       initProfil(d[0], perso);
       initAnalyse(d[1], params.get("e") || (perso && perso.entreprise) || d[1].entreprises[0].slug);
       initJournal(d[2]);
+      compteur(d[0].compteur_goatcounter, perso ? perso.code : null);
     })
     .catch(function () {
       $("fiche").textContent = "Les données n'ont pas pu être chargées. Ouvrez la page depuis un serveur web (et non en double-cliquant sur le fichier).";
