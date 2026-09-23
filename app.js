@@ -354,11 +354,14 @@
     marquer('a[href*="linkedin.com"]', "clic-linkedin");
     marquer('a[href$=".pdf"], #lien-cv', "clic-cv");
     marquer('a[href="cas-pratiques.html"]', "clic-cas-pratiques");
+    window.goatcounter = { no_onload: true };   // la visite est comptée explicitement ci-dessous
     var s = document.createElement("script");
     s.async = true;
     s.src = "https://gc.zgo.at/count.js";
     s.setAttribute("data-goatcounter", "https://" + codeGC + ".goatcounter.com/count");
     s.onload = function () {
+      if (!window.goatcounter || !window.goatcounter.count) return;
+      window.goatcounter.count({ path: location.pathname });
       if (codeCandidature && window.goatcounter && window.goatcounter.count) {
         window.goatcounter.count({ path: "candidature-" + codeCandidature, title: "Candidature " + codeCandidature, event: true });
       }
