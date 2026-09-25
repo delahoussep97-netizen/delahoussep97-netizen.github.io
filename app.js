@@ -35,7 +35,7 @@
       .replace(/([+\-−]?\d[\d\u202f\u00a0 ]*(?:,\d+)?\s?(?:M€|k€|%|pt|jours|j\b|€))/g, "<strong>$1</strong>");
     return n;
   }
-  var VERSION = "20260925d";
+  var VERSION = "20260925e";
   function charger(url) {
     return fetch(url + "?v=" + VERSION).then(function (r) { if (!r.ok) throw new Error(url); return r.json(); });
   }
@@ -81,9 +81,9 @@
   }
   function cacherBulle() { bulle.hidden = true; }
 
-  function graphe(titre, formule, points, unite) {
+  function graphe(titre, formule, points, unite, couleur) {
     // points : [{annee, valeur, sources:[...]}]
-    var boite = el("div", { "class": "graphe" });
+    var boite = el("div", { "class": "graphe " + (couleur || "k1") });
     boite.appendChild(el("h4", null, titre));
     var connus = points.filter(function (p) { return p.valeur != null; });
     function ecart(v0, v1) {
@@ -364,46 +364,65 @@
 
   /* ---------- Cartes d'indicateurs (façon Power BI) ---------- */
   function sparkline(vals) {
-    var W = 64, H = 22, v = vals.filter(function (x) { return x != null; });
+    var W = 160, H = 34, v = vals.filter(function (x) { return x != null; });
     var svg = svgEl("svg", { viewBox: "0 0 " + W + " " + H, "class": "spark", "aria-hidden": "true" });
     if (v.length < 2) return svg;
     var mn = Math.min.apply(null, v), mx = Math.max.apply(null, v), d = mx - mn || 1;
-    var pts = v.map(function (x, i) { return [3 + i * (W - 6) / (v.length - 1), H - 3 - (x - mn) / d * (H - 6)]; });
-    svg.appendChild(svgEl("polyline", { points: pts.map(function (p) { return p.join(","); }).join(" "), "class": "spark-ligne" }));
-    var last = pts[pts.length - 1];
-    svg.appendChild(svgEl("circle", { cx: last[0], cy: last[1], r: 2.8, "class": "spark-point" }));
+    var pts = v.map(function (x, i) { return [6 + i * (W - 12) / (v.length - 1), H - 6 - (x - mn) / d * (H - 12)]; });
+    var ligne = pts.map(function (p) { return p.join(","); }).join(" ");
+    svg.appendChild(svgEl("polygon", { points: "6," + H + " " + ligne + " " + (W - 6) + "," + H, "class": "spark-aire" }));
+    svg.appendChild(svgEl("polyline", { points: ligne, "class": "spark-ligne" }));
+    pts.forEach(function (p, i) { svg.appendChild(svgEl("circle", { cx: p[0], cy: p[1], r: i === pts.length - 1 ? 4 : 2.5, "class": "spark-point" + (i === pts.length - 1 ? " dernier" : "") })); });
     return svg;
   }
+  function ecartKpi(x0, x1, unite) {
+    var s = x1 - x0 >= 0 ? "+" : "−", d = Math.abs(x1 - x0);
+    if (unite === "%") return s + nf1.format(d * 100) + " pt";
+    if (unite === "j") return s + nf0.format(d) + " j";
+    return x0 > 0 && x0 >= 0.2 * Math.abs(x1) ? s + nf1.format(Math.abs(x1 / x0 - 1) * 100) + " %" : s + nf1.format(d / 1e6) + " M€";
+  }
+  function valeurKpi(x, unite) {
+    if (x == null) return ["n.p.", ""];
+    if (unite === "M€") return [nf1.format(x / 1e6), " M€"];
+    if (unite === "%") return [nf1.format(x * 100), " %"];
+    return [nf0.format(x), " j"];
+  }
+  function carteKpi(titre, vals, annees, unite, sens, couleur, aide) {
+    var x1 = vals[vals.length - 1], x0 = vals[vals.length - 2];
+    var c = el("div", { "class": "kpi tuile " + couleur });
+    c.appendChild(el("p", { "class": "kpi-titre" }, titre));
+    var v = valeurKpi(x1, unite), pv = el("p", { "class": "kpi-valeur" }, v[0]);
+    pv.appendChild(el("span", { "class": "kpi-unite" }, v[1]));
+    c.appendChild(pv);
+    if (aide) c.appendChild(el("p", { "class": "kpi-aide" }, aide));
+    if (x1 != null && x0 != null) {
+      var sensReel = x1 === x0 ? 0 : (x1 > x0 ? 1 : -1), cls = sensReel === 0 ? "neutre" : (sensReel === sens ? "bon" : "mauvais");
+      var dl = el("p", { "class": "kpi-delta" });
+      dl.appendChild(el("span", { "class": "kpi-pill " + cls, title: cls === "bon" ? "évolution favorable" : cls === "mauvais" ? "évolution défavorable" : "stable" },
+        (sensReel > 0 ? "▲ " : sensReel < 0 ? "▼ " : "= ") + ecartKpi(x0, x1, unite)));
+      dl.appendChild(el("span", { "class": "kpi-vs" }, "vs " + annees[annees.length - 2]));
+      c.appendChild(dl);
+    }
+    c.appendChild(sparkline(vals));
+    var ans = el("p", { "class": "kpi-ans" });
+    ans.appendChild(el("span", null, annees[0])); ans.appendChild(el("span", null, annees[annees.length - 1]));
+    c.appendChild(ans);
+    c.setAttribute("title", titre + " — " + annees.map(function (a, i) { var w = valeurKpi(vals[i], unite); return a + " : " + w[0] + w[1]; }).join(" · "));
+    return c;
+  }
   function kpis(ent, annees) {
-    var S = ent.analyse.sig, R = ent.ratios.par_exercice, a1 = annees[annees.length - 1], a0 = annees[annees.length - 2];
+    var S = ent.analyse.sig, R = ent.ratios.par_exercice;
     var marge = ent.type === "distribution" ? "taux_marge_commerciale" : "taux_marge_sur_matieres";
     var defs = [
-      ["Chiffre d'affaires", annees.map(function (a) { return S[a].chiffre_affaires; }), "M€"],
-      [ent.type === "distribution" ? "Marge commerciale" : "Marge sur matières", annees.map(function (a) { return R[a][marge].valeur; }), "%"],
-      ["Valeur ajoutée / CA", annees.map(function (a) { return S[a].taux.valeur_ajoutee; }), "%"],
-      ["EBE / CA", annees.map(function (a) { return S[a].taux.ebe; }), "%"],
-      ["Résultat d'exploitation", annees.map(function (a) { return S[a].rex_publie; }), "M€"],
-      ["BFR", annees.map(function (a) { return R[a].bfr_jours_ca.valeur; }), "j"]
+      ["Chiffre d'affaires", annees.map(function (a) { return S[a].chiffre_affaires; }), "M€", 1, "k1"],
+      [ent.type === "distribution" ? "Marge commerciale" : "Marge sur matières", annees.map(function (a) { return R[a][marge].valeur; }), "%", 1, "k2"],
+      ["Valeur ajoutée / CA", annees.map(function (a) { return S[a].taux.valeur_ajoutee; }), "%", 1, "k3"],
+      ["EBE / CA", annees.map(function (a) { return S[a].taux.ebe; }), "%", 1, "k4"],
+      ["Résultat d'exploitation", annees.map(function (a) { return S[a].rex_publie; }), "M€", 1, "k5"],
+      ["BFR en jours de CA", annees.map(function (a) { return R[a].bfr_jours_ca.valeur; }), "j", -1, "k6"]
     ];
     var row = el("div", { "class": "kpis t12" });
-    defs.forEach(function (d) {
-      var v = d[1], x1 = v[v.length - 1], x0 = v[v.length - 2];
-      var c = el("div", { "class": "kpi tuile" });
-      c.appendChild(el("p", { "class": "kpi-titre" }, d[0]));
-      var val = d[2] === "M€" ? nf1.format(x1 / 1e6) + " M€" : d[2] === "%" ? nf1.format(x1 * 100) + " %" : nf0.format(x1) + " j de CA";
-      c.appendChild(el("p", { "class": "kpi-valeur" }, x1 == null ? "n.p." : val));
-      var bas = el("div", { "class": "kpi-bas" });
-      if (x1 != null && x0 != null) {
-        var dv = d[2] === "%" ? (x1 - x0 >= 0 ? "+" : "") + nf1.format((x1 - x0) * 100) + " pt"
-               : d[2] === "j" ? (x1 - x0 >= 0 ? "+" : "") + nf0.format(x1 - x0) + " j"
-               : x0 > 0 && x0 >= 0.2 * Math.abs(x1) ? (x1 - x0 >= 0 ? "+" : "") + nf1.format((x1 / x0 - 1) * 100) + " %" : (x1 - x0 >= 0 ? "+" : "") + nf1.format((x1 - x0) / 1e6) + " M€";
-        bas.appendChild(el("span", { "class": "kpi-delta" }, (x1 >= x0 ? "▲ " : "▼ ") + dv + " vs " + a0));
-      }
-      bas.appendChild(sparkline(v));
-      c.appendChild(bas);
-      c.setAttribute("title", d[0] + " — " + annees.map(function (a, i) { return a + " : " + (v[i] == null ? "n.p." : (d[2] === "M€" ? nf1.format(v[i] / 1e6) + " M€" : d[2] === "%" ? nf1.format(v[i] * 100) + " %" : nf0.format(v[i]) + " j")); }).join(" · "));
-      row.appendChild(c);
-    });
+    defs.forEach(function (d) { row.appendChild(carteKpi(d[0], d[1], annees, d[2], d[3], d[4], d[5])); });
     return row;
   }
 
@@ -411,7 +430,7 @@
 
   /* ---------- Visuels « dashboard » ---------- */
   // Jauge semi-circulaire : valeur N (arc bleu), repère N-1 (trait jaune)
-  function jauge(titre, v, vPrec, mini, maxi, aN, aP, formule) {
+  function jauge(titre, v, vPrec, mini, maxi, aN, aP, formule, couleur) {
     var b = el("div", { "class": "bloc-analyse jauge-bloc" });
     b.appendChild(el("h3", null, titre));
     var W = 200, H = 122, cx = 100, cy = 104, R = 78, ep = 22;
@@ -423,7 +442,7 @@
       return svgEl("path", { d: "M" + p0[0] + "," + p0[1] + " A" + r + "," + r + " 0 0 1 " + p1[0] + "," + p1[1], "class": cls, "stroke-width": ep, fill: "none" });
     }
     svg.appendChild(arc(Math.PI, 0, "jauge-fond"));
-    if (v != null) svg.appendChild(arc(Math.PI, ang(Math.max(v, mini)), "jauge-val"));
+    if (v != null) svg.appendChild(arc(Math.PI, ang(Math.max(v, mini)), "jauge-val " + (couleur || "k1")));
     if (vPrec != null) {
       var t = ang(vPrec), a1 = pt(R - ep - 3, t), a2 = pt(R + 3, t);
       svg.appendChild(svgEl("line", { x1: a1[0], y1: a1[1], x2: a2[0], y2: a2[1], "class": "jauge-repere" }));
@@ -433,7 +452,7 @@
     svg.appendChild(svgEl("text", { x: cx + R - ep / 2, y: cy + 14, "text-anchor": "middle", "class": "jauge-borne" }, nf0.format(maxi * 100) + " %"));
     var zone = el("div", { "class": "jauge-zone" }); zone.appendChild(svg); b.appendChild(zone);
     var leg = el("p", { "class": "jauge-leg" });
-    leg.appendChild(el("span", { "class": "cle" }, "")); leg.firstChild.appendChild(el("i", { "class": "pastille c1" })); leg.firstChild.appendChild(document.createTextNode(aN));
+    leg.appendChild(el("span", { "class": "cle" }, "")); leg.firstChild.appendChild(el("i", { "class": "pastille " + (couleur || "k1") })); leg.firstChild.appendChild(document.createTextNode(aN));
     var s2 = el("span", { "class": "cle" }); s2.appendChild(el("i", { "class": "pastille repere" })); s2.appendChild(document.createTextNode(aP + " : " + pct(vPrec))); leg.appendChild(s2);
     b.appendChild(leg);
     surBulle(zone, "<b>" + titre + "</b><br>" + aN + " : " + pct(v) + "<br>" + aP + " : " + pct(vPrec) + (formule ? "<br><i>" + formule + "</i>" : ""));
@@ -445,12 +464,12 @@
     var s = ent.analyse.sig[a1], ca = s.chiffre_affaires;
     var b = bloc("Du chiffre d'affaires au résultat (" + a1 + ")");
     var etapes = [["Chiffre d'affaires", ca], ["Valeur ajoutée", s.valeur_ajoutee], ["EBE", s.ebe], ["Résultat d'exploitation", s.rex_publie]];
-    var W = 460, row = 62, H = etapes.length * row, lab = 150, zone = W - lab - 8;
+    var petit = window.innerWidth < 600, W = petit ? 340 : 460, row = 62, H = etapes.length * row, lab = petit ? 112 : 150, zone = W - lab - 8;
     var svg = svgEl("svg", { viewBox: "0 0 " + W + " " + H, role: "img", "aria-label": "Du chiffre d'affaires au résultat d'exploitation en " + a1 });
     etapes.forEach(function (e, i) {
       var y = i * row + 6, v = e[1], w = Math.max(v > 0 ? 3 : 0, v / ca * zone), x = lab + (zone - w) / 2;
       svg.appendChild(svgEl("text", { x: 0, y: y + 30, "class": "lib fort" }, e[0]));
-      svg.appendChild(svgEl("rect", { x: x, y: y, width: Math.max(w, 0.1), height: row - 10, "class": "entonnoir" + (v < 0 ? " neg" : "") }));
+      svg.appendChild(svgEl("rect", { x: x, y: y, width: Math.max(w, 0.1), height: row - 10, "class": "entonnoir e" + (i + 1) + (v < 0 ? " neg" : "") }));
       var txt = meur(v) + " · " + nf1.format(v / ca * 100) + " %";
       var dansBarre = w > 150;
       svg.appendChild(svgEl("text", { x: dansBarre ? lab + zone / 2 : lab + zone / 2 + w / 2 + 6, y: y + 30, "text-anchor": dansBarre ? "middle" : "start", "class": dansBarre ? "val-inv" : "val-s fort" }, txt));
@@ -463,7 +482,209 @@
     return b;
   }
 
-  /* ---------- Fiche entreprise : rapport en 4 pages ---------- */
+  /* ---------- Simulation : et si un facteur changeait ? ---------- */
+  // Base : dernier exercice publié. Écart de résultat = effet volume + prix + coût des achats + charges externes + personnel.
+  function simBase(ent, a1) {
+    var s = ent.analyse.sig[a1];
+    function poste(debut) { var x = s.structure.filter(function (p) { return p.poste.indexOf(debut) === 0; })[0]; return x ? x.montant : 0; }
+    return { ca: s.chiffre_affaires, achats: poste("Achats"), externes: poste("Charges externes"), personnel: poste("Personnel"),
+             va: s.valeur_ajoutee, ebe: s.ebe, rex: s.rex_calcule };
+  }
+  function simCalcul(B, x) {
+    var v = x.v / 100, p = x.p / 100, c = x.c / 100, e = x.e / 100, sa = x.s / 100;
+    var eff = [
+      ["Volume vendu", v * (B.ca - B.achats)],
+      ["Prix de vente", B.ca * (1 + v) * p],
+      ["Coût des achats", -B.achats * (1 + v) * c],
+      ["Charges externes", -B.externes * e],
+      ["Charges de personnel", -B.personnel * sa]
+    ];
+    var ca = B.ca * (1 + v) * (1 + p), achats = B.achats * (1 + v) * (1 + c);
+    var dVA = (ca - B.ca) - (achats - B.achats) - B.externes * e;
+    var dRex = eff.reduce(function (t, f) { return t + f[1]; }, 0);
+    return { ca: ca, marge: ca ? (ca - achats) / ca : null, va: B.va + dVA, ebe: B.ebe + dVA - B.personnel * sa, rex: B.rex + dRex, eff: eff };
+  }
+  // Cascade horizontale générique : [{l, v, tot}]
+  function cascade(etapes, label, W) {
+    var cum = 0, pts = [];
+    etapes.forEach(function (e) { if (e.tot) { pts.push([0, e.v]); cum = e.v; } else { pts.push([cum, cum + e.v]); cum += e.v; } });
+    var all = [0].concat([].concat.apply([], pts));
+    var min = Math.min.apply(null, all), max = Math.max.apply(null, all);
+    W = W || 460;
+    var row = 32, H = etapes.length * row, zx0 = 4, zx1 = W - 78;
+    var x = function (v) { return zx0 + (v - min) / (max - min || 1) * (zx1 - zx0); };
+    var svg = svgEl("svg", { viewBox: "0 0 " + W + " " + H, role: "img", "aria-label": label, style: "max-width:" + Math.round(W * 1.3) + "px" });
+    etapes.forEach(function (e, i) {
+      var y = i * row, a = pts[i][0], z = pts[i][1];
+      svg.appendChild(svgEl("line", { x1: x(0), x2: x(0), y1: y + 13, y2: y + 29, "class": "axe" }));
+      svg.appendChild(svgEl("text", { x: zx0, y: y + 11, "class": "lib" + (e.tot ? " fort" : "") }, e.l));
+      var cls = e.tot ? (e.sim ? "sim" : "tot") : (e.v > 0 ? "hausse" : e.v < 0 ? "baisse" : "nul");
+      var xa = Math.min(x(a), x(z)), w = Math.max(1.5, Math.abs(x(z) - x(a)));
+      svg.appendChild(svgEl("rect", { x: xa, y: y + 15, width: w, height: 12, rx: 2, "class": "pont " + cls }));
+      svg.appendChild(svgEl("text", { x: Math.max(x(a), x(z)) + 4, y: y + 25, "class": "val-s" + (e.tot ? " fort" : "") }, e.tot ? meur(e.v) : (e.v === 0 ? "0" : meur(e.v, true))));
+    });
+    return svg;
+  }
+  function pctSigne(v, dec) { return (v > 0 ? "+" : v < 0 ? "−" : "") + (dec ? nf1 : nf0).format(Math.abs(v)) + " %"; }
+
+  function simulation(ent, annees, page) {
+    var a1 = annees[annees.length - 1], B = simBase(ent, a1);
+    var LEV = [
+      { k: "v", nom: "Volume vendu", min: -20, max: 20, pas: 1, aide: "Le chiffre d'affaires et les achats consommés suivent le volume." },
+      { k: "p", nom: "Prix de vente", min: -10, max: 10, pas: 0.5, aide: "Le chiffre d'affaires change, les coûts ne bougent pas." },
+      { k: "c", nom: "Coût des achats", min: -10, max: 10, pas: 0.5, aide: "Prix des matières premières et des marchandises achetées." },
+      { k: "e", nom: "Charges externes", min: -10, max: 10, pas: 0.5, aide: "Transport, énergie, loyers, sous-traitance…" },
+      { k: "s", nom: "Charges de personnel", min: -10, max: 10, pas: 0.5, aide: "Salaires et charges sociales." }
+    ];
+    var etat = { v: 0, p: 0, c: 0, e: 0, s: 0 }, entrees = {}, sorties = {}, compte = false;
+
+    // Leviers
+    var tl = el("div", { "class": "tuile sim-leviers t4" });
+    tl.appendChild(el("h3", null, "Les leviers"));
+    tl.appendChild(el("p", { "class": "small muted" }, "Base : l'exercice " + a1 + " publié. Faites varier un facteur, le compte de résultat se recalcule."));
+    var sc = el("div", { "class": "sim-scenarios", role: "group", "aria-label": "Scénarios prêts à l'emploi" });
+    [["Prix +2 %", { p: 2 }], ["Volumes −5 %", { v: -5 }], ["Matières +5 % non répercutées", { c: 5 }], ["Salaires +3 %", { s: 3 }]].forEach(function (x) {
+      var b = el("button", { type: "button" }, x[0]);
+      b.addEventListener("click", function () { LEV.forEach(function (l) { etat[l.k] = x[1][l.k] || 0; }); maj(); });
+      sc.appendChild(b);
+    });
+    tl.appendChild(sc);
+    LEV.forEach(function (l) {
+      var id = "sim-" + l.k + "-" + ent.slug;
+      var d = el("div", { "class": "sim-levier" });
+      var lab = el("label", { "for": id });
+      lab.appendChild(el("span", null, l.nom));
+      var o = el("output", { "for": id, "class": "sim-val" }, "0 %");
+      lab.appendChild(o);
+      d.appendChild(lab);
+      var r = el("input", { type: "range", id: id, min: String(l.min), max: String(l.max), step: String(l.pas), value: "0" });
+      r.addEventListener("input", function () { etat[l.k] = +r.value; maj(); });
+      d.appendChild(r);
+      var bornes = el("p", { "class": "sim-bornes" });
+      bornes.appendChild(el("span", null, l.min + " %")); bornes.appendChild(el("span", null, "+" + l.max + " %"));
+      d.appendChild(bornes);
+      d.appendChild(el("p", { "class": "small muted sim-aide" }, l.aide));
+      tl.appendChild(d);
+      entrees[l.k] = r; sorties[l.k] = o;
+    });
+    var raz = el("button", { type: "button", "class": "bouton secondaire" }, "Remettre à zéro");
+    raz.addEventListener("click", function () { LEV.forEach(function (l) { etat[l.k] = 0; }); maj(); });
+    tl.appendChild(raz);
+    page.appendChild(tl);
+
+    // Résultats
+    var tr = el("div", { "class": "tuile sim-resultats t8" });
+    tr.appendChild(el("h3", null, "Réel " + a1 + " et simulé"));
+    var cartes = el("div", { "class": "sim-cartes" });
+    var IND = [
+      ["ca", "Chiffre d'affaires", "M€", "k1"],
+      ["marge", "Marge sur achats", "%", "k2", "(CA − achats consommés) / CA"],
+      ["va", "Valeur ajoutée", "M€", "k3"],
+      ["ebe", "EBE", "M€", "k4"],
+      ["rex", "Résultat d'exploitation", "M€", "k5"],
+      ["taux", "Résultat d'exploitation / CA", "%", "k6"]
+    ];
+    var zones = {};
+    IND.forEach(function (d) {
+      var c = el("div", { "class": "sim-carte " + d[3] });
+      c.appendChild(el("p", { "class": "kpi-titre" }, d[1]));
+      var v = el("p", { "class": "sim-simule" }); c.appendChild(v);
+      var r = el("p", { "class": "sim-reel" }); c.appendChild(r);
+      if (d[4]) c.appendChild(el("p", { "class": "kpi-aide" }, d[4]));
+      cartes.appendChild(c);
+      zones[d[0]] = { v: v, r: r, unite: d[2] };
+    });
+    tr.appendChild(cartes);
+    var phrase = el("p", { "class": "sim-phrase", "aria-live": "polite" });
+    tr.appendChild(phrase);
+    tr.appendChild(el("h4", { "class": "sim-sous" }, "Du résultat d'exploitation réel au résultat simulé"));
+    var zc = el("div", { "class": "graphe-large" });
+    tr.appendChild(zc);
+    page.appendChild(tr);
+
+    // Sensibilité : effet de 1 % sur le résultat d'exploitation
+    var ts = el("div", { "class": "tuile t6" });
+    ts.appendChild(el("h3", null, "Sensibilité du résultat à 1 % de variation"));
+    var sens = LEV.map(function (l) { var x = { v: 0, p: 0, c: 0, e: 0, s: 0 }; x[l.k] = 1; return [l.nom, simCalcul(B, x).rex - B.rex]; })
+      .sort(function (a, b) { return Math.abs(b[1]) - Math.abs(a[1]); });
+    var mx = Math.max.apply(null, sens.map(function (x) { return Math.abs(x[1]); })) || 1;
+    var W = window.innerWidth < 600 ? 360 : 460, row = 30, lab = 150, mid = lab + (W - lab - 70) / 2, demi = (W - lab - 70) / 2;
+    var svg = svgEl("svg", { viewBox: "0 0 " + W + " " + sens.length * row, role: "img", "aria-label": "Effet d'une hausse de 1 % de chaque facteur sur le résultat d'exploitation " + a1 });
+    sens.forEach(function (x, i) {
+      var y = i * row, w = Math.max(1.5, Math.abs(x[1]) / mx * demi);
+      svg.appendChild(svgEl("text", { x: 0, y: y + 19, "class": "lib fort" }, "+1 % " + x[0].toLowerCase()));
+      svg.appendChild(svgEl("line", { x1: mid, x2: mid, y1: y + 4, y2: y + 28, "class": "axe" }));
+      svg.appendChild(svgEl("rect", { x: x[1] >= 0 ? mid : mid - w, y: y + 8, width: w, height: 14, rx: 2, "class": "pont " + (x[1] >= 0 ? "hausse" : "baisse") }));
+      svg.appendChild(svgEl("text", { x: x[1] >= 0 ? mid + w + 4 : mid - w - 4, y: y + 19, "text-anchor": x[1] >= 0 ? "start" : "end", "class": "val-s fort" }, meur(x[1], true)));
+    });
+    var zs = el("div", { "class": "graphe-large" }); zs.appendChild(svg); ts.appendChild(zs);
+    var prix = sens.filter(function (x) { return x[0] === "Prix de vente"; })[0][1];
+    ts.appendChild(riche("p", "Lecture : **1 % de prix de vente** en plus, à volume égal, ajoute " + meur(prix) + " au résultat d'exploitation " + a1 +
+      (B.rex > 0 ? ", soit " + pctSigne(prix / B.rex * 100, true) + " du résultat." : "."), { "class": "small" }));
+    page.appendChild(ts);
+
+    // Hypothèses
+    var th = el("div", { "class": "tuile sim-hyp t6" });
+    th.appendChild(el("h3", null, "Hypothèses du calcul"));
+    var ul = el("ul");
+    ["Calcul théorique sur les comptes " + a1 + " publiés, toutes choses égales par ailleurs. **Pas une prévision**, pas un avis sur l'entreprise.",
+     "Achats consommés proportionnels au volume. Charges externes, personnel, impôts et dotations fixes, sauf si vous les faites varier.",
+     "Effet volume = variation de volume × (CA − achats consommés). Effet prix = CA à nouveau volume × variation de prix. Effet coût = achats à nouveau volume × variation de coût.",
+     "Avec tous les leviers à zéro, le résultat simulé est égal au résultat publié : " + meur(B.rex) + "."
+    ].forEach(function (t) { ul.appendChild(riche("li", t)); });
+    th.appendChild(ul);
+    var mcv = B.ca - B.achats;
+    if (B.rex > 0 && mcv > 0) {
+      th.appendChild(riche("p", "Seuil théorique : avec cette structure de coûts, une baisse de volume de **" + nf1.format(B.rex / mcv * 100) + " %** ramènerait le résultat d'exploitation à zéro.", { "class": "small sim-seuil" }));
+    }
+    page.appendChild(th);
+
+    function fmt(v, u) { return v == null ? "n.p." : u === "%" ? nf1.format(v * 100) + " %" : nf1.format(v / 1e6) + " M€"; }
+    function maj() {
+      var r = simCalcul(B, etat);
+      LEV.forEach(function (l) {
+        entrees[l.k].value = String(etat[l.k]);
+        var t = pctSigne(etat[l.k], l.pas < 1);
+        sorties[l.k].textContent = t;
+        entrees[l.k].setAttribute("aria-valuetext", t);
+        sorties[l.k].className = "sim-val" + (etat[l.k] ? " actif" : "");
+      });
+      var reel = { ca: B.ca, marge: (B.ca - B.achats) / B.ca, va: B.va, ebe: B.ebe, rex: B.rex, taux: B.rex / B.ca };
+      var sim = { ca: r.ca, marge: r.marge, va: r.va, ebe: r.ebe, rex: r.rex, taux: r.ca ? r.rex / r.ca : null };
+      Object.keys(zones).forEach(function (k) {
+        var z = zones[k], d = sim[k] - reel[k], eps = z.unite === "%" ? 5e-5 : 500;
+        z.v.textContent = fmt(sim[k], z.unite);
+        z.r.textContent = "";
+        if (Math.abs(d) < eps) { z.r.appendChild(document.createTextNode("= réel " + a1)); return; }
+        var ec = z.unite === "%" ? (d > 0 ? "+" : "−") + nf1.format(Math.abs(d) * 100) + " pt" : meur(d, true).replace("-", "−");
+        z.r.appendChild(el("span", { "class": "kpi-pill " + (d > 0 ? "bon" : "mauvais") }, (d > 0 ? "▲ " : "▼ ") + ec));
+        z.r.appendChild(document.createTextNode(" réel : " + fmt(reel[k], z.unite)));
+      });
+      var actifs = LEV.filter(function (l) { return etat[l.k]; });
+      phrase.textContent = "";
+      if (!actifs.length) {
+        phrase.appendChild(riche("span", "Tous les leviers sont à zéro : le résultat simulé est le résultat publié, **" + meur(B.rex) + "**. Choisissez un scénario ou déplacez un curseur."));
+      } else {
+        var dr = r.rex - B.rex;
+        var txt = actifs.map(function (l) { return l.nom.toLowerCase() + " " + pctSigne(etat[l.k], l.pas < 1); }).join(", ");
+        phrase.appendChild(riche("span", txt.charAt(0).toUpperCase() + txt.slice(1) +
+          " : le résultat d'exploitation passe de " + meur(B.rex) + " à **" + meur(r.rex) + "**" +
+          (B.rex > 0 ? " (" + pctSigne(dr / B.rex * 100, true) + ")." : ".")));
+      }
+      zc.innerHTML = "";
+      zc.appendChild(cascade([{ l: "Résultat d'exploitation " + a1 + " (réel)", v: B.rex, tot: true }]
+        .concat(r.eff.filter(function (f) { return Math.round(f[1]) !== 0; }).map(function (f) { return { l: "Effet " + f[0].toLowerCase(), v: Math.round(f[1]) }; }))
+        .concat([{ l: "Résultat d'exploitation simulé", v: r.rex, tot: true, sim: true }]), "Passage du résultat réel au résultat simulé",
+        Math.max(320, Math.min(460, zc.clientWidth || 460))));
+      if (actifs.length && !compte && window.goatcounter && window.goatcounter.count) {
+        compte = true;
+        window.goatcounter.count({ path: "simulation-utilisee", title: "Simulation utilisée", event: true });
+      }
+    }
+    maj();
+  }
+
+  /* ---------- Fiche entreprise : rapport en 5 pages ---------- */
   var pageActive = 0;
   function fiche(ent, ents, choisir) {
     var f = $("fiche");
@@ -481,7 +702,7 @@
     titre.appendChild(el("p", { "class": "dash-sous" }, ent.secteur + " · " + ent.ville + " · exercices " + annees.join(", ")));
     tete.appendChild(titre);
     var onglets = el("div", { "class": "dash-onglets", role: "tablist", "aria-label": "Pages du rapport" });
-    var noms = ["Vue d'ensemble", "Compte de résultat", "Analyse des écarts", "Lecture et questions"];
+    var noms = ["Vue d'ensemble", "Compte de résultat", "Analyse des écarts", "Simulation", "Lecture et questions"];
     tete.appendChild(onglets);
     var seg = el("label", { "class": "dash-segment" });
     seg.appendChild(el("span", null, "Sélectionner l'entreprise"));
@@ -514,31 +735,39 @@
 
     // Page 1 : vue d'ensemble
     var p1 = pages[0];
-    if (ent.lecture.synthese && ent.lecture.synthese.length) p1.appendChild(riche("p", ent.lecture.synthese[0], { "class": "synthese tuile t12" }));
+    if (ent.lecture.synthese && ent.lecture.synthese.length) {
+      var syn = el("div", { "class": "synthese tuile t12" });
+      syn.appendChild(riche("p", ent.lecture.synthese[0]));
+      var go = el("button", { type: "button", "class": "bouton-sim" }, "Et si la marge changeait ? Simuler →");
+      go.addEventListener("click", function () { montrer(3); tabs[3].focus(); });
+      syn.appendChild(go);
+      p1.appendChild(syn);
+    }
     p1.appendChild(kpis(ent, annees));
     var ent1 = entonnoir(ent, a1); ent1.classList.add("t6"); p1.appendChild(ent1);
     var jg = el("div", { "class": "jauges t6" });
     var mKey = ent.type === "distribution" ? "taux_marge_commerciale" : "taux_marge_sur_matieres";
-    jg.appendChild(jauge(ent.type === "distribution" ? "Marge commerciale" : "Marge sur matières", R[a1][mKey].valeur, R[a0][mKey].valeur, 0, 1, a1, a0, R[a1][mKey].formule));
-    jg.appendChild(jauge("Valeur ajoutée / CA", S[a1].taux.valeur_ajoutee, S[a0].taux.valeur_ajoutee, 0, 0.4, a1, a0, "Valeur ajoutée / chiffre d'affaires"));
-    jg.appendChild(jauge("Masse salariale / CA", R[a1].poids_masse_salariale.valeur, R[a0].poids_masse_salariale.valeur, 0, 0.3, a1, a0, R[a1].poids_masse_salariale.formule));
-    jg.appendChild(jauge("Résultat d'exploitation / CA", R[a1].marge_exploitation.valeur, R[a0].marge_exploitation.valeur, -0.05, 0.1, a1, a0, R[a1].marge_exploitation.formule));
+    jg.appendChild(jauge(ent.type === "distribution" ? "Marge commerciale" : "Marge sur matières", R[a1][mKey].valeur, R[a0][mKey].valeur, 0, 1, a1, a0, R[a1][mKey].formule, "k2"));
+    jg.appendChild(jauge("Valeur ajoutée / CA", S[a1].taux.valeur_ajoutee, S[a0].taux.valeur_ajoutee, 0, 0.4, a1, a0, "Valeur ajoutée / chiffre d'affaires", "k3"));
+    jg.appendChild(jauge("Masse salariale / CA", R[a1].poids_masse_salariale.valeur, R[a0].poids_masse_salariale.valeur, 0, 0.3, a1, a0, R[a1].poids_masse_salariale.formule, "k4"));
+    jg.appendChild(jauge("Résultat d'exploitation / CA", R[a1].marge_exploitation.valeur, R[a0].marge_exploitation.valeur, -0.05, 0.1, a1, a0, R[a1].marge_exploitation.formule, "k5"));
     p1.appendChild(jg);
     var g = el("div", { "class": "graphes t12" });
     g.appendChild(graphe(NOMS.ca, "Chiffre d'affaires net", annees.map(function (a) {
       var p = ent.exercices[a].postes.chiffre_affaires_net;
       return { annee: a, valeur: p ? p.montant : null, sources: sourcesRatio(ent, a, ["chiffre_affaires_net"]) };
-    }), "M€"));
+    }), "M€", "k1"));
     g.appendChild(graphe("Résultat d'exploitation", "en M€, tel que publié", annees.map(function (a) {
       var p = ent.exercices[a].postes.resultat_exploitation;
       return { annee: a, valeur: p ? p.montant : null, sources: sourcesRatio(ent, a, ["resultat_exploitation"]) };
-    }), "M€"));
+    }), "M€", "k5"));
+    var COUL = { marge_exploitation: "k4", poids_masse_salariale: "k3", bfr_jours_ca: "k6" };
     ent.marges_affichees.concat(["marge_exploitation", "poids_masse_salariale", "bfr_jours_ca"]).forEach(function (m) {
       var r0 = R[annees[0]][m];
       g.appendChild(graphe(NOMS[m], r0.formule, annees.map(function (a) {
         var r = R[a][m];
         return { annee: a, valeur: r.valeur, sources: sourcesRatio(ent, a, r.postes) };
-      }), r0.unite));
+      }), r0.unite, COUL[m] || "k2"));
     });
     p1.appendChild(g);
 
@@ -552,9 +781,12 @@
     var t3 = pont(ent, annees); t3.classList.add("t7"); p3.appendChild(t3);
     var t4 = calcul(ent, annees); t4.classList.add("t5"); p3.appendChild(t4);
 
-    // Page 4 : lecture, questions, données
+    // Page 4 : simulation
+    simulation(ent, annees, pages[3]);
+
+    // Page 5 : lecture, questions, données
     var f0 = f;
-    f = pages[3];
+    f = pages[4];
     var lec = el("div", { "class": "lecture t8" });
     [["Ce qui se voit", ent.lecture.ce_qui_se_voit], ["Ce qui ne se voit pas dans des comptes publics", ent.lecture.ce_qui_ne_se_voit_pas]].forEach(function (b) {
       var d = el("div", { "class": "tuile" });
@@ -702,6 +934,124 @@
     }
   }
 
+  /* ---------- Formations 2026 : chiffres, cours par mois, frise ---------- */
+  var MOIS = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
+  var MOIS_C = ["janv.", "févr.", "mars", "avr.", "mai", "juin", "juil.", "août", "sept.", "oct.", "nov.", "déc."];
+  function dateFr(d) { var x = d.split("-"); return +x[2] + " " + MOIS[+x[1] - 1]; }
+  function initFormations(f) {
+    var z = $("formations-contenu");
+    if (!f || !z) { if ($("formations")) $("formations").hidden = true; return; }
+    $("t-formations").textContent = f.titre;
+    $("formations-intro").textContent = f.intro;
+    var nom = {}; f.domaines.forEach(function (d) { nom[d.cle] = d.nom; });
+    var metier = f.parcours.filter(function (p) { return p.type === "parcours métier"; }).length;
+    var nPbi = f.cours.filter(function (c) { return c.domaine === "pbi"; }).length;
+
+    // 1. Chiffres clés
+    var st = el("div", { "class": "f-stats" });
+    [[f.cours.length, "cours de données terminés en 2026"], [f.parcours.length, "parcours validés, dont " + metier + " parcours métier"],
+     [nPbi, "cours Power BI : DAX, modélisation, rapports"], [2, "cas pratiques construits de bout en bout"]].forEach(function (x) {
+      var c = el("div", { "class": "chiffre" });
+      c.appendChild(el("span", { "class": "chiffre-n" }, nf0.format(x[0])));
+      c.appendChild(el("span", { "class": "chiffre-l" }, x[1]));
+      st.appendChild(c);
+    });
+    z.appendChild(st);
+
+    // 2. Cours terminés par mois, empilés par domaine
+    var mois = f.cours.map(function (c) { return +c.date.slice(5, 7); });
+    var m0 = Math.min.apply(null, mois), m1 = Math.max.apply(null, mois), liste = [];
+    for (var m = m0; m <= m1; m++) liste.push(m);
+    var par = {};
+    f.cours.forEach(function (c) { var k = +c.date.slice(5, 7); (par[k] = par[k] || {}); (par[k][c.domaine] = par[k][c.domaine] || []).push(c); });
+    var tg = el("div", { "class": "tuile f-graphe" });
+    tg.appendChild(el("h3", null, "Cours terminés par mois, " + MOIS[m0 - 1] + " à " + MOIS[m1 - 1] + " 2026"));
+    var leg = el("p", { "class": "legende small" });
+    f.domaines.forEach(function (d) {
+      var n = f.cours.filter(function (c) { return c.domaine === d.cle; }).length;
+      var s = el("span", { "class": "cle" }); s.appendChild(el("i", { "class": "pastille d-" + d.cle })); s.appendChild(document.createTextNode(d.nom + " (" + n + ")")); leg.appendChild(s);
+    });
+    tg.appendChild(leg);
+    var tot = liste.map(function (k) { return f.domaines.reduce(function (t, d) { return t + ((par[k] || {})[d.cle] || []).length; }, 0); });
+    var mx = Math.max.apply(null, tot), W = 420, H = 210, haut = 20, bas = 22, bande = (W - 8) / liste.length, lb = Math.min(44, bande * 0.62);
+    var y = function (v) { return H - bas - v / mx * (H - haut - bas); };
+    var svg = svgEl("svg", { viewBox: "0 0 " + W + " " + H, role: "img", "aria-label": "Cours terminés par mois : " + liste.map(function (k, i) { return MOIS[k - 1] + " " + tot[i]; }).join(", ") });
+    svg.appendChild(svgEl("line", { x1: 4, x2: W - 4, y1: y(0), y2: y(0), "class": "axe" }));
+    liste.forEach(function (k, i) {
+      var cx = 4 + bande * i + bande / 2, cum = 0;
+      f.domaines.forEach(function (d) {
+        var cs = (par[k] || {})[d.cle] || [];
+        if (!cs.length) return;
+        var y1 = y(cum), y2 = y(cum + cs.length);
+        svg.appendChild(svgEl("rect", { x: cx - lb / 2, y: y2 + 1, width: lb, height: Math.max(1, y1 - y2 - 1), "class": "seg d-" + d.cle }));
+        if (y1 - y2 >= 14) svg.appendChild(svgEl("text", { x: cx, y: (y1 + y2) / 2 + 4, "text-anchor": "middle", "class": "seg-n d-" + d.cle }, String(cs.length)));
+        var cible = svgEl("rect", { x: cx - bande / 2, y: y2, width: bande, height: y1 - y2, "class": "cible" });
+        surBulle(cible, "<b>" + MOIS[k - 1] + " — " + echapper(d.nom) + "</b><br>" + cs.map(function (c) { return echapper(c.titre); }).join("<br>"));
+        svg.appendChild(cible);
+        cum += cs.length;
+      });
+      svg.appendChild(svgEl("text", { x: cx, y: y(cum) - 5, "text-anchor": "middle", "class": "val fort" }, String(cum)));
+      svg.appendChild(svgEl("text", { x: cx, y: H - 5, "text-anchor": "middle", "class": "an" }, MOIS_C[k - 1]));
+    });
+    var gz = el("div", { "class": "graphe-large" }); gz.appendChild(svg); tg.appendChild(gz);
+    tg.appendChild(el("p", { "class": "small muted" }, "Survolez une barre pour voir les cours. Source : historique du compte DataCamp, attestations en lien plus bas."));
+
+    // 3. Frise
+    var tf = el("div", { "class": "tuile f-frise" });
+    tf.appendChild(el("h3", null, "L'année, mois par mois"));
+    var ol = el("ol", { "class": "frise" });
+    f.etapes.forEach(function (e) {
+      var li = el("li", { "class": "d-" + e.domaine });
+      li.appendChild(el("p", { "class": "frise-mois" }, e.mois));
+      li.appendChild(el("p", { "class": "frise-titre" }, e.titre));
+      li.appendChild(el("p", { "class": "frise-texte" }, e.texte));
+      var n = MOIS.indexOf(e.mois.toLowerCase()) + 1;
+      var liens = el("p", { "class": "frise-liens" });
+      f.parcours.filter(function (p) { return +p.date.slice(5, 7) === n; }).forEach(function (p) {
+        liens.appendChild(el("a", { href: p.attestation, rel: "noopener" }, "Attestation « " + p.titre + " »"));
+      });
+      if (e.lien) liens.appendChild(el("a", { href: e.lien.url }, e.lien.texte));
+      if (liens.childNodes.length) li.appendChild(liens);
+      ol.appendChild(li);
+    });
+    tf.appendChild(ol);
+    var gauche = el("div", { "class": "f-gauche" });
+    gauche.appendChild(tg);
+    if (f.usages && f.usages.length) {
+      var tu = el("div", { "class": "tuile f-usages" });
+      tu.appendChild(el("h3", null, "À quoi ça sert en contrôle de gestion"));
+      var ul = el("ul");
+      f.usages.forEach(function (u) { ul.appendChild(riche("li", u.texte, { "class": "d-" + u.domaine })); });
+      tu.appendChild(ul);
+      gauche.appendChild(tu);
+    }
+    var grille = el("div", { "class": "f-grille" });
+    grille.appendChild(gauche); grille.appendChild(tf);
+    z.appendChild(grille);
+
+    // 4. Liste complète, avec attestations
+    var det = el("details", { "class": "tuile" });
+    det.appendChild(el("summary", null, "Les " + f.cours.length + " cours et " + f.parcours.length + " parcours, avec leur attestation"));
+    var sc = el("div", { "class": "table-scroll" });
+    var t = el("table", { "class": "f-table" });
+    var th = el("thead"), trh = el("tr");
+    ["Terminé le", "Cours ou parcours", "Domaine", "Preuve"].forEach(function (c) { trh.appendChild(el("th", { scope: "col" }, c)); });
+    th.appendChild(trh); t.appendChild(th);
+    var tb = el("tbody");
+    f.parcours.map(function (p) { return { date: p.date, titre: "Parcours : " + p.titre + " (" + p.type + ")", domaine: "", attestation: p.attestation, fort: true }; })
+      .concat(f.cours).sort(function (a, b) { return a.date < b.date ? -1 : a.date > b.date ? 1 : 0; })
+      .forEach(function (c) {
+        var tr = el("tr", c.fort ? { "class": "fort" } : null);
+        tr.appendChild(el("td", null, dateFr(c.date)));
+        tr.appendChild(el("td", null, c.titre));
+        tr.appendChild(el("td", null, c.domaine ? nom[c.domaine] : "—"));
+        var td = el("td"); td.appendChild(el("a", { href: c.attestation, rel: "noopener" }, "attestation")); tr.appendChild(td);
+        tb.appendChild(tr);
+      });
+    t.appendChild(tb); sc.appendChild(t); det.appendChild(sc);
+    z.appendChild(det);
+  }
+
   function initJournal(j) {
     var z = $("journal");
     j.entrees.filter(function (e) { return e.publie; }).forEach(function (e) {
@@ -805,6 +1155,7 @@
       initProfil(d[0], perso);
       initChiffres(d[1]);
       initAnalyse(d[1], params.get("e") || (perso && perso.entreprise) || d[1].entreprises[0].slug);
+      initFormations(d[0].formations_2026);
       initJournal(d[2]);
       compteur(d[0].compteur_goatcounter, perso ? perso.code : null);
     })

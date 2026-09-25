@@ -54,5 +54,394 @@
  ],
  "telephone": "06 60 43 78 27",
  "compteur_goatcounter": "pauldelahousse",
- "_compteur": "Code du compte GoatCounter (sans cookie). Vide = compteur désactivé."
+ "_compteur": "Code du compte GoatCounter (sans cookie). Vide = compteur désactivé.",
+ "formations_2026": {
+  "_note": "Relevé de l'activité DataCamp de Paul le 25/09/2026 (cours et parcours terminés en 2026). Exclus : cours Java et cours d'IA, hors sujet contrôle de gestion. AMF non affichée (non obtenue). DCG UE11 = autoformation non diplômante.",
+  "titre": "2026 : je me suis formé, puis j'ai appliqué",
+  "intro": "Cours et parcours terminés sur DataCamp en 2026, chacun avec son attestation en ligne. En parallèle : autoformation en contrôle de gestion et deux cas pratiques.",
+  "domaines": [
+   {
+    "cle": "sql",
+    "nom": "SQL"
+   },
+   {
+    "cle": "stats",
+    "nom": "Statistiques, data viz et Python"
+   },
+   {
+    "cle": "excel",
+    "nom": "Excel et Power Query"
+   },
+   {
+    "cle": "pbi",
+    "nom": "Power BI (DAX, modélisation, rapports)"
+   }
+  ],
+  "cours": [
+   {
+    "date": "2026-01-16",
+    "titre": "SQL intermédiaire",
+    "domaine": "sql",
+    "attestation": "https://www.datacamp.com/statement-of-accomplishment/course/6f39e03ae0ea48207fdfa9f2faaf3abb164bcc3f"
+   },
+   {
+    "date": "2026-01-21",
+    "titre": "Analyse exploratoire des données en SQL",
+    "domaine": "sql",
+    "attestation": "https://www.datacamp.com/statement-of-accomplishment/course/f1ce7f211f824a3418ca2a4ee95b70752a943e46"
+   },
+   {
+    "date": "2026-02-02",
+    "titre": "Prise de décision basée sur des données en SQL",
+    "domaine": "sql",
+    "attestation": "https://www.datacamp.com/statement-of-accomplishment/course/19e59a49ae68b1d686ad66d932757c1d3794df58"
+   },
+   {
+    "date": "2026-02-03",
+    "titre": "Appliquer SQL à des problèmes concrets",
+    "domaine": "sql",
+    "attestation": "https://www.datacamp.com/statement-of-accomplishment/course/6e4ab6712b014d5875d4e0937f1212d2762542c0"
+   },
+   {
+    "date": "2026-02-04",
+    "titre": "Analyser des données métier en SQL",
+    "domaine": "sql",
+    "attestation": "https://www.datacamp.com/statement-of-accomplishment/course/144c63f904060b1e6ccf35a3d3d8438abd26ded4"
+   },
+   {
+    "date": "2026-02-05",
+    "titre": "Réaliser des rapports en SQL",
+    "domaine": "sql",
+    "attestation": "https://www.datacamp.com/statement-of-accomplishment/course/f64bbefee45a353cac1219ee605beb042c3e5abf"
+   },
+   {
+    "date": "2026-02-06",
+    "titre": "Introduction au SQL",
+    "domaine": "sql",
+    "attestation": "https://www.datacamp.com/statement-of-accomplishment/course/80f7689cb43c5ab996166d23dcd9406ae8414c99"
+   },
+   {
+    "date": "2026-02-06",
+    "titre": "Assembler des données en SQL",
+    "domaine": "sql",
+    "attestation": "https://www.datacamp.com/statement-of-accomplishment/course/d5aa5b4a2eadac57c1c407a8973295e3bf9392f9"
+   },
+   {
+    "date": "2026-02-09",
+    "titre": "Manipulation de données en SQL",
+    "domaine": "sql",
+    "attestation": "https://www.datacamp.com/statement-of-accomplishment/course/c4cec7ef29006757e3e4ca02722e34f572940ea2"
+   },
+   {
+    "date": "2026-02-10",
+    "titre": "Statistiques récapitulatives et fonctions de fenêtrage (PostgreSQL)",
+    "domaine": "sql",
+    "attestation": "https://www.datacamp.com/statement-of-accomplishment/course/4c88fc86ad848caf7ea6ee579ee8034c2b02a7a6"
+   },
+   {
+    "date": "2026-02-11",
+    "titre": "Fonctions de manipulation des données (PostgreSQL)",
+    "domaine": "sql",
+    "attestation": "https://www.datacamp.com/statement-of-accomplishment/course/1de6e36c89b641c6ddbcd8bc89c9d0ecbbfbd34f"
+   },
+   {
+    "date": "2026-02-11",
+    "titre": "Introduction aux statistiques",
+    "domaine": "stats",
+    "attestation": "https://www.datacamp.com/statement-of-accomplishment/course/4333ebc8483aa5409f98d34ffe928882e5007685"
+   },
+   {
+    "date": "2026-02-12",
+    "titre": "Comprendre la visualisation des données",
+    "domaine": "stats",
+    "attestation": "https://www.datacamp.com/statement-of-accomplishment/course/67148ff935f269938c9bd3e6b5b3180fce65b63d"
+   },
+   {
+    "date": "2026-02-12",
+    "titre": "Concepts de communication des données",
+    "domaine": "stats",
+    "attestation": "https://www.datacamp.com/statement-of-accomplishment/course/186c3041d0eeb8776924cbde472fb070112cc4ea"
+   },
+   {
+    "date": "2026-02-18",
+    "titre": "Conception de bases de données",
+    "domaine": "sql",
+    "attestation": "https://www.datacamp.com/statement-of-accomplishment/course/c563071da648e2a9e611a0174d06980d286652f7"
+   },
+   {
+    "date": "2026-03-06",
+    "titre": "Introduction à Python",
+    "domaine": "stats",
+    "attestation": "https://www.datacamp.com/statement-of-accomplishment/course/d1fe07ad24872837133ad613883a6b8cb89f1005"
+   },
+   {
+    "date": "2026-03-10",
+    "titre": "Python intermédiaire",
+    "domaine": "stats",
+    "attestation": "https://www.datacamp.com/statement-of-accomplishment/course/20ccce40e42638fb1ad8d7fd26e89691b79a7d3f"
+   },
+   {
+    "date": "2026-03-12",
+    "titre": "Manipulation de données avec pandas",
+    "domaine": "stats",
+    "attestation": "https://www.datacamp.com/statement-of-accomplishment/course/381d00e60997f7507722a71ce729e4bd52220785"
+   },
+   {
+    "date": "2026-03-13",
+    "titre": "Assembler des données avec pandas",
+    "domaine": "stats",
+    "attestation": "https://www.datacamp.com/statement-of-accomplishment/course/e53ed8c6ec69b925cd26d13548e196fd0d1655a6"
+   },
+   {
+    "date": "2026-03-16",
+    "titre": "Introduction aux statistiques en Python",
+    "domaine": "stats",
+    "attestation": "https://www.datacamp.com/statement-of-accomplishment/course/3944ec6d3c4848c0880f91fd73f53511dcd5100e"
+   },
+   {
+    "date": "2026-03-16",
+    "titre": "Visualisation de données avec Seaborn",
+    "domaine": "stats",
+    "attestation": "https://www.datacamp.com/statement-of-accomplishment/course/278e7960af5db69b69e75f0270ff935ae4b18961"
+   },
+   {
+    "date": "2026-03-17",
+    "titre": "Analyse exploratoire des données en Python",
+    "domaine": "stats",
+    "attestation": "https://www.datacamp.com/statement-of-accomplishment/course/929176e3bd820844707adc011968a2a5091e57ce"
+   },
+   {
+    "date": "2026-03-18",
+    "titre": "L'échantillonnage en Python",
+    "domaine": "stats",
+    "attestation": "https://www.datacamp.com/statement-of-accomplishment/course/a9e075adba13fb2cfbabd262e9ee636170d123c9"
+   },
+   {
+    "date": "2026-04-10",
+    "titre": "Préparation des données dans Excel",
+    "domaine": "excel",
+    "attestation": "https://www.datacamp.com/statement-of-accomplishment/course/7d2facdb9df2e197091b664cd94f39b368addba3"
+   },
+   {
+    "date": "2026-04-13",
+    "titre": "Visualisation de données avec Excel",
+    "domaine": "excel",
+    "attestation": "https://www.datacamp.com/statement-of-accomplishment/course/f1f00f9b4d5c5c9fcf02ef66485a56e614ef2575"
+   },
+   {
+    "date": "2026-04-13",
+    "titre": "Introduction à Power Query dans Excel",
+    "domaine": "excel",
+    "attestation": "https://www.datacamp.com/statement-of-accomplishment/course/e6d6755c8f33d885655322a8842f8d4f283a192d"
+   },
+   {
+    "date": "2026-04-14",
+    "titre": "Introduction à Power BI",
+    "domaine": "pbi",
+    "attestation": "https://www.datacamp.com/statement-of-accomplishment/course/5028709139cfeea45edbed335e22115853152a15"
+   },
+   {
+    "date": "2026-05-12",
+    "titre": "Introduction à DAX dans Power BI",
+    "domaine": "pbi",
+    "attestation": "https://www.datacamp.com/statement-of-accomplishment/course/dc5bbee417ac26f2d0591d984f304a1cb0876c39"
+   },
+   {
+    "date": "2026-05-12",
+    "titre": "Visualisation des données dans Power BI",
+    "domaine": "pbi",
+    "attestation": "https://www.datacamp.com/statement-of-accomplishment/course/1d5bab119883ca8c97f1c92aa536ca701f0d1941"
+   },
+   {
+    "date": "2026-05-12",
+    "titre": "Étude de cas : analyse de l'attrition clients dans Power BI",
+    "domaine": "pbi",
+    "attestation": "https://www.datacamp.com/statement-of-accomplishment/course/4054e38b9c1b1b963f9306dfa72580c81caa3f6b"
+   },
+   {
+    "date": "2026-05-13",
+    "titre": "Préparation des données dans Power BI",
+    "domaine": "pbi",
+    "attestation": "https://www.datacamp.com/statement-of-accomplishment/course/b04ffb756e84360e41b3e91161a0460f44c0cdd4"
+   },
+   {
+    "date": "2026-05-27",
+    "titre": "Transformation des données dans Power BI",
+    "domaine": "pbi",
+    "attestation": "https://www.datacamp.com/statement-of-accomplishment/course/b1b9ea0670971352c6838b5dda58f3f6b14bf52e"
+   },
+   {
+    "date": "2026-05-27",
+    "titre": "Modélisation des données dans Power BI",
+    "domaine": "pbi",
+    "attestation": "https://www.datacamp.com/statement-of-accomplishment/course/4a88b9650385922f638233fc50af82e3c7564722"
+   },
+   {
+    "date": "2026-06-03",
+    "titre": "Modélisation de données intermédiaire dans Power BI",
+    "domaine": "pbi",
+    "attestation": "https://www.datacamp.com/statement-of-accomplishment/course/7baf6facb7fdce44a867ded1e313d223036cf0f7"
+   },
+   {
+    "date": "2026-06-03",
+    "titre": "Étude de cas : analyse RH dans Power BI",
+    "domaine": "pbi",
+    "attestation": "https://www.datacamp.com/statement-of-accomplishment/course/bcc9c714230adbfb033eb8174e1d70be06962973"
+   },
+   {
+    "date": "2026-06-03",
+    "titre": "Fonctions DAX dans Power BI",
+    "domaine": "pbi",
+    "attestation": "https://www.datacamp.com/statement-of-accomplishment/course/ff1219c51b3a25e19ac55165e12fa643ddecab7b"
+   },
+   {
+    "date": "2026-06-04",
+    "titre": "DAX intermédiaire dans Power BI",
+    "domaine": "pbi",
+    "attestation": "https://www.datacamp.com/statement-of-accomplishment/course/b2cefc60368530d7a29efd4d86ccfc57f9e16867"
+   },
+   {
+    "date": "2026-06-08",
+    "titre": "Analyse exploratoire des données dans Power BI",
+    "domaine": "pbi",
+    "attestation": "https://www.datacamp.com/statement-of-accomplishment/course/5c4c866913375278371cdeddb37c3313d00fde1b"
+   },
+   {
+    "date": "2026-06-10",
+    "titre": "Analyse des tendances dans Power BI",
+    "domaine": "pbi",
+    "attestation": "https://www.datacamp.com/statement-of-accomplishment/course/ea2344562f024fda7de7040e7231ebdaf341dc20"
+   },
+   {
+    "date": "2026-06-22",
+    "titre": "Rapports dans Power BI",
+    "domaine": "pbi",
+    "attestation": "https://www.datacamp.com/statement-of-accomplishment/course/6b75309c4958f784866d5daeb69ab29c4f3b3aae"
+   },
+   {
+    "date": "2026-06-22",
+    "titre": "Conception de rapports dans Power BI",
+    "domaine": "pbi",
+    "attestation": "https://www.datacamp.com/statement-of-accomplishment/course/cd16c2ad628c46df5ac9f553a03cfbab8b145116"
+   },
+   {
+    "date": "2026-06-23",
+    "titre": "Connexions de données dans Power BI",
+    "domaine": "pbi",
+    "attestation": "https://www.datacamp.com/statement-of-accomplishment/course/6a8e09e944f5d001c3b3fbf600a7f7bdefa253aa"
+   },
+   {
+    "date": "2026-06-23",
+    "titre": "Déployer et maintenir des ressources dans Power BI",
+    "domaine": "pbi",
+    "attestation": "https://www.datacamp.com/statement-of-accomplishment/course/9475d0d392c8c23f96b11e7da0407a68ddbe9e1b"
+   }
+  ],
+  "parcours": [
+   {
+    "date": "2026-01-13",
+    "titre": "Analyste de données associé en SQL",
+    "type": "parcours métier",
+    "attestation": "https://www.datacamp.com/statement-of-accomplishment/track/b2954713bcf47606adf86395728bf1c26174f147"
+   },
+   {
+    "date": "2026-01-13",
+    "titre": "SQL pour les analystes commerciaux",
+    "type": "parcours de compétences",
+    "attestation": "https://www.datacamp.com/statement-of-accomplishment/track/7f18c92183131297e05d563a1ec64a7b65d7102e"
+   },
+   {
+    "date": "2026-02-13",
+    "titre": "Principes fondamentaux de SQL",
+    "type": "parcours de compétences",
+    "attestation": "https://www.datacamp.com/statement-of-accomplishment/track/72934d9ff8d862470309f7d355c5117a73896176"
+   },
+   {
+    "date": "2026-04-13",
+    "titre": "Principes de base de Power BI",
+    "type": "parcours de compétences",
+    "attestation": "https://www.datacamp.com/statement-of-accomplishment/track/5e262b0f8882d80b4f0819928ed3495bbc2f408d"
+   },
+   {
+    "date": "2026-05-11",
+    "titre": "Analyste de données dans Power BI",
+    "type": "parcours métier",
+    "attestation": "https://www.datacamp.com/statement-of-accomplishment/track/d11b9e83e3bf4a6b7c935522fb17b5a67e0843f1"
+   }
+  ],
+  "etapes": [
+   {
+    "mois": "Janvier",
+    "domaine": "sql",
+    "titre": "Deux parcours SQL validés",
+    "texte": "« Analyste de données associé en SQL » et « SQL pour les analystes commerciaux ». Puis SQL intermédiaire et analyse exploratoire."
+   },
+   {
+    "mois": "Février",
+    "domaine": "sql",
+    "titre": "Requêtes métier et reporting",
+    "texte": "Analyser des données métier, construire des rapports, fonctions de fenêtrage. Parcours « Principes fondamentaux de SQL » validé. Bases de statistiques et de communication des données."
+   },
+   {
+    "mois": "Mars",
+    "domaine": "stats",
+    "titre": "Statistiques et analyse avec Python",
+    "texte": "pandas, statistiques descriptives, échantillonnage, analyse exploratoire."
+   },
+   {
+    "mois": "Avril",
+    "domaine": "excel",
+    "titre": "Excel, Power Query, puis Power BI",
+    "texte": "Préparation et visualisation des données dans Excel, Power Query. Parcours « Principes de base de Power BI » validé. Cas pratique : un tableau de bord Power BI (données fictives).",
+    "lien": {
+     "texte": "Voir le cas",
+     "url": "cas-pratiques.html"
+    }
+   },
+   {
+    "mois": "Mai",
+    "domaine": "pbi",
+    "titre": "Parcours métier Power BI, cas de contrôle de gestion",
+    "texte": "Parcours « Analyste de données dans Power BI » validé. Cas pratique : le contrôle de gestion d'une région de magasins (données fictives), travaillé avec le manuel DCG UE11 « Contrôle de gestion » (autoformation, non diplômante).",
+    "lien": {
+     "texte": "Voir le cas",
+     "url": "cas-pratiques.html"
+    }
+   },
+   {
+    "mois": "Juin",
+    "domaine": "pbi",
+    "titre": "Power BI avancé",
+    "texte": "DAX intermédiaire, modélisation, analyse de tendances, conception de rapports, connexions et déploiement."
+   },
+   {
+    "mois": "Septembre",
+    "domaine": "cdg",
+    "titre": "Application : six entreprises du Loiret",
+    "texte": "Les comptes publics de six entreprises lus, saisis ligne par ligne et recalculés : l'analyse de cette page.",
+    "lien": {
+     "texte": "Voir les analyses",
+     "url": "#analyse"
+    }
+   }
+  ],
+  "usages": [
+   {
+    "domaine": "sql",
+    "texte": "**SQL** : extraire et rapprocher ventes, coûts et stocks directement dans les bases, sans ressaisie."
+   },
+   {
+    "domaine": "excel",
+    "texte": "**Excel et Power Query** : automatiser la préparation du reporting mensuel, d'une source à l'autre."
+   },
+   {
+    "domaine": "pbi",
+    "texte": "**Power BI** : modéliser les données et construire un suivi budget / réalisé en DAX, comme le tableau de bord ci-dessus."
+   },
+   {
+    "domaine": "stats",
+    "texte": "**Statistiques** : distinguer un écart significatif d'une variation normale avant de l'expliquer."
+   }
+  ]
+ }
 }
