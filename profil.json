@@ -29,9 +29,10 @@
  ],
  "offres": {
   "immersion": {
-   "afficher": true,
+   "afficher": false,
    "titre": "Commencer par une immersion, sans coût pour vous",
-   "texte": "Je peux démarrer par une période de mise en situation en milieu professionnel (PMSMP), encadrée par France Travail : vous me voyez travailler sur vos chiffres avant toute embauche, sans coût pour l'entreprise."
+   "texte": "Je peux démarrer par une période de mise en situation en milieu professionnel (PMSMP), encadrée par France Travail : vous me voyez travailler sur vos chiffres avant toute embauche, sans coût pour l'entreprise.",
+   "_note": "Masqué le 25/09/2026 à la demande de Paul : à réactiver (afficher=true) après échange avec France Travail."
   },
   "diagnostic_48h": {
    "afficher": true,
