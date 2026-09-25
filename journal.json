@@ -11,85 +11,31 @@
    "change": "Ligne ajoutée avec sa source ; un contrôle de plus recalcule désormais le résultat d'exploitation par les soldes intermédiaires de gestion."
   },
   {
-   "id": "A1",
+   "id": "L1-d",
    "publie": true,
-   "titre": "Un pourcentage multiplié par 100",
-   "contexte": "Jeu de données fictif d'un CRM (remises promotionnelles).",
-   "faux": "Remises écrites 0,30 au lieu de 30 : une remise de 30 % serait devenue 0,3 %.",
-   "repere": "À la relecture du jeu de données, avant import.",
-   "change": "Règle écrite : un champ pourcentage stocke la valeur affichée."
+   "titre": "Un écart de 5 € pris pour une erreur de saisie",
+   "contexte": "Saisie des comptes d'Axiane Meunerie, exercice 2023.",
+   "faux": "Le script signalait une erreur : les montants saisis étaient pourtant exacts.",
+   "repere": "Relecture du texte du PDF : l'écart vient des arrondis ligne à ligne de la liasse.",
+   "change": "Tolérance d'arrondi de 10 €, justifiée dans le code."
   },
   {
-   "id": "A2",
-   "publie": true,
-   "titre": "420 visites au lieu de 400",
-   "contexte": "Même jeu de données : 400 visites demandées.",
-   "faux": "Le script de génération en produisait 420.",
-   "repere": "En recomptant les lignes générées.",
-   "change": "380 visites passées + 20 planifiées, recomptées."
+   "id": "L1-b",
+   "titre": "Une règle de contrôle trop stricte",
+   "contexte": "Script de contrôle des comptes saisis.",
+   "faux": "La règle interdisait une production stockée négative ; elle l'est pourtant en cas de déstockage (Antartic 2025 : −559 k€).",
+   "repere": "À la première saisie réelle, le contrôle bloquait un montant pourtant exact.",
+   "change": "Règle corrigée et justifiée dans le code : seuls les postes qui ne peuvent pas être négatifs sont contrôlés.",
+   "publie": true
   },
   {
-   "id": "A3",
-   "publie": true,
-   "titre": "Un chiffre faux dans un document pour recruteurs",
-   "contexte": "Kit de présentation d'un cas pratique.",
-   "faux": "« 71 lignes et 11 anomalies » ; le vrai compte : 66 lignes et 16 anomalies.",
-   "repere": "En recomptant le fichier contre le cahier des charges, avant diffusion.",
-   "change": "Document corrigé avant diffusion."
-  },
-  {
-   "id": "A4",
-   "publie": true,
-   "titre": "Un fuseau horaire qui décalait tout de 9 heures",
-   "contexte": "Relance automatique prévue à 7 h, délai d'escalade de 48 h ouvrées.",
-   "faux": "L'environnement était réglé sur Los Angeles : relance à 16 h heure de Paris, délais calculés sur de mauvaises heures ouvrées.",
-   "repere": "En lisant l'heure réelle de déclenchement planifiée, au lieu de la supposer juste.",
-   "change": "Fuseau et heures ouvrées corrigés, puis vérifiés le lendemain sur le déclenchement réel."
-  },
-  {
-   "id": "A5",
-   "publie": true,
-   "titre": "Un trimestre qui n'existait pas",
-   "contexte": "Objectifs commerciaux par trimestre glissant.",
-   "faux": "Le calcul produisait « T4-2025 », absent des valeurs autorisées : l'import aurait échoué.",
-   "repere": "En régénérant les données à la date du jour, avant import.",
-   "change": "Liste des trimestres complétée et documentée."
-  },
-  {
-   "id": "B1",
-   "publie": true,
-   "titre": "Une impossibilité qui n'en était pas une",
-   "contexte": "Création d'un profil utilisateur dans un CRM.",
-   "faux": "L'IA affirmait que ce profil devait être créé à la main.",
-   "repere": "En testant : le déploiement automatique le crée bien.",
-   "change": "Affirmation corrigée, preuve à l'appui."
-  },
-  {
-   "id": "B2",
-   "publie": true,
-   "titre": "Une autorisation inventée",
-   "contexte": "Paramétrage des droits d'un CRM.",
-   "faux": "L'IA utilisait une permission qui n'existe pas.",
-   "repere": "Rejet au déploiement, message d'erreur lu en entier.",
-   "change": "Chaque nom technique est désormais vérifié dans la documentation ou dans l'environnement."
-  },
-  {
-   "id": "B4",
-   "publie": true,
-   "titre": "Une cause attribuée à tort",
-   "contexte": "Blocage de doublons à l'import.",
-   "faux": "Blocage attribué à la règle de doublons ; la vraie cause était une contrainte d'unicité.",
-   "repere": "Lecture du code d'erreur exact dans le fichier de rejets.",
-   "change": "Diagnostic à partir du code d'erreur, pas de l'intuition."
-  },
-  {
-   "id": "C3",
-   "publie": true,
-   "titre": "Des données perdues en route",
-   "contexte": "Conversion de prospects en clients.",
-   "faux": "Secteur et format vides sur les 5 comptes convertis, alors que les prospects les portaient.",
-   "repere": "Requête sur les comptes convertis : vérifié dans les données, pas à l'œil.",
-   "change": "Correspondance des champs configurée, conversion retestée."
+   "id": "L1-c",
+   "titre": "Une supposition sur le format des comptes",
+   "contexte": "Lecture de la liasse fiscale 2026 d'Antartic.",
+   "faux": "Chaque liasse était supposée donner l'exercice N et N-1 ; le nouveau format ne donne que N et ajoute deux lignes au résultat d'exploitation.",
+   "repere": "En lisant la page elle-même plutôt que de supposer sa structure.",
+   "change": "Les deux lignes ont été ajoutées ; le dépôt de chaque année a été récupéré.",
+   "publie": true
   },
   {
    "id": "L1-a",
@@ -101,13 +47,85 @@
    "change": "Filtre sur le siège, puis vérification de la publication, exercice par exercice."
   },
   {
-   "id": "L1-d",
-   "publie": true,
-   "titre": "Un écart de 5 € pris pour une erreur de saisie",
-   "contexte": "Saisie des comptes d'Axiane Meunerie, exercice 2023.",
-   "faux": "Le script signalait une erreur : les montants saisis étaient pourtant exacts.",
-   "repere": "Relecture du texte du PDF : l'écart vient des arrondis ligne à ligne de la liasse.",
-   "change": "Tolérance d'arrondi de 10 €, justifiée dans le code."
+   "id": "A1",
+   "publie": false,
+   "titre": "Un pourcentage multiplié par 100",
+   "contexte": "Jeu de données fictif d'un CRM (remises promotionnelles).",
+   "faux": "Remises écrites 0,30 au lieu de 30 : une remise de 30 % serait devenue 0,3 %.",
+   "repere": "À la relecture du jeu de données, avant import.",
+   "change": "Règle écrite : un champ pourcentage stocke la valeur affichée."
+  },
+  {
+   "id": "A2",
+   "publie": false,
+   "titre": "420 visites au lieu de 400",
+   "contexte": "Même jeu de données : 400 visites demandées.",
+   "faux": "Le script de génération en produisait 420.",
+   "repere": "En recomptant les lignes générées.",
+   "change": "380 visites passées + 20 planifiées, recomptées."
+  },
+  {
+   "id": "A3",
+   "publie": false,
+   "titre": "Un chiffre faux dans un document pour recruteurs",
+   "contexte": "Kit de présentation d'un cas pratique.",
+   "faux": "« 71 lignes et 11 anomalies » ; le vrai compte : 66 lignes et 16 anomalies.",
+   "repere": "En recomptant le fichier contre le cahier des charges, avant diffusion.",
+   "change": "Document corrigé avant diffusion."
+  },
+  {
+   "id": "A4",
+   "publie": false,
+   "titre": "Un fuseau horaire qui décalait tout de 9 heures",
+   "contexte": "Relance automatique prévue à 7 h, délai d'escalade de 48 h ouvrées.",
+   "faux": "L'environnement était réglé sur Los Angeles : relance à 16 h heure de Paris, délais calculés sur de mauvaises heures ouvrées.",
+   "repere": "En lisant l'heure réelle de déclenchement planifiée, au lieu de la supposer juste.",
+   "change": "Fuseau et heures ouvrées corrigés, puis vérifiés le lendemain sur le déclenchement réel."
+  },
+  {
+   "id": "A5",
+   "publie": false,
+   "titre": "Un trimestre qui n'existait pas",
+   "contexte": "Objectifs commerciaux par trimestre glissant.",
+   "faux": "Le calcul produisait « T4-2025 », absent des valeurs autorisées : l'import aurait échoué.",
+   "repere": "En régénérant les données à la date du jour, avant import.",
+   "change": "Liste des trimestres complétée et documentée."
+  },
+  {
+   "id": "B1",
+   "publie": false,
+   "titre": "Une impossibilité qui n'en était pas une",
+   "contexte": "Création d'un profil utilisateur dans un CRM.",
+   "faux": "L'IA affirmait que ce profil devait être créé à la main.",
+   "repere": "En testant : le déploiement automatique le crée bien.",
+   "change": "Affirmation corrigée, preuve à l'appui."
+  },
+  {
+   "id": "B2",
+   "publie": false,
+   "titre": "Une autorisation inventée",
+   "contexte": "Paramétrage des droits d'un CRM.",
+   "faux": "L'IA utilisait une permission qui n'existe pas.",
+   "repere": "Rejet au déploiement, message d'erreur lu en entier.",
+   "change": "Chaque nom technique est désormais vérifié dans la documentation ou dans l'environnement."
+  },
+  {
+   "id": "B4",
+   "publie": false,
+   "titre": "Une cause attribuée à tort",
+   "contexte": "Blocage de doublons à l'import.",
+   "faux": "Blocage attribué à la règle de doublons ; la vraie cause était une contrainte d'unicité.",
+   "repere": "Lecture du code d'erreur exact dans le fichier de rejets.",
+   "change": "Diagnostic à partir du code d'erreur, pas de l'intuition."
+  },
+  {
+   "id": "C3",
+   "publie": false,
+   "titre": "Des données perdues en route",
+   "contexte": "Conversion de prospects en clients.",
+   "faux": "Secteur et format vides sur les 5 comptes convertis, alors que les prospects les portaient.",
+   "repere": "Requête sur les comptes convertis : vérifié dans les données, pas à l'œil.",
+   "change": "Correspondance des champs configurée, conversion retestée."
   }
  ]
 }
