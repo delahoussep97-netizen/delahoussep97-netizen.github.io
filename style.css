@@ -1,6 +1,7 @@
 /* Preuve publique — feuille unique, mobile d'abord, sans dépendance externe */
 :root {
   color-scheme: light;
+  --c1: #2a78d6; --c2: #eb6834; --hausse: #2a78d6; --baisse: #e34948; --tot: #52514e;
   --bg: #fcfcfb;
   --surface: #ffffff;
   --surface-2: #f3f2ef;
@@ -22,6 +23,7 @@
     --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --line: #34332f;
     --text: #f4f3ee; --text-2: #c3c2b7; --text-3: #9a988f;
     --accent: #7eb1f0; --series-1: #3987e5; --neg: #9a988f; --focus: #7eb1f0;
+    --c1: #3987e5; --c2: #d95926; --hausse: #3987e5; --baisse: #e66767; --tot: #c3c2b7;
   }
 }
 :root[data-theme="dark"] {
@@ -29,6 +31,7 @@
   --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --line: #34332f;
   --text: #f4f3ee; --text-2: #c3c2b7; --text-3: #9a988f;
   --accent: #7eb1f0; --series-1: #3987e5; --neg: #9a988f; --focus: #7eb1f0;
+  --c1: #3987e5; --c2: #d95926; --hausse: #3987e5; --baisse: #e66767; --tot: #c3c2b7;
 }
 
 * { box-sizing: border-box; }
@@ -126,3 +129,31 @@ footer { padding: 28px 0 40px; border-top: 1px solid var(--line); font-size: 0.8
 }
 @media (forced-colors: active) { svg .barre { fill: CanvasText; } }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+/* Analyse approfondie */
+.bloc-analyse { margin-top: 18px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px; }
+.bloc-analyse h3 { margin: 0 0 4px; }
+table.sig td:first-child { min-width: 11rem; }
+table.sig tr.solde td { font-weight: 600; border-top: 1px solid var(--text-3); }
+table.sig .pct { color: var(--text-3); font-size: 0.75rem; }
+.controle { margin: 8px 0 0; color: var(--text-2); }
+.graphe-large svg { display: block; width: 100%; height: auto; overflow: visible; }
+@media (min-width: 720px) { .graphe-large { max-width: 640px; } }
+svg .lib { font-size: 10px; fill: var(--text-2); }
+svg .lib.fort { fill: var(--text); font-weight: 600; }
+svg .val-s { font-size: 9.5px; fill: var(--text); font-variant-numeric: tabular-nums; }
+svg .barre-s.c1 { fill: var(--c1); } svg .barre-s.c2 { fill: var(--c2); }
+svg .pont.hausse { fill: var(--hausse); } svg .pont.baisse { fill: var(--baisse); } svg .pont.tot { fill: var(--tot); }
+svg .liaison { stroke: var(--text-3); stroke-width: 1; stroke-dasharray: 2 2; }
+.legende { display: flex; gap: 14px; margin: 4px 0 6px; }
+.cle { display: inline-flex; align-items: center; gap: 6px; color: var(--text-2); }
+.pastille { display: inline-block; width: 10px; height: 10px; border-radius: 2px; }
+.pastille.c1 { background: var(--c1); } .pastille.c2 { background: var(--c2); }
+.choix.petit button { min-height: 34px; padding: 4px 10px; font-size: 0.8125rem; }
+ol.etapes { margin: 6px 0 0; padding-left: 20px; font-size: 0.9375rem; }
+ol.etapes li { margin-bottom: 6px; }
+@media (forced-colors: active) { svg .barre-s, svg .pont { fill: CanvasText; } }
+table.sig { font-size: 0.8125rem; }
+table.sig td:first-child { min-width: 9.5rem; }
+@media (max-width: 600px) { table.sig td:first-child .muted, table.sig td:first-child br { display: none; } table.sig td, table.sig th { padding: 5px 6px; } }
+.synthese { font-size: 1rem; font-weight: 500; border-left: 3px solid var(--c1); padding: 4px 0 4px 10px; margin: 0 0 14px; }

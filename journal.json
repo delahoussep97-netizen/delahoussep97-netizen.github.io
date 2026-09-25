@@ -2,30 +2,39 @@
  "_note": "Publié seulement si publie=true. Les entrées « À CONFIRMER » restent à false tant que Paul n'a pas confirmé qui a repéré l'erreur.",
  "entrees": [
   {
+   "id": "L1-e",
+   "publie": true,
+   "titre": "Une ligne de 2,4 M€ oubliée à la saisie",
+   "contexte": "Saisie du compte de résultat 2024 d'Antartic, publié en milliers d'euros.",
+   "faux": "Le total des charges ne correspondait pas à la somme des lignes (écart de 2,4 M€) ; l'écart avait d'abord été attribué au document lui-même.",
+   "repere": "En recoupant avec la colonne « exercice précédent » du dépôt 2025 : la ligne « achats de marchandises » (2 398 k€) manquait à la saisie.",
+   "change": "Ligne ajoutée avec sa source ; un contrôle de plus recalcule désormais le résultat d'exploitation par les soldes intermédiaires de gestion."
+  },
+  {
    "id": "A1",
-   "publie": false,
+   "publie": true,
    "titre": "Un pourcentage multiplié par 100",
    "contexte": "Jeu de données fictif d'un CRM (remises promotionnelles).",
    "faux": "Remises écrites 0,30 au lieu de 30 : une remise de 30 % serait devenue 0,3 %.",
-   "repere": "À CONFIRMER",
+   "repere": "À la relecture du jeu de données, avant import.",
    "change": "Règle écrite : un champ pourcentage stocke la valeur affichée."
   },
   {
    "id": "A2",
-   "publie": false,
+   "publie": true,
    "titre": "420 visites au lieu de 400",
    "contexte": "Même jeu de données : 400 visites demandées.",
    "faux": "Le script de génération en produisait 420.",
-   "repere": "À CONFIRMER",
+   "repere": "En recomptant les lignes générées.",
    "change": "380 visites passées + 20 planifiées, recomptées."
   },
   {
    "id": "A3",
-   "publie": false,
+   "publie": true,
    "titre": "Un chiffre faux dans un document pour recruteurs",
    "contexte": "Kit de présentation d'un cas pratique.",
    "faux": "« 71 lignes et 11 anomalies » ; le vrai compte : 66 lignes et 16 anomalies.",
-   "repere": "À CONFIRMER",
+   "repere": "En recomptant le fichier contre le cahier des charges, avant diffusion.",
    "change": "Document corrigé avant diffusion."
   },
   {
@@ -84,16 +93,16 @@
   },
   {
    "id": "L1-a",
-   "publie": false,
+   "publie": true,
    "titre": "Le mauvais filtre géographique",
    "contexte": "Recherche des entreprises du Loiret pour cette analyse.",
    "faux": "Le tri filtrait sur le département d'un établissement, pas du siège : il ramenait des sociétés parisiennes.",
-   "repere": "Par l'IA elle-même, en contrôlant le département du siège.",
+   "repere": "En contrôlant le département du siège de chaque société retenue.",
    "change": "Filtre sur le siège, puis vérification de la publication, exercice par exercice."
   },
   {
    "id": "L1-d",
-   "publie": false,
+   "publie": true,
    "titre": "Un écart de 5 € pris pour une erreur de saisie",
    "contexte": "Saisie des comptes d'Axiane Meunerie, exercice 2023.",
    "faux": "Le script signalait une erreur : les montants saisis étaient pourtant exacts.",
