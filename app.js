@@ -26,6 +26,15 @@
     if (texte != null) n.textContent = texte;
     return n;
   }
+  function echapper(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  /* Met en gras les chiffres avec unité (M€, k€, %, pt, j, €) et les passages **entre doubles astérisques**. */
+  function riche(tag, texte, attrs) {
+    var n = el(tag, attrs);
+    n.innerHTML = echapper(texte)
+      .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+      .replace(/([+\-−]?\d[\d\u202f\u00a0 ]*(?:,\d+)?\s?(?:M€|k€|%|pt|jours|j\b|€))/g, "<strong>$1</strong>");
+    return n;
+  }
   function charger(url) {
     return fetch(url).then(function (r) { if (!r.ok) throw new Error(url); return r.json(); });
   }
@@ -75,6 +84,21 @@
     // points : [{annee, valeur, sources:[...]}]
     var boite = el("div", { "class": "graphe" });
     boite.appendChild(el("h4", null, titre));
+    var connus = points.filter(function (p) { return p.valeur != null; });
+    function ecart(v0, v1) {
+      if (unite === "%") return (v1 - v0 >= 0 ? "+" : "") + nf1.format((v1 - v0) * 100) + " pt";
+      if (unite === "jours") return (v1 - v0 >= 0 ? "+" : "") + nf0.format(v1 - v0) + " j";
+      return v0 > 0 ? (v1 - v0 >= 0 ? "+" : "") + nf1.format((v1 / v0 - 1) * 100) + " %"
+                    : (v1 - v0 >= 0 ? "+" : "") + nf1.format((v1 - v0) / 1e6) + " M€";
+    }
+    if (connus.length >= 2) {
+      var n = connus.length, a1 = connus[n - 1], a0 = connus[n - 2];
+      var tend = el("p", { "class": "tendance" });
+      tend.appendChild(el("strong", null, (a1.valeur >= a0.valeur ? "▲ " : "▼ ") + ecart(a0.valeur, a1.valeur)));
+      tend.appendChild(document.createTextNode(" sur un an"));
+      if (n >= 3) tend.appendChild(el("span", { "class": "muted" }, " · " + ecart(connus[0].valeur, a1.valeur) + " depuis " + connus[0].annee));
+      boite.appendChild(tend);
+    }
     if (formule) boite.appendChild(el("p", { "class": "formule" }, formule));
     var W = 200, H = 128, haut = 18, bas = 20;
     var vals = points.map(function (p) { return p.valeur; }).filter(function (v) { return v != null; });
@@ -115,10 +139,11 @@
           ? "M" + x0 + "," + y0 + " H" + x1 + " V" + (y0 + h - r) + " Q" + x1 + "," + (y0 + h) + " " + (x1 - r) + "," + (y0 + h) + " H" + (x0 + r) + " Q" + x0 + "," + (y0 + h) + " " + x0 + "," + (y0 + h - r) + " Z"
           : "M" + x0 + "," + y0 + " V" + (y0 - h + r) + " Q" + x0 + "," + (y0 - h) + " " + (x0 + r) + "," + (y0 - h) + " H" + (x1 - r) + " Q" + x1 + "," + (y0 - h) + " " + x1 + "," + (y0 - h + r) + " V" + y0 + " Z";
         var b = document.createElementNS(ns, "path");
-        b.setAttribute("d", d); b.setAttribute("class", "barre" + (neg ? " neg" : ""));
+        var dernier = i === points.length - 1;
+        b.setAttribute("d", d); b.setAttribute("class", "barre" + (neg ? " neg" : "") + (dernier ? "" : " passe"));
         svg.appendChild(b);
         t.setAttribute("y", neg ? y0 + h + 12 : y0 - h - 5);
-        t.setAttribute("class", "val"); t.textContent = formater(p.valeur, unite);
+        t.setAttribute("class", "val" + (dernier ? " fort" : "")); t.textContent = formater(p.valeur, unite);
         svg.appendChild(t);
       }
       var cible = document.createElementNS(ns, "rect");
@@ -174,11 +199,13 @@
     var b = bloc("Le compte de résultat en cascade", "Soldes intermédiaires de gestion (plan comptable général), recalculés à partir des montants saisis. Entre parenthèses : en % du chiffre d'affaires.");
     var distri = ent.type === "distribution";
     var lignes = [
-      ["Chiffre d'affaires", "chiffre_affaires", "", false],
-      ["Marge commerciale", "marge_commerciale", "ventes de marchandises − achats consommés", !annees.some(function (a) { return S[a].marge_commerciale; })],
-      ["+ Production de l'exercice", "production", "vendue + stockée + immobilisée", distri && !annees.some(function (a) { return S[a].production; })],
-      ["− Consommations en provenance des tiers", "consommations_tiers", "matières + charges externes", false],
-      ["= Valeur ajoutée", "valeur_ajoutee", "", false, true],
+      ["Chiffre d'affaires", "chiffre_affaires", "= ventes de marchandises + production vendue", false, true],
+      ["   dont ventes de marchandises (négoce)", "ventes_marchandises", "produits achetés et revendus en l'état", !(annees.some(function (a) { return S[a].ventes_marchandises; }) && annees.some(function (a) { return S[a].production_vendue; })), false, true],
+      ["   dont production vendue (fabrication)", "production_vendue", "produits fabriqués et vendus", !(annees.some(function (a) { return S[a].ventes_marchandises; }) && annees.some(function (a) { return S[a].production_vendue; })), false, true],
+      ["Marge commerciale (négoce)", "marge_commerciale", "= ventes de marchandises − coût d'achat des marchandises vendues", !annees.some(function (a) { return S[a].marge_commerciale; })],
+      ["+ Production de l'exercice (fabrication)", "production", "= production vendue + production stockée (fabriquée, pas encore vendue) + immobilisée", distri && !annees.some(function (a) { return S[a].production; })],
+      ["− Consommations en provenance des tiers", "consommations_tiers", "= matières premières consommées + charges externes", false],
+      ["= Valeur ajoutée", "valeur_ajoutee", "= marge commerciale + production − consommations", false, true],
       ["− Impôts et taxes", "impots_taxes", "", false],
       ["− Charges de personnel", "charges_personnel", "", false],
       ["= Excédent brut d'exploitation", "ebe", "+ subventions d'exploitation", false, true],
@@ -194,7 +221,7 @@
     var tb = el("tbody");
     lignes.forEach(function (l) {
       if (l[3]) return;
-      var tr = el("tr", l[4] ? { "class": "solde" } : null);
+      var tr = el("tr", l[4] ? { "class": "solde" } : (l[5] ? { "class": "dont" } : null));
       var td = el("td"); td.appendChild(el("span", null, l[0]));
       if (l[2]) { td.appendChild(el("br")); td.appendChild(el("span", { "class": "muted small" }, l[2])); }
       tr.appendChild(td);
@@ -208,6 +235,7 @@
       tb.appendChild(tr);
     });
     t.appendChild(tb); sc.appendChild(t); b.appendChild(sc);
+    b.appendChild(el("p", { "class": "small muted" }, "Lecture : le chiffre d'affaires réunit le négoce (ventes de marchandises) et la fabrication (production vendue). La marge commerciale mesure le négoce ; la production de l'exercice mesure la fabrication, y compris ce qui a été produit sans être encore vendu (production stockée). C'est pourquoi « chiffre d'affaires − marge commerciale » n'est pas égal à la production."));
     var ok = annees.every(function (a) { return S[a].rex_coherent; });
     b.appendChild(el("p", { "class": "controle small" }, ok
       ? "✓ Contrôle : pour chaque exercice, le résultat d'exploitation recalculé par cette cascade est égal, à l'euro près, au résultat publié."
@@ -306,7 +334,7 @@
     var s = ent.analyse.sig[a1], e = ent.analyse.effets[a1];
     var b = bloc("Le calcul, pas à pas (" + a1 + ")", "Pour vérifier chaque chiffre : les montants viennent du tableau « Les montants saisis » plus bas.");
     var ol = el("ol", { "class": "etapes" });
-    function li(t) { ol.appendChild(el("li", null, t)); }
+    function li(t) { ol.appendChild(riche("li", t)); }
     if (s.marge_commerciale) {
       var P = ent.exercices[a1].postes, mt = function (k) { return P[k] ? P[k].montant : 0; };
       li("Marge commerciale = ventes de marchandises " + meur(mt("ventes_marchandises")) + " − achats de marchandises " +
@@ -344,12 +372,16 @@
       " · exercices clos le " + annees.map(function (a) { return ent.exercices[a].date_cloture.split("-").reverse().join("/"); }).join(", ");
     tete.appendChild(el("p", { "class": "muted small" }, sous));
     f.appendChild(tete);
-    if (ent.lecture.synthese && ent.lecture.synthese.length) f.appendChild(el("p", { "class": "synthese" }, ent.lecture.synthese[0]));
+    if (ent.lecture.synthese && ent.lecture.synthese.length) f.appendChild(riche("p", ent.lecture.synthese[0], { "class": "synthese" }));
 
     var g = el("div", { "class": "graphes" });
     g.appendChild(graphe(NOMS.ca, "Chiffre d'affaires net", annees.map(function (a) {
       var p = ent.exercices[a].postes.chiffre_affaires_net;
       return { annee: a, valeur: p ? p.montant : null, sources: sourcesRatio(ent, a, ["chiffre_affaires_net"]) };
+    }), "M€"));
+    g.appendChild(graphe("Résultat d'exploitation", "en M€, tel que publié", annees.map(function (a) {
+      var p = ent.exercices[a].postes.resultat_exploitation;
+      return { annee: a, valeur: p ? p.montant : null, sources: sourcesRatio(ent, a, ["resultat_exploitation"]) };
     }), "M€"));
     var metriques = ent.marges_affichees.concat(["marge_exploitation", "poids_masse_salariale", "bfr_jours_ca"]);
     metriques.forEach(function (m) {
@@ -372,7 +404,7 @@
       var d = el("div");
       d.appendChild(el("h3", null, b[0]));
       var ul = el("ul");
-      b[1].forEach(function (t) { ul.appendChild(el("li", null, t)); });
+      b[1].forEach(function (t) { ul.appendChild(riche("li", t)); });
       d.appendChild(ul);
       lec.appendChild(d);
     });

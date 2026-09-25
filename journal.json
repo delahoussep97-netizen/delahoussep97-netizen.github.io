@@ -26,7 +26,7 @@
    "faux": "La règle interdisait une production stockée négative ; elle l'est pourtant en cas de déstockage (Antartic 2025 : −559 k€).",
    "repere": "À la première saisie réelle, le contrôle bloquait un montant pourtant exact.",
    "change": "Règle corrigée et justifiée dans le code : seuls les postes qui ne peuvent pas être négatifs sont contrôlés.",
-   "publie": true
+   "publie": false
   },
   {
    "id": "L1-c",
@@ -39,7 +39,7 @@
   },
   {
    "id": "L1-a",
-   "publie": true,
+   "publie": false,
    "titre": "Le mauvais filtre géographique",
    "contexte": "Recherche des entreprises du Loiret pour cette analyse.",
    "faux": "Le tri filtrait sur le département d'un établissement, pas du siège : il ramenait des sociétés parisiennes.",

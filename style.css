@@ -155,5 +155,14 @@ ol.etapes li { margin-bottom: 6px; }
 @media (forced-colors: active) { svg .barre-s, svg .pont { fill: CanvasText; } }
 table.sig { font-size: 0.8125rem; }
 table.sig td:first-child { min-width: 9.5rem; }
-@media (max-width: 600px) { table.sig td:first-child .muted, table.sig td:first-child br { display: none; } table.sig td, table.sig th { padding: 5px 6px; } }
+@media (max-width: 600px) { table.sig td, table.sig th { padding: 5px 6px; } table.sig td:first-child .muted { font-size: 0.6875rem; } }
 .synthese { font-size: 1rem; font-weight: 500; border-left: 3px solid var(--c1); padding: 4px 0 4px 10px; margin: 0 0 14px; }
+
+.tendance { margin: 0 0 2px; font-size: 0.8125rem; color: var(--text-2); }
+.tendance strong { color: var(--text); }
+svg .barre.passe { opacity: 0.45; }
+svg .val { font-weight: 400; fill: var(--text-2); }
+svg .val.fort { font-weight: 700; fill: var(--text); font-size: 12px; }
+table.sig tr.dont td { color: var(--text-2); font-size: 0.75rem; border-bottom-style: dotted; }
+table.sig tr.dont td:first-child { padding-left: 16px; }
+.lecture li strong, ol.etapes strong, .synthese strong { font-weight: 700; }
