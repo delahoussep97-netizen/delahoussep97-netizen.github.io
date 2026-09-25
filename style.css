@@ -268,3 +268,73 @@ details.tuile { margin-top: 0; }
 .journal { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
 .entree, .carte { background: var(--tuile); border: 0; box-shadow: var(--ombre); border-radius: 4px; }
 footer { border-top: 0; }
+
+/* ======================================================================
+   Tableau de bord façon Power BI + accroche (25/09/2026, v3)
+   ====================================================================== */
+:root { --bi-bandeau: #174a8b; --bi-jaune: #ffd24d; --c3: #eda100; --titre-tuile: #252423; --titre-tuile-texte: #ffffff; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bi-bandeau: #12345f; --c3: #c98500; --titre-tuile: #0b0b0b; } }
+:root[data-theme="dark"] { --bi-bandeau: #12345f; --c3: #c98500; --titre-tuile: #0b0b0b; }
+
+/* Accroche */
+.surtitre { text-transform: uppercase; letter-spacing: .08em; font-size: 0.75rem; font-weight: 700; color: var(--accent-bi); margin: 0 0 6px; }
+.hero h1 { font-size: clamp(2rem, 4vw, 3rem); letter-spacing: -0.02em; margin-bottom: 6px; }
+.hero .accroche { font-size: clamp(1.125rem, 1.8vw, 1.375rem); font-weight: 600; line-height: 1.35; }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 14px 0; }
+.bouton { display: inline-flex; align-items: center; min-height: 44px; padding: 10px 18px; border-radius: 6px; background: var(--accent-bi); color: #fff; font-weight: 600; text-decoration: none; }
+.bouton:hover { filter: brightness(1.08); }
+.bouton.secondaire { background: transparent; color: var(--accent); box-shadow: inset 0 0 0 2px var(--accent-bi); }
+
+/* Bandeau de chiffres clés */
+.chiffres { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 8px 0 4px; }
+@media (min-width: 900px) { .chiffres { grid-template-columns: repeat(4, 1fr); } }
+.chiffre { background: var(--bi-bandeau); color: #fff; border-radius: 6px; padding: 16px 18px; box-shadow: var(--ombre); }
+.chiffre-n { font-size: clamp(1.75rem, 3vw, 2.5rem); font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1; }
+.chiffre-l { display: block; margin-top: 6px; font-size: 0.875rem; color: #dbe7f6; }
+
+/* Tableau de bord */
+.dash { background: var(--canvas); border-radius: 6px; overflow: hidden; box-shadow: var(--ombre); }
+.dash-tete { display: grid; gap: 12px; align-items: center; background: var(--bi-bandeau); color: #fff; padding: 14px 16px; }
+@media (min-width: 1000px) { .dash-tete { grid-template-columns: minmax(0, 4fr) minmax(0, 5fr) minmax(0, 3fr); padding: 14px 20px; } }
+.dash-surtitre { margin: 0; text-transform: uppercase; letter-spacing: .06em; font-size: 0.75rem; font-weight: 700; color: var(--bi-jaune); }
+.dash-titre h3 { margin: 2px 0; font-size: clamp(1.25rem, 2.2vw, 1.75rem); font-weight: 800; color: #fff; text-transform: uppercase; letter-spacing: .01em; }
+.dash-sous { margin: 0; font-size: 0.8125rem; color: #dbe7f6; }
+.dash-onglets { display: flex; flex-wrap: wrap; gap: 4px; }
+.dash-onglets button { flex: 1 1 auto; min-height: 44px; border: 0; border-radius: 4px; padding: 8px 12px; font: inherit; font-size: 0.8125rem; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; cursor: pointer; background: rgba(255,255,255,.14); color: #fff; }
+.dash-onglets button[aria-selected="true"] { background: #0e2f58; color: var(--bi-jaune); box-shadow: inset 0 -3px 0 var(--bi-jaune); }
+.dash-onglets button:focus-visible { outline: 2px solid var(--bi-jaune); outline-offset: 2px; }
+.dash-segment { display: grid; gap: 4px; font-size: 0.8125rem; font-weight: 700; color: #fff; }
+.dash-segment select { font: inherit; font-size: 0.9375rem; font-weight: 600; min-height: 40px; padding: 6px 10px; border-radius: 4px; border: 0; background: #fff; color: #16150f; }
+.dash-page { padding: 12px; }
+@media (min-width: 1000px) { .dash-page { padding: 16px; } .rapport > .t6 { grid-column: span 6; } }
+.synthese.tuile { border-left: 4px solid var(--accent-bi); margin: 0; font-size: 1.0625rem; }
+
+/* Barres de titre sombres, comme les visuels Power BI */
+.dash .bloc-analyse > h3:first-child, .dash .graphe > h4:first-child, .dash .lecture .tuile > h3:first-child, .dash .questions-bloc > h3:first-child {
+  margin: -14px -16px 10px; padding: 8px 12px; background: var(--titre-tuile); color: var(--titre-tuile-texte);
+  text-align: center; font-size: 0.9375rem; font-weight: 700; border-radius: 4px 4px 0 0; }
+.dash .graphe > h4:first-child { margin: -12px -12px 8px; }
+.dash .questions-bloc.tuile { border-left: 0; }
+
+/* Jauges */
+.jauges { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.jauge-bloc { padding: 14px 12px 10px; }
+.dash .jauge-bloc > h3:first-child { margin: -14px -12px 6px; }
+.jauge-zone svg { display: block; width: 100%; max-width: 260px; margin: 0 auto; height: auto; }
+.jauge-fond { stroke: var(--surface-2); }
+.jauge-val { stroke: var(--c1); }
+.jauge-repere { stroke: var(--c3); stroke-width: 3; stroke-linecap: round; }
+.jauge-chiffre { font-size: 26px; font-weight: 300; fill: var(--text); font-variant-numeric: tabular-nums; }
+.jauge-borne { font-size: 10px; fill: var(--text-2); }
+.jauge-leg { display: flex; justify-content: center; gap: 12px; margin: 2px 0 0; font-size: 0.75rem; }
+.pastille.repere { width: 12px; height: 3px; background: var(--c3); border-radius: 2px; }
+.pastille.c3, svg .barre-s.c3 { background: var(--c3); fill: var(--c3); }
+
+/* Entonnoir */
+svg .entonnoir { fill: #1f4e8c; }
+svg .entonnoir.neg { fill: var(--baisse); }
+svg .val-inv { font-size: 12px; font-weight: 700; fill: #fff; font-variant-numeric: tabular-nums; }
+svg .val-s.fort { font-weight: 700; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) svg .entonnoir { fill: #3987e5; } }
+:root[data-theme="dark"] svg .entonnoir { fill: #3987e5; }
+.dash-page[hidden], [hidden] { display: none !important; }

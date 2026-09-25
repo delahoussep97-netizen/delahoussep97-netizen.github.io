@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Paul Delahousse — contrôle de gestion</title>
 <meta name="description" content="Contrôle de gestion et données : analyse des comptes publics de six entreprises du Loiret, chaque chiffre relié à sa source.">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css?v=20260925d">
 </head>
 <body>
 <nav class="barre-haut" aria-label="Navigation">
@@ -19,10 +19,15 @@
   <div class="hero">
     <!-- 1. Bandeau : le terrain commercial d'abord -->
     <header class="bandeau">
+      <p class="surtitre">Contrôle de gestion &amp; données · Orléans</p>
       <h1 id="nom">Paul Delahousse</h1>
-      <p class="role" id="role"></p>
       <p class="accroche" id="accroche"></p>
       <p class="muted" id="sous-accroche"></p>
+      <p class="actions">
+        <a class="bouton" href="#analyse">Voir les 6 analyses</a>
+        <a class="bouton secondaire" id="lien-cv-haut" href="#">Télécharger mon CV</a>
+      </p>
+      <p class="role" id="role" hidden></p>
       <ul class="parcours" id="parcours" aria-label="Parcours"></ul>
       <p class="contact-ligne" id="contact-haut"></p>
       <p class="perso" id="perso" hidden></p>
@@ -34,6 +39,8 @@
       <div class="offres" id="offres"></div>
     </section>
   </div>
+
+  <section class="chiffres" id="chiffres" aria-label="Le travail en chiffres"></section>
 
   <!-- 3. Analyse sur comptes publics -->
   <section id="analyse" aria-labelledby="t-analyse">
@@ -73,6 +80,6 @@
   </footer>
 </div>
 <div class="bulle" id="bulle" role="tooltip" hidden></div>
-<script src="app.js"></script>
+<script src="app.js?v=20260925d"></script>
 </body>
 </html>

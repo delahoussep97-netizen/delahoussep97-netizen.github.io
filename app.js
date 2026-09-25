@@ -35,8 +35,9 @@
       .replace(/([+\-−]?\d[\d\u202f\u00a0 ]*(?:,\d+)?\s?(?:M€|k€|%|pt|jours|j\b|€))/g, "<strong>$1</strong>");
     return n;
   }
+  var VERSION = "20260925d";
   function charger(url) {
-    return fetch(url).then(function (r) { if (!r.ok) throw new Error(url); return r.json(); });
+    return fetch(url + "?v=" + VERSION).then(function (r) { if (!r.ok) throw new Error(url); return r.json(); });
   }
 
   function formater(v, unite) {
@@ -247,11 +248,11 @@
 
   // B. Sur 100 € de chiffre d'affaires : première et dernière année
   function structure100(ent, annees) {
-    var a0 = annees[0], a1 = annees[annees.length - 1];
-    var s0 = ent.analyse.sig[a0].structure, s1 = ent.analyse.sig[a1].structure;
-    var b = bloc("Sur 100 € de chiffre d'affaires, où va l'argent ?", "Chaque poste rapporté au chiffre d'affaires, en euros pour 100 € vendus. Une valeur négative est un produit (reprises, subventions…).");
+    var a1 = annees[annees.length - 1], a0 = annees[annees.length - 2];
+    var s1 = ent.analyse.sig[a0].structure, s0 = ent.analyse.sig[a1].structure;   // s0 = année N (bleu), s1 = N-1 (jaune)
+    var b = bloc("Sur 100 € de chiffre d'affaires, où va l'argent ?", "Chaque poste rapporté au chiffre d'affaires, en euros pour 100 € vendus : " + a1 + " comparé à " + a0 + ". Une valeur négative est un produit (reprises, subventions…).");
     var leg = el("p", { "class": "legende small" });
-    [[a0, "c1"], [a1, "c2"]].forEach(function (x) {
+    [[a1, "c1"], [a0, "c3"]].forEach(function (x) {
       var s = el("span", { "class": "cle" }); s.appendChild(el("i", { "class": "pastille " + x[1] })); s.appendChild(document.createTextNode(x[0])); leg.appendChild(s);
     });
     b.appendChild(leg);
@@ -265,7 +266,7 @@
       var y = i * row;
       svg.appendChild(svgEl("line", { x1: x(0), x2: x(0), y1: y + lab - 2, y2: y + lab + 2 * barH + gap + 2, "class": "axe" }));
       svg.appendChild(svgEl("text", { x: zx0, y: y + 12, "class": "lib" }, p.poste));
-      [[s0[i], "c1", a0], [s1[i], "c2", a1]].forEach(function (q, k) {
+      [[s0[i], "c1", a1], [s1[i], "c3", a0]].forEach(function (q, k) {
         var v = q[0].pour_100, yb = y + lab + k * (barH + gap);
         var xa = Math.min(x(0), x(v)), w = Math.max(1, Math.abs(x(v) - x(0)));
         svg.appendChild(svgEl("rect", { x: xa, y: yb, width: w, height: barH, rx: 2, "class": "barre-s " + q[1] }));
@@ -407,22 +408,122 @@
   }
 
   /* ---------- Fiche entreprise ---------- */
-  function fiche(ent) {
+
+  /* ---------- Visuels « dashboard » ---------- */
+  // Jauge semi-circulaire : valeur N (arc bleu), repère N-1 (trait jaune)
+  function jauge(titre, v, vPrec, mini, maxi, aN, aP, formule) {
+    var b = el("div", { "class": "bloc-analyse jauge-bloc" });
+    b.appendChild(el("h3", null, titre));
+    var W = 200, H = 122, cx = 100, cy = 104, R = 78, ep = 22;
+    var svg = svgEl("svg", { viewBox: "0 0 " + W + " " + H, role: "img", "aria-label": titre + " : " + pct(v) + " en " + aN + ", " + pct(vPrec) + " en " + aP });
+    function ang(x) { var t = Math.max(0, Math.min(1, (x - mini) / (maxi - mini))); return Math.PI * (1 - t); }
+    function pt(r, t) { return [cx + r * Math.cos(t), cy - r * Math.sin(t)]; }
+    function arc(t0, t1, cls) {
+      var r = R - ep / 2, p0 = pt(r, t0), p1 = pt(r, t1);
+      return svgEl("path", { d: "M" + p0[0] + "," + p0[1] + " A" + r + "," + r + " 0 0 1 " + p1[0] + "," + p1[1], "class": cls, "stroke-width": ep, fill: "none" });
+    }
+    svg.appendChild(arc(Math.PI, 0, "jauge-fond"));
+    if (v != null) svg.appendChild(arc(Math.PI, ang(Math.max(v, mini)), "jauge-val"));
+    if (vPrec != null) {
+      var t = ang(vPrec), a1 = pt(R - ep - 3, t), a2 = pt(R + 3, t);
+      svg.appendChild(svgEl("line", { x1: a1[0], y1: a1[1], x2: a2[0], y2: a2[1], "class": "jauge-repere" }));
+    }
+    svg.appendChild(svgEl("text", { x: cx, y: cy - 8, "text-anchor": "middle", "class": "jauge-chiffre" }, v == null ? "n.p." : nf1.format(v * 100) + " %"));
+    svg.appendChild(svgEl("text", { x: cx - R + ep / 2, y: cy + 14, "text-anchor": "middle", "class": "jauge-borne" }, nf0.format(mini * 100) + " %"));
+    svg.appendChild(svgEl("text", { x: cx + R - ep / 2, y: cy + 14, "text-anchor": "middle", "class": "jauge-borne" }, nf0.format(maxi * 100) + " %"));
+    var zone = el("div", { "class": "jauge-zone" }); zone.appendChild(svg); b.appendChild(zone);
+    var leg = el("p", { "class": "jauge-leg" });
+    leg.appendChild(el("span", { "class": "cle" }, "")); leg.firstChild.appendChild(el("i", { "class": "pastille c1" })); leg.firstChild.appendChild(document.createTextNode(aN));
+    var s2 = el("span", { "class": "cle" }); s2.appendChild(el("i", { "class": "pastille repere" })); s2.appendChild(document.createTextNode(aP + " : " + pct(vPrec))); leg.appendChild(s2);
+    b.appendChild(leg);
+    surBulle(zone, "<b>" + titre + "</b><br>" + aN + " : " + pct(v) + "<br>" + aP + " : " + pct(vPrec) + (formule ? "<br><i>" + formule + "</i>" : ""));
+    return b;
+  }
+
+  // Entonnoir : du chiffre d'affaires au résultat d'exploitation
+  function entonnoir(ent, a1) {
+    var s = ent.analyse.sig[a1], ca = s.chiffre_affaires;
+    var b = bloc("Du chiffre d'affaires au résultat (" + a1 + ")");
+    var etapes = [["Chiffre d'affaires", ca], ["Valeur ajoutée", s.valeur_ajoutee], ["EBE", s.ebe], ["Résultat d'exploitation", s.rex_publie]];
+    var W = 460, row = 62, H = etapes.length * row, lab = 150, zone = W - lab - 8;
+    var svg = svgEl("svg", { viewBox: "0 0 " + W + " " + H, role: "img", "aria-label": "Du chiffre d'affaires au résultat d'exploitation en " + a1 });
+    etapes.forEach(function (e, i) {
+      var y = i * row + 6, v = e[1], w = Math.max(v > 0 ? 3 : 0, v / ca * zone), x = lab + (zone - w) / 2;
+      svg.appendChild(svgEl("text", { x: 0, y: y + 30, "class": "lib fort" }, e[0]));
+      svg.appendChild(svgEl("rect", { x: x, y: y, width: Math.max(w, 0.1), height: row - 10, "class": "entonnoir" + (v < 0 ? " neg" : "") }));
+      var txt = meur(v) + " · " + nf1.format(v / ca * 100) + " %";
+      var dansBarre = w > 150;
+      svg.appendChild(svgEl("text", { x: dansBarre ? lab + zone / 2 : lab + zone / 2 + w / 2 + 6, y: y + 30, "text-anchor": dansBarre ? "middle" : "start", "class": dansBarre ? "val-inv" : "val-s fort" }, txt));
+      var cible = svgEl("rect", { x: 0, y: y - 4, width: W, height: row, "class": "cible" });
+      surBulle(cible, "<b>" + e[0] + " " + a1 + "</b><br>" + meur(v) + " soit " + nf1.format(v / ca * 100) + " % du CA");
+      svg.appendChild(cible);
+    });
+    var zoneEl = el("div", { "class": "graphe-large" }); zoneEl.appendChild(svg); b.appendChild(zoneEl);
+    b.appendChild(el("p", { "class": "small muted" }, "Chaque barre est proportionnelle au chiffre d'affaires. Un EBE ou un résultat négatif n'a pas de barre et s'affiche en rouge."));
+    return b;
+  }
+
+  /* ---------- Fiche entreprise : rapport en 4 pages ---------- */
+  var pageActive = 0;
+  function fiche(ent, ents, choisir) {
     var f = $("fiche");
     f.innerHTML = "";
-    f.className = "rapport";
+    f.className = "dash";
     var annees = Object.keys(ent.exercices).sort();
-    var R = ent.ratios.par_exercice;
+    var R = ent.ratios.par_exercice, S = ent.analyse.sig;
+    var a1 = annees[annees.length - 1], a0 = annees[annees.length - 2];
 
-    var tete = el("div", { "class": "fiche-tete tuile t12" });
-    tete.appendChild(el("h3", null, ent.nom));
-    var sous = ent.secteur + " · " + ent.ville + " · " + (ent.type === "distribution" ? "distribution" : "industrie") +
-      " · exercices clos le " + annees.map(function (a) { return ent.exercices[a].date_cloture.split("-").reverse().join("/"); }).join(", ");
-    tete.appendChild(el("p", { "class": "muted small" }, sous));
-    if (ent.lecture.synthese && ent.lecture.synthese.length) tete.appendChild(riche("p", ent.lecture.synthese[0], { "class": "synthese" }));
+    // Bandeau bleu : titre, onglets, segment
+    var tete = el("div", { "class": "dash-tete" });
+    var titre = el("div", { "class": "dash-titre" });
+    titre.appendChild(el("p", { "class": "dash-surtitre" }, "Analyse financière · comptes publics"));
+    titre.appendChild(el("h3", null, ent.nom));
+    titre.appendChild(el("p", { "class": "dash-sous" }, ent.secteur + " · " + ent.ville + " · exercices " + annees.join(", ")));
+    tete.appendChild(titre);
+    var onglets = el("div", { "class": "dash-onglets", role: "tablist", "aria-label": "Pages du rapport" });
+    var noms = ["Vue d'ensemble", "Compte de résultat", "Analyse des écarts", "Lecture et questions"];
+    tete.appendChild(onglets);
+    var seg = el("label", { "class": "dash-segment" });
+    seg.appendChild(el("span", null, "Sélectionner l'entreprise"));
+    var sel = el("select", { "aria-label": "Sélectionner l'entreprise" });
+    ents.forEach(function (x) { var o = el("option", { value: x.slug }, x.nom); if (x.slug === ent.slug) o.selected = true; sel.appendChild(o); });
+    sel.addEventListener("change", function () { choisir(sel.value); });
+    seg.appendChild(sel);
+    tete.appendChild(seg);
     f.appendChild(tete);
-    if (ent.analyse) f.appendChild(kpis(ent, annees));
 
+    var pages = noms.map(function (n, i) {
+      var p = el("div", { "class": "rapport dash-page", role: "tabpanel", id: "page-" + i, "aria-label": n });
+      f.appendChild(p);
+      return p;
+    });
+    var tabs = noms.map(function (n, i) {
+      var t = el("button", { type: "button", role: "tab", "aria-controls": "page-" + i, id: "onglet-" + i }, n);
+      t.addEventListener("click", function () { montrer(i); t.focus(); });
+      t.addEventListener("keydown", function (e) {
+        if (e.key === "ArrowRight" || e.key === "ArrowLeft") { e.preventDefault(); var k = (i + (e.key === "ArrowRight" ? 1 : noms.length - 1)) % noms.length; montrer(k); tabs[k].focus(); }
+      });
+      onglets.appendChild(t);
+      return t;
+    });
+    function montrer(i) {
+      pageActive = i; cacherBulle();
+      tabs.forEach(function (t, k) { t.setAttribute("aria-selected", String(k === i)); t.tabIndex = k === i ? 0 : -1; });
+      pages.forEach(function (p, k) { p.hidden = k !== i; });
+    }
+
+    // Page 1 : vue d'ensemble
+    var p1 = pages[0];
+    if (ent.lecture.synthese && ent.lecture.synthese.length) p1.appendChild(riche("p", ent.lecture.synthese[0], { "class": "synthese tuile t12" }));
+    p1.appendChild(kpis(ent, annees));
+    var ent1 = entonnoir(ent, a1); ent1.classList.add("t6"); p1.appendChild(ent1);
+    var jg = el("div", { "class": "jauges t6" });
+    var mKey = ent.type === "distribution" ? "taux_marge_commerciale" : "taux_marge_sur_matieres";
+    jg.appendChild(jauge(ent.type === "distribution" ? "Marge commerciale" : "Marge sur matières", R[a1][mKey].valeur, R[a0][mKey].valeur, 0, 1, a1, a0, R[a1][mKey].formule));
+    jg.appendChild(jauge("Valeur ajoutée / CA", S[a1].taux.valeur_ajoutee, S[a0].taux.valeur_ajoutee, 0, 0.4, a1, a0, "Valeur ajoutée / chiffre d'affaires"));
+    jg.appendChild(jauge("Masse salariale / CA", R[a1].poids_masse_salariale.valeur, R[a0].poids_masse_salariale.valeur, 0, 0.3, a1, a0, R[a1].poids_masse_salariale.formule));
+    jg.appendChild(jauge("Résultat d'exploitation / CA", R[a1].marge_exploitation.valeur, R[a0].marge_exploitation.valeur, -0.05, 0.1, a1, a0, R[a1].marge_exploitation.formule));
+    p1.appendChild(jg);
     var g = el("div", { "class": "graphes t12" });
     g.appendChild(graphe(NOMS.ca, "Chiffre d'affaires net", annees.map(function (a) {
       var p = ent.exercices[a].postes.chiffre_affaires_net;
@@ -432,23 +533,28 @@
       var p = ent.exercices[a].postes.resultat_exploitation;
       return { annee: a, valeur: p ? p.montant : null, sources: sourcesRatio(ent, a, ["resultat_exploitation"]) };
     }), "M€"));
-    var metriques = ent.marges_affichees.concat(["marge_exploitation", "poids_masse_salariale", "bfr_jours_ca"]);
-    metriques.forEach(function (m) {
+    ent.marges_affichees.concat(["marge_exploitation", "poids_masse_salariale", "bfr_jours_ca"]).forEach(function (m) {
       var r0 = R[annees[0]][m];
       g.appendChild(graphe(NOMS[m], r0.formule, annees.map(function (a) {
         var r = R[a][m];
         return { annee: a, valeur: r.valeur, sources: sourcesRatio(ent, a, r.postes) };
       }), r0.unite));
     });
-    f.appendChild(g);
-    if (ent.analyse) {
-      var t1 = tableauSIG(ent, annees); t1.classList.add("t7");
-      var t2 = structure100(ent, annees); t2.classList.add("t5");
-      var t3 = pont(ent, annees); t3.classList.add("t7");
-      var t4 = calcul(ent, annees); t4.classList.add("t5");
-      [t1, t2, t3, t4].forEach(function (x) { f.appendChild(x); });
-    }
+    p1.appendChild(g);
 
+    // Page 2 : compte de résultat
+    var p2 = pages[1];
+    var t1 = tableauSIG(ent, annees); t1.classList.add("t7"); p2.appendChild(t1);
+    var t2 = structure100(ent, annees); t2.classList.add("t5"); p2.appendChild(t2);
+
+    // Page 3 : analyse des écarts
+    var p3 = pages[2];
+    var t3 = pont(ent, annees); t3.classList.add("t7"); p3.appendChild(t3);
+    var t4 = calcul(ent, annees); t4.classList.add("t5"); p3.appendChild(t4);
+
+    // Page 4 : lecture, questions, données
+    var f0 = f;
+    f = pages[3];
     var lec = el("div", { "class": "lecture t8" });
     [["Ce qui se voit", ent.lecture.ce_qui_se_voit], ["Ce qui ne se voit pas dans des comptes publics", ent.lecture.ce_qui_ne_se_voit_pas]].forEach(function (b) {
       var d = el("div", { "class": "tuile" });
@@ -540,6 +646,10 @@
     });
     src.appendChild(ul2);
     f.appendChild(src);
+
+    // les ratios détaillés vont aussi sur la page « Analyse des écarts »
+    f = f0;
+    montrer(pageActive);
   }
 
   /* ---------- Page ---------- */
@@ -568,6 +678,7 @@
       z.appendChild(el("a", { href: p.linkedin, rel: "noopener" }, "LinkedIn"));
     });
     $("lien-cv").setAttribute("href", p.cv);
+    if ($("lien-cv-haut")) $("lien-cv-haut").setAttribute("href", p.cv);
     $("certifs").textContent = "Certifications obtenues : " + p.certifications.join(" · ") + ".";
     var o = $("offres");
     ["immersion", "diagnostic_48h"].forEach(function (k) {
@@ -606,21 +717,47 @@
     });
   }
 
+  function initChiffres(data) {
+    var ents = data.entreprises, ex = 0, montants = 0, coherents = 0;
+    ents.forEach(function (e) {
+      Object.keys(e.exercices).forEach(function (a) { ex++; montants += Object.keys(e.exercices[a].postes).length; });
+      Object.keys(e.analyse.sig).forEach(function (a) { if (e.analyse.sig[a].rex_coherent) coherents++; });
+    });
+    var defs = [[ents.length, "entreprises du Loiret analysées"], [ex, "exercices comptables lus"], [montants, "montants saisis, chacun avec sa page"], [Math.round(coherents / ex * 100), "des résultats recalculés à l'euro près", "%"]];
+    var z = $("chiffres");
+    defs.forEach(function (d) {
+      var c = el("div", { "class": "chiffre" });
+      var n = el("span", { "class": "chiffre-n", "data-cible": String(d[0]) }, nf0.format(d[0]));
+      c.appendChild(n);
+      if (d[2]) c.appendChild(el("span", { "class": "chiffre-n" }, " " + d[2]));
+      c.appendChild(el("span", { "class": "chiffre-l" }, d[1]));
+      z.appendChild(c);
+    });
+    // Compteur animé, une seule fois, et seulement si l'utilisateur accepte les animations
+    var reduit = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var nums = z.querySelectorAll("[data-cible]");
+    function finir() { nums.forEach(function (n) { n.textContent = nf0.format(+n.dataset.cible); }); }
+    if (reduit || !("IntersectionObserver" in window)) { finir(); return; }
+    var obs = new IntersectionObserver(function (es) {
+      if (!es.some(function (e) { return e.isIntersecting; })) return;
+      obs.disconnect();
+      var t0 = performance.now();
+      (function pas(t) {
+        var k = Math.min(1, (t - t0) / 900), e = 1 - Math.pow(1 - k, 3);
+        nums.forEach(function (n) { n.textContent = nf0.format(Math.round(+n.dataset.cible * e)); });
+        if (k < 1) requestAnimationFrame(pas);
+      })(t0);
+    });
+    obs.observe(z);
+  }
+
   function initAnalyse(data, slugInitial) {
     var ents = data.entreprises;
-    var choix = $("choix");
-    var boutons = [];
+    $("choix").hidden = true;
     function selectionner(slug) {
       var e = ents.filter(function (x) { return x.slug === slug; })[0] || ents[0];
-      boutons.forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.slug === e.slug)); });
-      fiche(e);
+      fiche(e, ents, selectionner);
     }
-    ents.forEach(function (e) {
-      var b = el("button", { type: "button", "data-slug": e.slug, "aria-pressed": "false" }, e.nom);
-      b.addEventListener("click", function () { selectionner(e.slug); cacherBulle(); });
-      choix.appendChild(b);
-      boutons.push(b);
-    });
     selectionner(slugInitial);
   }
 
@@ -666,6 +803,7 @@
     .then(function (d) {
       var perso = code && d[3][code] ? Object.assign({ code: code }, d[3][code]) : null;
       initProfil(d[0], perso);
+      initChiffres(d[1]);
       initAnalyse(d[1], params.get("e") || (perso && perso.entreprise) || d[1].entreprises[0].slug);
       initJournal(d[2]);
       compteur(d[0].compteur_goatcounter, perso ? perso.code : null);
