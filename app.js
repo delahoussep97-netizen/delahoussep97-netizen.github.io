@@ -88,7 +88,7 @@
     function ecart(v0, v1) {
       if (unite === "%") return (v1 - v0 >= 0 ? "+" : "") + nf1.format((v1 - v0) * 100) + " pt";
       if (unite === "jours") return (v1 - v0 >= 0 ? "+" : "") + nf0.format(v1 - v0) + " j";
-      return v0 > 0 ? (v1 - v0 >= 0 ? "+" : "") + nf1.format((v1 / v0 - 1) * 100) + " %"
+      return v0 > 0 && v0 >= 0.2 * Math.abs(v1) ? (v1 - v0 >= 0 ? "+" : "") + nf1.format((v1 / v0 - 1) * 100) + " %"
                     : (v1 - v0 >= 0 ? "+" : "") + nf1.format((v1 - v0) / 1e6) + " M€";
     }
     if (connus.length >= 2) {
@@ -198,10 +198,12 @@
     var S = ent.analyse.sig;
     var b = bloc("Le compte de résultat en cascade", "Soldes intermédiaires de gestion (plan comptable général), recalculés à partir des montants saisis. Entre parenthèses : en % du chiffre d'affaires.");
     var distri = ent.type === "distribution";
+    var mixte = annees.some(function (a) { return S[a].chiffre_affaires && S[a].ventes_marchandises / S[a].chiffre_affaires > 0.02; }) &&
+                annees.some(function (a) { return S[a].chiffre_affaires && S[a].production_vendue / S[a].chiffre_affaires > 0.02; });
     var lignes = [
       ["Chiffre d'affaires", "chiffre_affaires", "= ventes de marchandises + production vendue", false, true],
-      ["   dont ventes de marchandises (négoce)", "ventes_marchandises", "produits achetés et revendus en l'état", !(annees.some(function (a) { return S[a].ventes_marchandises; }) && annees.some(function (a) { return S[a].production_vendue; })), false, true],
-      ["   dont production vendue (fabrication)", "production_vendue", "produits fabriqués et vendus", !(annees.some(function (a) { return S[a].ventes_marchandises; }) && annees.some(function (a) { return S[a].production_vendue; })), false, true],
+      ["   dont ventes de marchandises (négoce)", "ventes_marchandises", "produits achetés et revendus en l'état", !mixte, false, true],
+      ["   dont production vendue (fabrication)", "production_vendue", "produits fabriqués et vendus", !mixte, false, true],
       ["Marge commerciale (négoce)", "marge_commerciale", "= ventes de marchandises − coût d'achat des marchandises vendues", !annees.some(function (a) { return S[a].marge_commerciale; })],
       ["+ Production de l'exercice (fabrication)", "production", "= production vendue + production stockée (fabriquée, pas encore vendue) + immobilisée", distri && !annees.some(function (a) { return S[a].production; })],
       ["− Consommations en provenance des tiers", "consommations_tiers", "= matières premières consommées + charges externes", false],
@@ -258,7 +260,7 @@
     var W = 320, lab = 16, barH = 9, gap = 2, row = lab + 2 * barH + gap + 12, H = s0.length * row;
     var zx0 = 4, zx1 = W - 54;
     var x = function (v) { return zx0 + (v - min) / (max - min) * (zx1 - zx0); };
-    var svg = svgEl("svg", { viewBox: "0 0 " + W + " " + H, role: "img", "aria-label": "Structure des charges pour 100 € de chiffre d'affaires, " + a0 + " et " + a1 });
+    var svg = svgEl("svg", { style: "max-width:" + Math.round(W * 1.45) + "px", viewBox: "0 0 " + W + " " + H, role: "img", "aria-label": "Structure des charges pour 100 € de chiffre d'affaires, " + a0 + " et " + a1 });
     s0.forEach(function (p, i) {
       var y = i * row;
       svg.appendChild(svgEl("line", { x1: x(0), x2: x(0), y1: y + lab - 2, y2: y + lab + 2 * barH + gap + 2, "class": "axe" }));
@@ -295,9 +297,9 @@
       });
       var all = [0].concat([].concat.apply([], pts));
       var min = Math.min.apply(null, all), max = Math.max.apply(null, all);
-      var W = 320, row = 34, H = etapes.length * row, zx0 = 4, zx1 = W - 60;
+      var W = 460, row = 34, H = etapes.length * row, zx0 = 4, zx1 = W - 70;
       var x = function (v) { return zx0 + (v - min) / (max - min || 1) * (zx1 - zx0); };
-      var svg = svgEl("svg", { viewBox: "0 0 " + W + " " + H, role: "img", "aria-label": "Pont du résultat d'exploitation de " + prec + " à " + an });
+      var svg = svgEl("svg", { viewBox: "0 0 " + W + " " + H, role: "img", "aria-label": "Pont du résultat d'exploitation de " + prec + " à " + an, style: "max-width:" + Math.round(W * 1.3) + "px" });
       etapes.forEach(function (e, i) {
         var y = i * row, a = pts[i][0], z = pts[i][1];
         svg.appendChild(svgEl("line", { x1: x(0), x2: x(0), y1: y + 13, y2: y + 29, "class": "axe" }));
@@ -339,7 +341,7 @@
       var P = ent.exercices[a1].postes, mt = function (k) { return P[k] ? P[k].montant : 0; };
       li("Marge commerciale = ventes de marchandises " + meur(mt("ventes_marchandises")) + " − achats de marchandises " +
          meur(mt("achats_marchandises")) + " − variation de stock " + meur(mt("variation_stock_marchandises")) +
-         " = " + meur(s.marge_commerciale) + (mt("ventes_marchandises") ? ", soit " + pct(s.marge_commerciale / mt("ventes_marchandises")) + " des ventes de marchandises." : "."));
+         " = " + meur(s.marge_commerciale) + (mt("ventes_marchandises") > 0.02 * s.chiffre_affaires ? ", soit " + pct(s.marge_commerciale / mt("ventes_marchandises")) + " des ventes de marchandises." : "."));
     }
     li("Valeur ajoutée = marge commerciale " + meur(s.marge_commerciale) + " + production " + meur(s.production) +
        " − consommations en provenance des tiers " + meur(s.consommations_tiers) + " = " + meur(s.valeur_ajoutee) +
@@ -359,22 +361,69 @@
     return b;
   }
 
+  /* ---------- Cartes d'indicateurs (façon Power BI) ---------- */
+  function sparkline(vals) {
+    var W = 64, H = 22, v = vals.filter(function (x) { return x != null; });
+    var svg = svgEl("svg", { viewBox: "0 0 " + W + " " + H, "class": "spark", "aria-hidden": "true" });
+    if (v.length < 2) return svg;
+    var mn = Math.min.apply(null, v), mx = Math.max.apply(null, v), d = mx - mn || 1;
+    var pts = v.map(function (x, i) { return [3 + i * (W - 6) / (v.length - 1), H - 3 - (x - mn) / d * (H - 6)]; });
+    svg.appendChild(svgEl("polyline", { points: pts.map(function (p) { return p.join(","); }).join(" "), "class": "spark-ligne" }));
+    var last = pts[pts.length - 1];
+    svg.appendChild(svgEl("circle", { cx: last[0], cy: last[1], r: 2.8, "class": "spark-point" }));
+    return svg;
+  }
+  function kpis(ent, annees) {
+    var S = ent.analyse.sig, R = ent.ratios.par_exercice, a1 = annees[annees.length - 1], a0 = annees[annees.length - 2];
+    var marge = ent.type === "distribution" ? "taux_marge_commerciale" : "taux_marge_sur_matieres";
+    var defs = [
+      ["Chiffre d'affaires", annees.map(function (a) { return S[a].chiffre_affaires; }), "M€"],
+      [ent.type === "distribution" ? "Marge commerciale" : "Marge sur matières", annees.map(function (a) { return R[a][marge].valeur; }), "%"],
+      ["Valeur ajoutée / CA", annees.map(function (a) { return S[a].taux.valeur_ajoutee; }), "%"],
+      ["EBE / CA", annees.map(function (a) { return S[a].taux.ebe; }), "%"],
+      ["Résultat d'exploitation", annees.map(function (a) { return S[a].rex_publie; }), "M€"],
+      ["BFR", annees.map(function (a) { return R[a].bfr_jours_ca.valeur; }), "j"]
+    ];
+    var row = el("div", { "class": "kpis t12" });
+    defs.forEach(function (d) {
+      var v = d[1], x1 = v[v.length - 1], x0 = v[v.length - 2];
+      var c = el("div", { "class": "kpi tuile" });
+      c.appendChild(el("p", { "class": "kpi-titre" }, d[0]));
+      var val = d[2] === "M€" ? nf1.format(x1 / 1e6) + " M€" : d[2] === "%" ? nf1.format(x1 * 100) + " %" : nf0.format(x1) + " j de CA";
+      c.appendChild(el("p", { "class": "kpi-valeur" }, x1 == null ? "n.p." : val));
+      var bas = el("div", { "class": "kpi-bas" });
+      if (x1 != null && x0 != null) {
+        var dv = d[2] === "%" ? (x1 - x0 >= 0 ? "+" : "") + nf1.format((x1 - x0) * 100) + " pt"
+               : d[2] === "j" ? (x1 - x0 >= 0 ? "+" : "") + nf0.format(x1 - x0) + " j"
+               : x0 > 0 && x0 >= 0.2 * Math.abs(x1) ? (x1 - x0 >= 0 ? "+" : "") + nf1.format((x1 / x0 - 1) * 100) + " %" : (x1 - x0 >= 0 ? "+" : "") + nf1.format((x1 - x0) / 1e6) + " M€";
+        bas.appendChild(el("span", { "class": "kpi-delta" }, (x1 >= x0 ? "▲ " : "▼ ") + dv + " vs " + a0));
+      }
+      bas.appendChild(sparkline(v));
+      c.appendChild(bas);
+      c.setAttribute("title", d[0] + " — " + annees.map(function (a, i) { return a + " : " + (v[i] == null ? "n.p." : (d[2] === "M€" ? nf1.format(v[i] / 1e6) + " M€" : d[2] === "%" ? nf1.format(v[i] * 100) + " %" : nf0.format(v[i]) + " j")); }).join(" · "));
+      row.appendChild(c);
+    });
+    return row;
+  }
+
   /* ---------- Fiche entreprise ---------- */
   function fiche(ent) {
     var f = $("fiche");
     f.innerHTML = "";
+    f.className = "rapport";
     var annees = Object.keys(ent.exercices).sort();
     var R = ent.ratios.par_exercice;
 
-    var tete = el("div", { "class": "fiche-tete" });
+    var tete = el("div", { "class": "fiche-tete tuile t12" });
     tete.appendChild(el("h3", null, ent.nom));
     var sous = ent.secteur + " · " + ent.ville + " · " + (ent.type === "distribution" ? "distribution" : "industrie") +
       " · exercices clos le " + annees.map(function (a) { return ent.exercices[a].date_cloture.split("-").reverse().join("/"); }).join(", ");
     tete.appendChild(el("p", { "class": "muted small" }, sous));
+    if (ent.lecture.synthese && ent.lecture.synthese.length) tete.appendChild(riche("p", ent.lecture.synthese[0], { "class": "synthese" }));
     f.appendChild(tete);
-    if (ent.lecture.synthese && ent.lecture.synthese.length) f.appendChild(riche("p", ent.lecture.synthese[0], { "class": "synthese" }));
+    if (ent.analyse) f.appendChild(kpis(ent, annees));
 
-    var g = el("div", { "class": "graphes" });
+    var g = el("div", { "class": "graphes t12" });
     g.appendChild(graphe(NOMS.ca, "Chiffre d'affaires net", annees.map(function (a) {
       var p = ent.exercices[a].postes.chiffre_affaires_net;
       return { annee: a, valeur: p ? p.montant : null, sources: sourcesRatio(ent, a, ["chiffre_affaires_net"]) };
@@ -393,15 +442,16 @@
     });
     f.appendChild(g);
     if (ent.analyse) {
-      f.appendChild(tableauSIG(ent, annees));
-      f.appendChild(structure100(ent, annees));
-      f.appendChild(pont(ent, annees));
-      f.appendChild(calcul(ent, annees));
+      var t1 = tableauSIG(ent, annees); t1.classList.add("t7");
+      var t2 = structure100(ent, annees); t2.classList.add("t5");
+      var t3 = pont(ent, annees); t3.classList.add("t7");
+      var t4 = calcul(ent, annees); t4.classList.add("t5");
+      [t1, t2, t3, t4].forEach(function (x) { f.appendChild(x); });
     }
 
-    var lec = el("div", { "class": "lecture" });
+    var lec = el("div", { "class": "lecture t8" });
     [["Ce qui se voit", ent.lecture.ce_qui_se_voit], ["Ce qui ne se voit pas dans des comptes publics", ent.lecture.ce_qui_ne_se_voit_pas]].forEach(function (b) {
-      var d = el("div");
+      var d = el("div", { "class": "tuile" });
       d.appendChild(el("h3", null, b[0]));
       var ul = el("ul");
       b[1].forEach(function (t) { ul.appendChild(riche("li", t)); });
@@ -410,7 +460,7 @@
     });
     f.appendChild(lec);
 
-    var q = el("div", { "class": "questions-bloc" });
+    var q = el("div", { "class": "questions-bloc tuile t4" });
     q.appendChild(el("h3", null, "Mes trois questions"));
     var ol = el("ol", { "class": "questions" });
     ent.lecture.questions.forEach(function (t) { ol.appendChild(el("li", null, t)); });
@@ -418,7 +468,7 @@
     f.appendChild(q);
 
     // Tableau de tous les ratios (vue accessible, sans graphe)
-    var det = el("details");
+    var det = el("details", { "class": "tuile t12" });
     det.appendChild(el("summary", null, "Tous les ratios, avec leur formule"));
     var sc = el("div", { "class": "table-scroll" });
     var tab = el("table");
@@ -455,7 +505,7 @@
     f.appendChild(det);
 
     // Montants saisis : chaque chiffre avec sa page
-    var det2 = el("details");
+    var det2 = el("details", { "class": "tuile t12" });
     det2.appendChild(el("summary", null, "Les montants saisis, ligne par ligne, avec leur page"));
     annees.forEach(function (a) {
       det2.appendChild(el("h3", null, "Exercice " + a));
@@ -478,7 +528,7 @@
     });
     f.appendChild(det2);
 
-    var src = el("details");
+    var src = el("details", { "class": "tuile t12" });
     src.appendChild(el("summary", null, "Sources"));
     var ul2 = el("ul", { "class": "sources" });
     ent.sources.forEach(function (s) {

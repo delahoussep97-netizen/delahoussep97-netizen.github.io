@@ -8,24 +8,32 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
+<nav class="barre-haut" aria-label="Navigation">
+  <div class="wrap barre-contenu">
+    <a class="marque" href="#">Paul Delahousse <span>· contrôle de gestion &amp; données</span></a>
+    <span class="liens"><a href="#analyse">Analyses</a><a href="#ia">Méthode</a><a href="cas-pratiques.html">Cas pratiques</a><a href="#contact">Contact</a></span>
+  </div>
+</nav>
 <div class="wrap">
 
-  <!-- 1. Bandeau : le terrain commercial d'abord -->
-  <header class="bandeau">
-    <h1 id="nom">Paul Delahousse</h1>
-    <p class="role" id="role"></p>
-    <p class="accroche" id="accroche"></p>
-    <p class="muted" id="sous-accroche"></p>
-    <ul class="parcours" id="parcours" aria-label="Parcours"></ul>
-    <p class="contact-ligne" id="contact-haut"></p>
-    <p class="perso" id="perso" hidden></p>
-  </header>
+  <div class="hero">
+    <!-- 1. Bandeau : le terrain commercial d'abord -->
+    <header class="bandeau">
+      <h1 id="nom">Paul Delahousse</h1>
+      <p class="role" id="role"></p>
+      <p class="accroche" id="accroche"></p>
+      <p class="muted" id="sous-accroche"></p>
+      <ul class="parcours" id="parcours" aria-label="Parcours"></ul>
+      <p class="contact-ligne" id="contact-haut"></p>
+      <p class="perso" id="perso" hidden></p>
+    </header>
 
-  <!-- 2. L'offre, visible sans défiler -->
-  <section id="offre" aria-labelledby="t-offre">
-    <h2 id="t-offre">Pour commencer sans risque</h2>
-    <div class="offres" id="offres"></div>
-  </section>
+    <!-- 2. L'offre, visible sans défiler -->
+    <section id="offre" aria-labelledby="t-offre">
+      <h2 id="t-offre">Pour commencer sans risque</h2>
+      <div class="offres" id="offres"></div>
+    </section>
+  </div>
 
   <!-- 3. Analyse sur comptes publics -->
   <section id="analyse" aria-labelledby="t-analyse">

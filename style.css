@@ -138,7 +138,7 @@ table.sig tr.solde td { font-weight: 600; border-top: 1px solid var(--text-3); }
 table.sig .pct { color: var(--text-3); font-size: 0.75rem; }
 .controle { margin: 8px 0 0; color: var(--text-2); }
 .graphe-large svg { display: block; width: 100%; height: auto; overflow: visible; }
-@media (min-width: 720px) { .graphe-large { max-width: 640px; } }
+
 svg .lib { font-size: 10px; fill: var(--text-2); }
 svg .lib.fort { fill: var(--text); font-weight: 600; }
 svg .val-s { font-size: 9.5px; fill: var(--text); font-variant-numeric: tabular-nums; }
@@ -166,3 +166,105 @@ svg .val.fort { font-weight: 700; fill: var(--text); font-size: 12px; }
 table.sig tr.dont td { color: var(--text-2); font-size: 0.75rem; border-bottom-style: dotted; }
 table.sig tr.dont td:first-child { padding-left: 16px; }
 .lecture li strong, ol.etapes strong, .synthese strong { font-weight: 700; }
+
+/* ======================================================================
+   Mise en page large, rendu « rapport Power BI » (25/09/2026)
+   ====================================================================== */
+:root {
+  --canvas: #f3f2f1; --tuile: #ffffff; --ombre: 0 1.6px 3.6px rgba(0,0,0,.13), 0 .3px .9px rgba(0,0,0,.11);
+  --barre: #252423; --barre-texte: #ffffff; --accent-bi: #2a78d6;
+  --font: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --canvas: #121211; --tuile: #1f1f1e; --ombre: 0 1px 3px rgba(0,0,0,.5); --barre: #0b0b0b; --accent-bi: #3987e5; }
+}
+:root[data-theme="dark"] { --canvas: #121211; --tuile: #1f1f1e; --ombre: 0 1px 3px rgba(0,0,0,.5); --barre: #0b0b0b; --accent-bi: #3987e5; }
+
+body { background: var(--canvas); }
+.wrap { max-width: 1280px; }
+section { border-top: 0; }
+
+/* Barre du haut */
+.barre-haut { background: var(--barre); color: var(--barre-texte); position: sticky; top: 0; z-index: 10; }
+.barre-contenu { display: flex; align-items: center; justify-content: space-between; min-height: 48px; gap: 12px; }
+.marque { color: var(--barre-texte); text-decoration: none; font-weight: 600; font-size: 0.9375rem; }
+.marque span { font-weight: 400; opacity: .75; }
+.liens { display: none; gap: 20px; }
+.liens a { color: var(--barre-texte); opacity: .85; text-decoration: none; font-size: 0.875rem; }
+.liens a:hover { opacity: 1; text-decoration: underline; }
+@media (min-width: 760px) { .liens { display: flex; } }
+@media (max-width: 480px) { .marque span { display: none; } }
+
+/* Hero : identité + offre côte à côte */
+.hero { display: grid; gap: 16px; padding: 20px 0 8px; }
+.hero > header, .hero > section { background: var(--tuile); box-shadow: var(--ombre); border-radius: 6px; padding: 18px 20px; }
+.hero > section { align-self: start; }
+@media (min-width: 900px) { .hero { grid-template-columns: 7fr 5fr; } }
+.hero h1 { font-size: 2rem; }
+#offre .offres { grid-template-columns: 1fr !important; }
+#offre .carte { border-left: 4px solid var(--accent-bi); }
+
+/* Sections sous forme de panneaux */
+#analyse, #ia, #cas, #mission { padding: 24px 0 8px; }
+#analyse > h2, #ia > h2, #cas > h2 { font-size: 1.375rem; }
+
+/* Sélecteur d'entreprise façon « segment » Power BI */
+.choix { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+@media (min-width: 700px) { .choix { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 1100px) { .choix { grid-template-columns: repeat(6, 1fr); } }
+.choix button { border-radius: 4px; background: var(--tuile); box-shadow: var(--ombre); border: 0; border-left: 4px solid transparent; text-align: left; font-weight: 600; padding: 10px 12px; }
+.choix button[aria-pressed="true"] { background: var(--tuile); color: var(--text); border-left-color: var(--accent-bi); box-shadow: 0 0 0 2px var(--accent-bi); }
+.choix.petit { display: flex; }
+.choix.petit button { box-shadow: none; border: 1px solid var(--line); border-radius: 999px; font-weight: 500; }
+.choix.petit button[aria-pressed="true"] { background: var(--text); color: var(--bg); box-shadow: none; }
+
+/* Grille du rapport */
+.rapport { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 12px; }
+.rapport > * { grid-column: span 12; margin: 0; }
+@media (min-width: 1000px) {
+  .rapport > .t7 { grid-column: span 7; } .rapport > .t5 { grid-column: span 5; }
+  .rapport > .t8 { grid-column: span 8; } .rapport > .t4 { grid-column: span 4; }
+}
+.tuile, .bloc-analyse, .graphe { background: var(--tuile); border: 0; border-radius: 4px; box-shadow: var(--ombre); }
+.tuile, .bloc-analyse { padding: 14px 16px; }
+.bloc-analyse { margin-top: 0; }
+.bloc-analyse h3, .tuile h3, .graphe h4 { font-size: 0.9375rem; font-weight: 600; margin: 0 0 4px; }
+.fiche-tete h3 { font-size: 1.25rem; margin-bottom: 2px; }
+.fiche-tete .synthese { margin: 10px 0 0; font-size: 1.0625rem; }
+
+/* Cartes KPI */
+.kpis { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+@media (min-width: 700px) { .kpis { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 1100px) { .kpis { grid-template-columns: repeat(6, 1fr); } }
+.kpi { padding: 12px 14px 10px; border-top: 3px solid var(--accent-bi); }
+.kpi-titre { font-size: 0.75rem; color: var(--text-2); margin: 0 0 4px; font-weight: 600; text-transform: uppercase; letter-spacing: .03em; }
+.kpi-valeur { font-size: 1.625rem; font-weight: 600; margin: 0; line-height: 1.15; font-variant-numeric: tabular-nums; color: var(--text); }
+.kpi-bas { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-top: 6px; }
+.kpi-delta { font-size: 0.75rem; color: var(--text-2); font-weight: 600; }
+.spark { width: 64px; height: 22px; flex: none; }
+.spark-ligne { fill: none; stroke: var(--accent-bi); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.spark-point { fill: var(--accent-bi); stroke: var(--tuile); stroke-width: 1.5; }
+
+/* Petits graphiques : 4 par ligne sur grand écran */
+.graphes { display: grid; gap: 12px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (min-width: 900px) { .graphes { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.graphe { padding: 12px 12px 8px; }
+
+/* Tableau matrice façon Power BI */
+table.sig { font-size: 0.8125rem; }
+table.sig thead th { background: var(--canvas); color: var(--text); font-weight: 600; border-bottom: 2px solid var(--accent-bi); }
+table.sig tbody tr:nth-child(even):not(.solde) td { background: color-mix(in srgb, var(--canvas) 45%, transparent); }
+table.sig tr.solde td { background: color-mix(in srgb, var(--accent-bi) 10%, transparent); border-top: 1px solid var(--accent-bi); }
+table.sig td, table.sig th { padding: 6px 10px; }
+
+/* Lecture et questions */
+.lecture { display: grid; gap: 12px; margin-top: 0; }
+@media (min-width: 720px) { .lecture { grid-template-columns: 1fr 1fr; } }
+.questions-bloc { margin-top: 0; }
+.questions-bloc.tuile { border-left: 4px solid var(--c2); }
+details.tuile { margin-top: 0; }
+
+/* Journal et cas pratiques en tuiles */
+.journal { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+.entree, .carte { background: var(--tuile); border: 0; box-shadow: var(--ombre); border-radius: 4px; }
+footer { border-top: 0; }
