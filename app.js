@@ -35,7 +35,7 @@
       .replace(/([+\-−]?\d[\d\u202f\u00a0 ]*(?:,\d+)?\s?(?:M€|k€|%|pt|jours|j\b|€))/g, "<strong>$1</strong>");
     return n;
   }
-  var VERSION = "20260928b";
+  var VERSION = "20260928c";
   function charger(url) {
     return fetch(url + "?v=" + VERSION).then(function (r) { if (!r.ok) throw new Error(url); return r.json(); });
   }
@@ -1128,7 +1128,9 @@
       initAnalyse(d[1], params.get("e") || (perso && perso.entreprise) || d[1].entreprises[0].slug);
       initParcours(d[0].transition_2026, d[0].parcours, d[1].entreprises.length);
       initJournal(d[2]);
-      compteur(d[0].compteur_goatcounter, perso ? perso.code : null);
+      // Tout code simple est compté (lettres, chiffres, tiret) ; candidatures.json ne sert qu'à la phrase personnalisée
+      var codeSur = code && /^[A-Za-z0-9-]{1,20}$/.test(code) ? code : null;
+      compteur(d[0].compteur_goatcounter, codeSur);
     })
     .catch(function () {
       $("fiche").textContent = "Les données n'ont pas pu être chargées. Ouvrez la page depuis un serveur web (et non en double-cliquant sur le fichier).";
