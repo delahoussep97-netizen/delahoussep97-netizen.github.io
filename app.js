@@ -35,7 +35,7 @@
       .replace(/([+\-−]?\d[\d\u202f\u00a0 ]*(?:,\d+)?\s?(?:M€|k€|%|pt|jours|j\b|€))/g, "<strong>$1</strong>");
     return n;
   }
-  var VERSION = "20260928c";
+  var VERSION = "20260928d";
   function charger(url) {
     return fetch(url + "?v=" + VERSION).then(function (r) { if (!r.ok) throw new Error(url); return r.json(); });
   }
