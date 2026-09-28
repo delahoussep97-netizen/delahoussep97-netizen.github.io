@@ -5,13 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Paul Delahousse — contrôle de gestion</title>
 <meta name="description" content="Contrôle de gestion et données : analyse des comptes publics de six entreprises du Loiret, chaque chiffre relié à sa source.">
-<link rel="stylesheet" href="style.css?v=20260925f">
+<link rel="stylesheet" href="style.css?v=20260928a">
 </head>
 <body>
 <nav class="barre-haut" aria-label="Navigation">
   <div class="wrap barre-contenu">
     <a class="marque" href="#">Paul Delahousse <span>· contrôle de gestion &amp; données</span></a>
-    <span class="liens"><a href="#analyse">Analyses</a><a href="#formations">Formations</a><a href="#ia">Méthode</a><a href="cas-pratiques.html">Cas pratiques</a><a href="#contact">Contact</a></span>
+    <span class="liens"><a href="#parcours">Parcours</a><a href="#analyse">Analyses</a><a href="#cas">Cas pratiques</a><a href="#ia">Méthode</a><a href="#contact">Contact</a></span>
   </div>
 </nav>
 <div class="wrap">
@@ -28,7 +28,6 @@
         <a class="bouton secondaire" id="lien-cv-haut" href="#">Télécharger mon CV</a>
       </p>
       <p class="role" id="role" hidden></p>
-      <ul class="parcours" id="parcours" aria-label="Parcours"></ul>
       <p class="contact-ligne" id="contact-haut"></p>
       <p class="perso" id="perso" hidden></p>
     </header>
@@ -40,6 +39,12 @@
     </section>
   </div>
 
+  <!-- 1 bis. Parcours : 2026 (transition vers le contrôle de gestion), puis les postes -->
+  <section id="parcours" aria-labelledby="t-parcours">
+    <h2 id="t-parcours">Parcours : du terrain commercial au contrôle de gestion</h2>
+    <div class="parcours-grille" id="parcours-contenu"></div>
+  </section>
+
   <section class="chiffres" id="chiffres" aria-label="Le travail en chiffres"></section>
 
   <!-- 3. Analyse sur comptes publics -->
@@ -50,18 +55,24 @@
     <div id="fiche" aria-live="polite"></div>
   </section>
 
-  <!-- 3 bis. Formations 2026 : compétences acquises, avec preuves -->
-  <section id="formations" aria-labelledby="t-formations">
-    <h2 id="t-formations">Formations 2026</h2>
-    <p class="muted small" id="formations-intro"></p>
-    <div class="formations" id="formations-contenu"></div>
-  </section>
-
-  <!-- 4. Journal des erreurs de l'IA -->
-  <section id="ia" aria-labelledby="t-ia">
-    <h2 id="t-ia">Comment je fiabilise mes chiffres</h2>
-    <p class="muted small">Chaque chiffre de l'analyse ci-dessus a été saisi, recalculé et contrôlé. J'utilise l'IA comme outil pour aller plus vite, jamais sans vérification. Voici les erreurs détectées pendant ce travail, et comment elles ont été corrigées.</p>
-    <div class="journal" id="journal"></div>
+  <!-- 4. Cas pratiques : données fictives, accessibles directement -->
+  <section id="cas" aria-labelledby="t-cas">
+    <h2 id="t-cas">Cas pratiques</h2>
+    <p class="muted small">Deux cas construits de bout en bout, sur des <b>données fictives</b>. Ce sont des exercices, pas des expériences professionnelles.</p>
+    <div class="cas-grille">
+      <article class="carte cas-carte">
+        <p><span class="tag">données fictives</span></p>
+        <h3>Contrôle de gestion d'une région de magasins</h3>
+        <p class="small">Région fictive, 6 points de vente : P&amp;L à cinq niveaux, cascade des écarts, ROI promotionnel, tableaux de bord point de vente / région / siège, trame de revue mensuelle.</p>
+        <p><a class="bouton" href="cas-controle-de-gestion-retail.pdf">Lire le cas (PDF, 29 pages)</a></p>
+      </article>
+      <article class="carte cas-carte">
+        <p><span class="tag">données fictives</span></p>
+        <h3>Tableau de bord Power BI : ventes de lubrifiants</h3>
+        <p class="small">Volume et marge par zone, emballage et produit, comparaison avec l'année précédente. Données fictives de l'exercice.</p>
+        <p><a class="bouton" href="cas-power-bi-lubrifiants.pdf">Voir le tableau de bord (PDF, 1 page)</a></p>
+      </article>
+    </div>
   </section>
 
   <!-- 5. Mission association : masquée tant qu'elle n'existe pas -->
@@ -71,11 +82,11 @@
     <p id="mission-attestation"></p>
   </section>
 
-  <!-- 6. Cas pratiques : sous-page, données fictives -->
-  <section id="cas" aria-labelledby="t-cas">
-    <h2 id="t-cas">Cas pratiques</h2>
-    <p>Deux cas construits de bout en bout : contrôle de gestion et tableau de bord Power BI. <span class="tag">données fictives</span></p>
-    <p><a href="cas-pratiques.html">Voir les cas pratiques</a></p>
+  <!-- 6. Méthode : comment je fiabilise mes chiffres (en fin de page) -->
+  <section id="ia" aria-labelledby="t-ia">
+    <h2 id="t-ia">Comment je fiabilise mes chiffres</h2>
+    <p class="muted small">Chaque chiffre de l'analyse ci-dessus a été saisi, recalculé et contrôlé. J'utilise l'IA comme outil pour aller plus vite, jamais sans vérification. Voici les erreurs détectées pendant ce travail, et comment elles ont été corrigées.</p>
+    <div class="journal" id="journal"></div>
   </section>
 
   <!-- 7. CV + contact -->
@@ -87,6 +98,6 @@
   </footer>
 </div>
 <div class="bulle" id="bulle" role="tooltip" hidden></div>
-<script src="app.js?v=20260925f"></script>
+<script src="app.js?v=20260928a"></script>
 </body>
 </html>

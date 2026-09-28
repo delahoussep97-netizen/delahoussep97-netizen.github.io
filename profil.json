@@ -27,38 +27,12 @@
    "fait": "Business reviews trimestrielles avec Carrefour et Auchan : compte de résultat promotionnel, rentabilité par segment."
   }
  ],
- "offres": {
-  "immersion": {
-   "afficher": false,
-   "titre": "Commencer par une immersion, sans coût pour vous",
-   "texte": "Je peux démarrer par une période de mise en situation en milieu professionnel (PMSMP), encadrée par France Travail : vous me voyez travailler sur vos chiffres avant toute embauche, sans coût pour l'entreprise.",
-   "_note": "Masqué le 25/09/2026 à la demande de Paul : à réactiver (afficher=true) après échange avec France Travail."
-  },
-  "diagnostic_48h": {
-   "afficher": true,
-   "titre": "Un diagnostic sous 48 heures",
-   "texte": "Envoyez-moi un extrait anonymisé de votre reporting. Sous 48 heures, je vous renvoie ce que j'y lis, ce qui n'y apparaît pas et les trois questions que je poserais. Des questions, pas un jugement."
-  }
- },
- "mission_association": {
-  "afficher": false,
-  "titre": "Mission bénévole en contrôle de gestion",
-  "texte": "",
-  "attestation": ""
- },
- "certifications": [
-  "Power BI — DataCamp (2026)",
-  "Data Analyst DA101/DA201 — DataCamp (2025)",
-  "PSM I — Scrum.org (2025)",
-  "dbt Fundamentals (2025)"
- ],
- "telephone": "06 60 43 78 27",
- "compteur_goatcounter": "pauldelahousse",
- "_compteur": "Code du compte GoatCounter (sans cookie). Vide = compteur désactivé.",
- "formations_2026": {
-  "_note": "Relevé de l'activité DataCamp de Paul le 25/09/2026 (cours et parcours terminés en 2026). Exclus : cours Java et cours d'IA, hors sujet contrôle de gestion. AMF non affichée (non obtenue). DCG UE11 = autoformation non diplômante.",
-  "titre": "2026 : je me suis formé, puis j'ai appliqué",
-  "intro": "Cours et parcours terminés sur DataCamp en 2026, chacun avec son attestation en ligne. En parallèle : autoformation en contrôle de gestion et deux cas pratiques.",
+ "transition_2026": {
+  "_note": "Relevé de l'activité DataCamp de Paul le 25/09/2026 (cours et parcours terminés en 2026). Exclus : cours Java et cours d'IA, hors sujet contrôle de gestion. AMF non affichée (non obtenue). DCG UE11 = autoformation non diplômante. Affiché comme ligne 2026 du parcours (demande de Paul du 28/09/2026), pas comme un poste.",
+  "poste": "Transition vers le contrôle de gestion",
+  "entreprise": "Formation continue et projets personnels",
+  "periode": "2026",
+  "texte": "En 2026, j'ai organisé ma transition vers le contrôle de gestion : formation continue en données, autoformation en contrôle de gestion, puis mise en pratique sur deux cas et sur les comptes réels de six entreprises.",
   "domaines": [
    {
     "cle": "sql",
@@ -395,7 +369,7 @@
     "texte": "Préparation et visualisation des données dans Excel, Power Query. Parcours « Principes de base de Power BI » validé. Cas pratique : un tableau de bord Power BI (données fictives).",
     "lien": {
      "texte": "Voir le cas",
-     "url": "cas-pratiques.html"
+     "url": "#cas"
     }
    },
    {
@@ -405,7 +379,7 @@
     "texte": "Parcours « Analyste de données dans Power BI » validé. Cas pratique : le contrôle de gestion d'une région de magasins (données fictives), travaillé avec le manuel DCG UE11 « Contrôle de gestion » (autoformation, non diplômante).",
     "lien": {
      "texte": "Voir le cas",
-     "url": "cas-pratiques.html"
+     "url": "#cas"
     }
    },
    {
@@ -436,12 +410,40 @@
    },
    {
     "domaine": "pbi",
-    "texte": "**Power BI** : modéliser les données et construire un suivi budget / réalisé en DAX, comme le tableau de bord ci-dessus."
+    "texte": "**Power BI** : modéliser les données et construire un suivi budget / réalisé en DAX, comme le tableau de bord de cette page."
    },
    {
     "domaine": "stats",
     "texte": "**Statistiques** : distinguer un écart significatif d'une variation normale avant de l'expliquer."
    }
   ]
- }
+ },
+ "offres": {
+  "immersion": {
+   "afficher": false,
+   "titre": "Commencer par une immersion, sans coût pour vous",
+   "texte": "Je peux démarrer par une période de mise en situation en milieu professionnel (PMSMP), encadrée par France Travail : vous me voyez travailler sur vos chiffres avant toute embauche, sans coût pour l'entreprise.",
+   "_note": "Masqué le 25/09/2026 à la demande de Paul : à réactiver (afficher=true) après échange avec France Travail."
+  },
+  "diagnostic_48h": {
+   "afficher": true,
+   "titre": "Un diagnostic sous 48 heures",
+   "texte": "Envoyez-moi un extrait anonymisé de votre reporting. Sous 48 heures, je vous renvoie ce que j'y lis, ce qui n'y apparaît pas et les trois questions que je poserais. Des questions, pas un jugement."
+  }
+ },
+ "mission_association": {
+  "afficher": false,
+  "titre": "Mission bénévole en contrôle de gestion",
+  "texte": "",
+  "attestation": ""
+ },
+ "certifications": [
+  "Power BI — DataCamp (2026)",
+  "Data Analyst DA101/DA201 — DataCamp (2025)",
+  "PSM I — Scrum.org (2025)",
+  "dbt Fundamentals (2025)"
+ ],
+ "telephone": "06 60 43 78 27",
+ "compteur_goatcounter": "pauldelahousse",
+ "_compteur": "Code du compte GoatCounter (sans cookie). Vide = compteur désactivé."
 }

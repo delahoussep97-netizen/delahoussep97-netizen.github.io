@@ -35,7 +35,7 @@
       .replace(/([+\-−]?\d[\d\u202f\u00a0 ]*(?:,\d+)?\s?(?:M€|k€|%|pt|jours|j\b|€))/g, "<strong>$1</strong>");
     return n;
   }
-  var VERSION = "20260925f";
+  var VERSION = "20260928a";
   function charger(url) {
     return fetch(url + "?v=" + VERSION).then(function (r) { if (!r.ok) throw new Error(url); return r.json(); });
   }
@@ -891,13 +891,6 @@
     $("role").textContent = p.role;
     $("accroche").textContent = p.accroche;
     $("sous-accroche").textContent = p.sous_accroche;
-    var ul = $("parcours");
-    p.parcours.forEach(function (x) {
-      var li = el("li");
-      li.appendChild(el("b", null, x.poste));
-      li.appendChild(document.createTextNode(" · " + x.entreprise + " · " + x.periode));
-      ul.appendChild(li);
-    });
     var sujet = "Contact" + (perso ? " — réf. " + perso.code : "");
     var mail = "mailto:" + p.email + "?subject=" + encodeURIComponent(sujet);
     [$("contact-haut"), $("contact-bas")].forEach(function (z) {
@@ -934,122 +927,94 @@
     }
   }
 
-  /* ---------- Formations 2026 : chiffres, cours par mois, frise ---------- */
+  /* ---------- Parcours : 2026 (transition) puis les postes ---------- */
   var MOIS = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
-  var MOIS_C = ["janv.", "févr.", "mars", "avr.", "mai", "juin", "juil.", "août", "sept.", "oct.", "nov.", "déc."];
   function dateFr(d) { var x = d.split("-"); return +x[2] + " " + MOIS[+x[1] - 1]; }
-  function initFormations(f) {
-    var z = $("formations-contenu");
-    if (!f || !z) { if ($("formations")) $("formations").hidden = true; return; }
-    $("t-formations").textContent = f.titre;
-    $("formations-intro").textContent = f.intro;
-    var nom = {}; f.domaines.forEach(function (d) { nom[d.cle] = d.nom; });
-    var metier = f.parcours.filter(function (p) { return p.type === "parcours métier"; }).length;
-    var nPbi = f.cours.filter(function (c) { return c.domaine === "pbi"; }).length;
+  function initParcours(t, postes, nbEntreprises) {
+    var z = $("parcours-contenu");
+    if (!z) return;
+    var ol = el("ol", { "class": "chrono" });
 
-    // 1. Chiffres clés
-    var st = el("div", { "class": "f-stats" });
-    [[f.cours.length, "cours de données terminés en 2026"], [f.parcours.length, "parcours validés, dont " + metier + " parcours métier"],
-     [nPbi, "cours Power BI : DAX, modélisation, rapports"], [2, "cas pratiques construits de bout en bout"]].forEach(function (x) {
-      var c = el("div", { "class": "chiffre" });
-      c.appendChild(el("span", { "class": "chiffre-n" }, nf0.format(x[0])));
-      c.appendChild(el("span", { "class": "chiffre-l" }, x[1]));
-      st.appendChild(c);
-    });
-    z.appendChild(st);
-
-    // 2. Cours terminés par mois, empilés par domaine
-    var mois = f.cours.map(function (c) { return +c.date.slice(5, 7); });
-    var m0 = Math.min.apply(null, mois), m1 = Math.max.apply(null, mois), liste = [];
-    for (var m = m0; m <= m1; m++) liste.push(m);
-    var par = {};
-    f.cours.forEach(function (c) { var k = +c.date.slice(5, 7); (par[k] = par[k] || {}); (par[k][c.domaine] = par[k][c.domaine] || []).push(c); });
-    var tg = el("div", { "class": "tuile f-graphe" });
-    tg.appendChild(el("h3", null, "Cours terminés par mois, " + MOIS[m0 - 1] + " à " + MOIS[m1 - 1] + " 2026"));
-    var leg = el("p", { "class": "legende small" });
-    f.domaines.forEach(function (d) {
-      var n = f.cours.filter(function (c) { return c.domaine === d.cle; }).length;
-      var s = el("span", { "class": "cle" }); s.appendChild(el("i", { "class": "pastille d-" + d.cle })); s.appendChild(document.createTextNode(d.nom + " (" + n + ")")); leg.appendChild(s);
-    });
-    tg.appendChild(leg);
-    var tot = liste.map(function (k) { return f.domaines.reduce(function (t, d) { return t + ((par[k] || {})[d.cle] || []).length; }, 0); });
-    var mx = Math.max.apply(null, tot), W = 420, H = 210, haut = 20, bas = 22, bande = (W - 8) / liste.length, lb = Math.min(44, bande * 0.62);
-    var y = function (v) { return H - bas - v / mx * (H - haut - bas); };
-    var svg = svgEl("svg", { viewBox: "0 0 " + W + " " + H, role: "img", "aria-label": "Cours terminés par mois : " + liste.map(function (k, i) { return MOIS[k - 1] + " " + tot[i]; }).join(", ") });
-    svg.appendChild(svgEl("line", { x1: 4, x2: W - 4, y1: y(0), y2: y(0), "class": "axe" }));
-    liste.forEach(function (k, i) {
-      var cx = 4 + bande * i + bande / 2, cum = 0;
-      f.domaines.forEach(function (d) {
-        var cs = (par[k] || {})[d.cle] || [];
-        if (!cs.length) return;
-        var y1 = y(cum), y2 = y(cum + cs.length);
-        svg.appendChild(svgEl("rect", { x: cx - lb / 2, y: y2 + 1, width: lb, height: Math.max(1, y1 - y2 - 1), "class": "seg d-" + d.cle }));
-        if (y1 - y2 >= 14) svg.appendChild(svgEl("text", { x: cx, y: (y1 + y2) / 2 + 4, "text-anchor": "middle", "class": "seg-n d-" + d.cle }, String(cs.length)));
-        var cible = svgEl("rect", { x: cx - bande / 2, y: y2, width: bande, height: y1 - y2, "class": "cible" });
-        surBulle(cible, "<b>" + MOIS[k - 1] + " — " + echapper(d.nom) + "</b><br>" + cs.map(function (c) { return echapper(c.titre); }).join("<br>"));
-        svg.appendChild(cible);
-        cum += cs.length;
+    // Ligne 2026 : la transition, détaillée
+    if (t) {
+      var nom = {}; t.domaines.forEach(function (d) { nom[d.cle] = d.nom; });
+      var li = el("li", { "class": "chrono-item actuel" });
+      li.appendChild(el("p", { "class": "chrono-periode" }, t.periode));
+      li.appendChild(el("h3", null, t.poste));
+      li.appendChild(el("p", { "class": "chrono-sous" }, t.entreprise));
+      li.appendChild(el("p", null, t.texte));
+      var ch = el("ul", { "class": "chrono-chiffres", "aria-label": "L'année 2026 en chiffres" });
+      [[t.cours.length, "cours de données terminés"], [t.parcours.length, "parcours validés"], [2, "cas pratiques"], [nbEntreprises, "entreprises analysées"]]
+        .forEach(function (x) {
+          var c = el("li");
+          c.appendChild(el("span", { "class": "chrono-n" }, nf0.format(x[0])));
+          c.appendChild(el("span", { "class": "chrono-l" }, x[1]));
+          ch.appendChild(c);
+        });
+      li.appendChild(ch);
+      var frise = el("ol", { "class": "frise" });
+      t.etapes.forEach(function (e) {
+        var m = el("li", { "class": "d-" + e.domaine });
+        m.appendChild(el("p", { "class": "frise-mois" }, e.mois));
+        m.appendChild(el("p", { "class": "frise-titre" }, e.titre));
+        m.appendChild(el("p", { "class": "frise-texte" }, e.texte));
+        var n = MOIS.indexOf(e.mois.toLowerCase()) + 1;
+        var liens = el("p", { "class": "frise-liens" });
+        t.parcours.filter(function (p) { return +p.date.slice(5, 7) === n; }).forEach(function (p) {
+          liens.appendChild(el("a", { href: p.attestation, rel: "noopener" }, "Attestation « " + p.titre + " »"));
+        });
+        if (e.lien) liens.appendChild(el("a", { href: e.lien.url }, e.lien.texte));
+        if (liens.childNodes.length) m.appendChild(liens);
+        frise.appendChild(m);
       });
-      svg.appendChild(svgEl("text", { x: cx, y: y(cum) - 5, "text-anchor": "middle", "class": "val fort" }, String(cum)));
-      svg.appendChild(svgEl("text", { x: cx, y: H - 5, "text-anchor": "middle", "class": "an" }, MOIS_C[k - 1]));
-    });
-    var gz = el("div", { "class": "graphe-large" }); gz.appendChild(svg); tg.appendChild(gz);
-    tg.appendChild(el("p", { "class": "small muted" }, "Survolez une barre pour voir les cours. Source : historique du compte DataCamp, attestations en lien plus bas."));
+      li.appendChild(frise);
 
-    // 3. Frise
-    var tf = el("div", { "class": "tuile f-frise" });
-    tf.appendChild(el("h3", null, "L'année, mois par mois"));
-    var ol = el("ol", { "class": "frise" });
-    f.etapes.forEach(function (e) {
-      var li = el("li", { "class": "d-" + e.domaine });
-      li.appendChild(el("p", { "class": "frise-mois" }, e.mois));
-      li.appendChild(el("p", { "class": "frise-titre" }, e.titre));
-      li.appendChild(el("p", { "class": "frise-texte" }, e.texte));
-      var n = MOIS.indexOf(e.mois.toLowerCase()) + 1;
-      var liens = el("p", { "class": "frise-liens" });
-      f.parcours.filter(function (p) { return +p.date.slice(5, 7) === n; }).forEach(function (p) {
-        liens.appendChild(el("a", { href: p.attestation, rel: "noopener" }, "Attestation « " + p.titre + " »"));
-      });
-      if (e.lien) liens.appendChild(el("a", { href: e.lien.url }, e.lien.texte));
-      if (liens.childNodes.length) li.appendChild(liens);
+      // Liste complète, avec attestations
+      var det = el("details", { "class": "chrono-detail" });
+      det.appendChild(el("summary", null, "Les " + t.cours.length + " cours et " + t.parcours.length + " parcours, avec leur attestation"));
+      var sc = el("div", { "class": "table-scroll" });
+      var tab = el("table", { "class": "f-table" });
+      var th = el("thead"), trh = el("tr");
+      ["Terminé le", "Cours ou parcours", "Domaine", "Preuve"].forEach(function (c) { trh.appendChild(el("th", { scope: "col" }, c)); });
+      th.appendChild(trh); tab.appendChild(th);
+      var tb = el("tbody");
+      t.parcours.map(function (p) { return { date: p.date, titre: "Parcours : " + p.titre + " (" + p.type + ")", domaine: "", attestation: p.attestation, fort: true }; })
+        .concat(t.cours).sort(function (a, b) { return a.date < b.date ? -1 : a.date > b.date ? 1 : 0; })
+        .forEach(function (c) {
+          var tr = el("tr", c.fort ? { "class": "fort" } : null);
+          tr.appendChild(el("td", null, dateFr(c.date)));
+          tr.appendChild(el("td", null, c.titre));
+          tr.appendChild(el("td", null, c.domaine ? nom[c.domaine] : "—"));
+          var td = el("td"); td.appendChild(el("a", { href: c.attestation, rel: "noopener" }, "attestation")); tr.appendChild(td);
+          tb.appendChild(tr);
+        });
+      tab.appendChild(tb); sc.appendChild(tab); det.appendChild(sc);
+      li.appendChild(det);
+      ol.appendChild(li);
+    }
+
+    // Postes occupés
+    postes.forEach(function (x) {
+      var li = el("li", { "class": "chrono-item" });
+      li.appendChild(el("p", { "class": "chrono-periode" }, x.periode));
+      li.appendChild(el("h3", null, x.poste));
+      li.appendChild(el("p", { "class": "chrono-sous" }, x.entreprise));
+      if (x.fait) li.appendChild(el("p", null, x.fait));
       ol.appendChild(li);
     });
-    tf.appendChild(ol);
-    var gauche = el("div", { "class": "f-gauche" });
-    gauche.appendChild(tg);
-    if (f.usages && f.usages.length) {
+    var gauche = el("div", { "class": "tuile parcours-frise" });
+    gauche.appendChild(ol);
+    z.appendChild(gauche);
+
+    // À quoi ça sert en contrôle de gestion
+    if (t && t.usages && t.usages.length) {
       var tu = el("div", { "class": "tuile f-usages" });
       tu.appendChild(el("h3", null, "À quoi ça sert en contrôle de gestion"));
       var ul = el("ul");
-      f.usages.forEach(function (u) { ul.appendChild(riche("li", u.texte, { "class": "d-" + u.domaine })); });
+      t.usages.forEach(function (u) { ul.appendChild(riche("li", u.texte, { "class": "d-" + u.domaine })); });
       tu.appendChild(ul);
-      gauche.appendChild(tu);
+      z.appendChild(tu);
     }
-    var grille = el("div", { "class": "f-grille" });
-    grille.appendChild(gauche); grille.appendChild(tf);
-    z.appendChild(grille);
-
-    // 4. Liste complète, avec attestations
-    var det = el("details", { "class": "tuile" });
-    det.appendChild(el("summary", null, "Les " + f.cours.length + " cours et " + f.parcours.length + " parcours, avec leur attestation"));
-    var sc = el("div", { "class": "table-scroll" });
-    var t = el("table", { "class": "f-table" });
-    var th = el("thead"), trh = el("tr");
-    ["Terminé le", "Cours ou parcours", "Domaine", "Preuve"].forEach(function (c) { trh.appendChild(el("th", { scope: "col" }, c)); });
-    th.appendChild(trh); t.appendChild(th);
-    var tb = el("tbody");
-    f.parcours.map(function (p) { return { date: p.date, titre: "Parcours : " + p.titre + " (" + p.type + ")", domaine: "", attestation: p.attestation, fort: true }; })
-      .concat(f.cours).sort(function (a, b) { return a.date < b.date ? -1 : a.date > b.date ? 1 : 0; })
-      .forEach(function (c) {
-        var tr = el("tr", c.fort ? { "class": "fort" } : null);
-        tr.appendChild(el("td", null, dateFr(c.date)));
-        tr.appendChild(el("td", null, c.titre));
-        tr.appendChild(el("td", null, c.domaine ? nom[c.domaine] : "—"));
-        var td = el("td"); td.appendChild(el("a", { href: c.attestation, rel: "noopener" }, "attestation")); tr.appendChild(td);
-        tb.appendChild(tr);
-      });
-    t.appendChild(tb); sc.appendChild(t); det.appendChild(sc);
-    z.appendChild(det);
   }
 
   function initJournal(j) {
@@ -1121,8 +1086,9 @@
     marquer('a[href^="mailto:"]', "clic-email");
     marquer('a[href^="tel:"]', "clic-telephone");
     marquer('a[href*="linkedin.com"]', "clic-linkedin");
-    marquer('a[href$=".pdf"], #lien-cv', "clic-cv");
-    marquer('a[href="cas-pratiques.html"]', "clic-cas-pratiques");
+    marquer('#lien-cv, #lien-cv-haut', "clic-cv");
+    marquer('a[href="cas-controle-de-gestion-retail.pdf"]', "clic-cas-controle-de-gestion");
+    marquer('a[href="cas-power-bi-lubrifiants.pdf"]', "clic-cas-power-bi");
     window.goatcounter = { no_onload: true };   // la visite est comptée explicitement ci-dessous
     var s = document.createElement("script");
     s.async = true;
@@ -1156,7 +1122,7 @@
       initProfil(d[0], perso);
       initChiffres(d[1]);
       initAnalyse(d[1], params.get("e") || (perso && perso.entreprise) || d[1].entreprises[0].slug);
-      initFormations(d[0].formations_2026);
+      initParcours(d[0].transition_2026, d[0].parcours, d[1].entreprises.length);
       initJournal(d[2]);
       compteur(d[0].compteur_goatcounter, perso ? perso.code : null);
     })

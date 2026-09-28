@@ -124,8 +124,8 @@ strong, b { font-weight: 600; }
 .carte p { font-size: 0.9375rem; }
 
 /* ---------- Cartes KPI (callouts) ---------- */
-.chiffres, .f-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
-@media (min-width: 900px) { .chiffres, .f-stats { grid-template-columns: repeat(4, 1fr); } }
+.chiffres { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+@media (min-width: 900px) { .chiffres { grid-template-columns: repeat(4, 1fr); } }
 .chiffres { margin: 8px 0 0; padding: 0; }
 .chiffre { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; }
 .chiffre-n { font-size: clamp(1.75rem, 3vw, 2.25rem); font-weight: 600; color: var(--p1); font-variant-numeric: tabular-nums; line-height: 1.1; }
@@ -296,35 +296,51 @@ ol.etapes li { margin-bottom: 6px; }
 .sim-hyp li { margin-bottom: 6px; }
 .sim-seuil { margin: 8px 0 0; padding: 8px 10px; background: var(--alt); border: 1px solid var(--grid); border-radius: 6px; }
 
-/* ---------- Formations 2026 ---------- */
-.formations { display: grid; gap: 16px; }
-.f-grille { display: grid; gap: 16px; }
-@media (min-width: 1000px) { .f-grille { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); } }
-.f-gauche { display: grid; gap: 16px; align-content: start; }
-.pastille.d-sql, svg .seg.d-sql { background: var(--d-sql); fill: var(--d-sql); }
-.pastille.d-stats, svg .seg.d-stats { background: var(--d-stats); fill: var(--d-stats); }
-.pastille.d-excel, svg .seg.d-excel { background: var(--d-excel); fill: var(--d-excel); }
-.pastille.d-pbi, svg .seg.d-pbi { background: var(--d-pbi); fill: var(--d-pbi); }
-svg .seg-n { font-size: 11px; font-weight: 600; fill: #fff; }
-svg .seg-n.d-excel { fill: #1B2432; }
-.frise { list-style: none; margin: 0; padding: 0 0 0 4px; }
-.frise li { position: relative; padding: 0 0 12px 22px; border-left: 2px solid var(--line); margin-left: 6px; }
+/* ---------- Parcours : 2026 puis les postes ---------- */
+.parcours-grille { display: grid; gap: 16px; }
+@media (min-width: 1000px) { .parcours-grille { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: start; } }
+.chrono { list-style: none; margin: 0; padding: 0; }
+.chrono-item { position: relative; padding: 0 0 18px 26px; border-left: 2px solid var(--line); margin-left: 7px; }
+.chrono-item:last-child { padding-bottom: 2px; border-left-color: transparent; }
+.chrono-item::before { content: ""; position: absolute; left: -8px; top: 4px; width: 14px; height: 14px; border-radius: 50%;
+  background: var(--card); border: 2px solid var(--p7); }
+.chrono-item.actuel::before { background: var(--p1); border-color: var(--p1); }
+.chrono-periode { margin: 0; font-size: 0.8125rem; font-weight: 600; color: var(--muted); font-variant-numeric: tabular-nums; }
+.chrono-item h3 { margin: 0; font-size: 1.0625rem; }
+.chrono-sous { margin: 0 0 6px; font-size: 0.9375rem; color: var(--muted); }
+.chrono-item > p:not(.chrono-periode):not(.chrono-sous) { font-size: 0.9375rem; margin-bottom: 8px; }
+.chrono-item.actuel h3 { color: var(--link); font-size: 1.1875rem; }
+.chrono-chiffres { list-style: none; margin: 4px 0 14px; padding: 0; display: grid; gap: 8px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (min-width: 600px) { .chrono-chiffres { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.chrono-chiffres li { background: var(--total); border-radius: 6px; padding: 8px 10px; }
+.chrono-n { display: block; font-size: 1.5rem; font-weight: 600; line-height: 1.1; color: var(--link); font-variant-numeric: tabular-nums; }
+.chrono-l { display: block; font-size: 0.8125rem; color: var(--muted); }
+.chrono-detail { margin: 6px 0 0; }
+.chrono-detail summary { cursor: pointer; font-weight: 600; font-size: 0.9375rem; min-height: 32px; color: var(--link); }
+.frise { list-style: none; margin: 0 0 4px; padding: 0 0 0 2px; }
+.frise li { position: relative; padding: 0 0 10px 20px; border-left: 2px solid var(--grid); margin-left: 5px; }
 .frise li:last-child { padding-bottom: 0; }
-.frise li::before { content: ""; position: absolute; left: -8px; top: 3px; width: 14px; height: 14px; border-radius: 50%; background: var(--dc); box-shadow: 0 0 0 3px var(--card); }
+.frise li::before { content: ""; position: absolute; left: -7px; top: 4px; width: 12px; height: 12px; border-radius: 50%; background: var(--dc); box-shadow: 0 0 0 3px var(--card); }
 .frise li.d-sql, .f-usages li.d-sql { --dc: var(--d-sql); } .frise li.d-stats, .f-usages li.d-stats { --dc: var(--d-stats); }
 .frise li.d-excel, .f-usages li.d-excel { --dc: var(--d-excel); } .frise li.d-pbi, .f-usages li.d-pbi { --dc: var(--d-pbi); }
 .frise li.d-cdg { --dc: var(--d-cdg); }
 .frise-mois { margin: 0; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
-.frise-titre { margin: 0; font-weight: 600; }
+.frise-titre { margin: 0; font-weight: 600; font-size: 0.9375rem; }
 .frise-texte { margin: 2px 0 4px; font-size: 0.875rem; color: var(--muted); }
 .frise-liens { display: flex; flex-wrap: wrap; gap: 4px 12px; margin: 0; font-size: 0.8125rem; }
 .f-usages ul { list-style: none; margin: 0; padding: 0; }
-.f-usages li { position: relative; padding: 0 0 8px 18px; font-size: 0.9375rem; }
+.f-usages li { position: relative; padding: 0 0 10px 18px; font-size: 0.9375rem; }
 .f-usages li::before { content: ""; position: absolute; left: 0; top: 7px; width: 10px; height: 10px; border-radius: 2px; background: var(--dc); }
 .f-table td:nth-child(2), .f-table td:nth-child(3), .f-table th:nth-child(2), .f-table th:nth-child(3) { text-align: left; white-space: normal; }
 .f-table tr.fort td { font-weight: 600; background: var(--total); }
 
-/* ---------- Méthode, cas pratiques, pied de page ---------- */
+/* ---------- Cas pratiques ---------- */
+.cas-grille { display: grid; gap: 16px; }
+@media (min-width: 760px) { .cas-grille { grid-template-columns: 1fr 1fr; } }
+.cas-carte { display: flex; flex-direction: column; border-top: 3px solid var(--p1); }
+.cas-carte p:last-child { margin: auto 0 0; padding-top: 6px; }
+
+/* ---------- Méthode, pied de page ---------- */
 .journal { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
 .entree h3 { font-size: 0.9375rem; margin: 0 0 6px; }
 .entree dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 2px 10px; font-size: 0.875rem; }
@@ -338,3 +354,4 @@ footer { padding: 28px 0 40px; font-size: 0.875rem; color: var(--muted); }
 /* Mode sombre : les barres sont éclaircies, leurs étiquettes passent en foncé */
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) svg .seg-n, :root:not([data-theme="light"]) svg .val-inv { fill: #0F141B; } }
 :root[data-theme="dark"] svg .seg-n, :root[data-theme="dark"] svg .val-inv { fill: #0F141B; }
+@media (min-width: 1000px) { .parcours-grille > .f-usages { position: sticky; top: 68px; } }
