@@ -355,3 +355,5 @@ footer { padding: 28px 0 40px; font-size: 0.875rem; color: var(--muted); }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) svg .seg-n, :root:not([data-theme="light"]) svg .val-inv { fill: #0F141B; } }
 :root[data-theme="dark"] svg .seg-n, :root[data-theme="dark"] svg .val-inv { fill: #0F141B; }
 @media (min-width: 1000px) { .parcours-grille > .f-usages { position: sticky; top: 68px; } }
+.sim-seuil p { margin: 0 0 6px; } .sim-seuil p:last-child { margin: 0; }
+.sim-question { padding-top: 6px; border-top: 1px solid var(--grid); }

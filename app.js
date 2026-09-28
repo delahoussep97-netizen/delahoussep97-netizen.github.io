@@ -35,7 +35,7 @@
       .replace(/([+\-−]?\d[\d\u202f\u00a0 ]*(?:,\d+)?\s?(?:M€|k€|%|pt|jours|j\b|€))/g, "<strong>$1</strong>");
     return n;
   }
-  var VERSION = "20260928a";
+  var VERSION = "20260928b";
   function charger(url) {
     return fetch(url + "?v=" + VERSION).then(function (r) { if (!r.ok) throw new Error(url); return r.json(); });
   }
@@ -634,7 +634,11 @@
     th.appendChild(ul);
     var mcv = B.ca - B.achats;
     if (B.rex > 0 && mcv > 0) {
-      th.appendChild(riche("p", "Seuil théorique : avec cette structure de coûts, une baisse de volume de **" + nf1.format(B.rex / mcv * 100) + " %** ramènerait le résultat d'exploitation à zéro.", { "class": "small sim-seuil" }));
+      var pm = el("div", { "class": "small sim-seuil" });
+      pm.appendChild(riche("p", "**Point mort théorique** = résultat d'exploitation / (CA − achats consommés) = " + meur(B.rex) + " / " + meur(mcv) +
+        " = " + nf1.format(B.rex / mcv * 100) + " % de baisse de volume, si toutes les autres charges restaient fixes."));
+      pm.appendChild(riche("p", "**Question que je poserais :** quelle part des charges externes et du personnel varie réellement avec le volume ? C'est elle qui fixe le vrai point mort.", { "class": "sim-question" }));
+      th.appendChild(pm);
     }
     page.appendChild(th);
 
