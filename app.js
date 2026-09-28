@@ -35,7 +35,7 @@
       .replace(/([+\-−]?\d[\d\u202f\u00a0 ]*(?:,\d+)?\s?(?:M€|k€|%|pt|jours|j\b|€))/g, "<strong>$1</strong>");
     return n;
   }
-  var VERSION = "20260925e";
+  var VERSION = "20260925f";
   function charger(url) {
     return fetch(url + "?v=" + VERSION).then(function (r) { if (!r.ok) throw new Error(url); return r.json(); });
   }
@@ -84,7 +84,8 @@
   function graphe(titre, formule, points, unite, couleur) {
     // points : [{annee, valeur, sources:[...]}]
     var boite = el("div", { "class": "graphe " + (couleur || "k1") });
-    boite.appendChild(el("h4", null, titre));
+    var h4 = el("h4", null, titre);
+    boite.appendChild(h4);
     var connus = points.filter(function (p) { return p.valeur != null; });
     function ecart(v0, v1) {
       if (unite === "%") return (v1 - v0 >= 0 ? "+" : "") + nf1.format((v1 - v0) * 100) + " pt";
@@ -94,11 +95,9 @@
     }
     if (connus.length >= 2) {
       var n = connus.length, a1 = connus[n - 1], a0 = connus[n - 2];
-      var tend = el("p", { "class": "tendance" });
-      tend.appendChild(el("strong", null, (a1.valeur >= a0.valeur ? "▲ " : "▼ ") + ecart(a0.valeur, a1.valeur)));
-      tend.appendChild(document.createTextNode(" sur un an"));
-      if (n >= 3) tend.appendChild(el("span", { "class": "muted" }, " · " + ecart(connus[0].valeur, a1.valeur) + " depuis " + connus[0].annee));
-      boite.appendChild(tend);
+      var e1 = ecart(a0.valeur, a1.valeur).replace(/^[+\-−]/, "");
+      h4.textContent = titre + (a1.valeur === a0.valeur ? " : stable" : (a1.valeur > a0.valeur ? " : en hausse de " : " : en baisse de ") + e1) + " vs " + a0.annee;
+      if (n >= 3) boite.appendChild(el("p", { "class": "tendance" }, ecart(connus[0].valeur, a1.valeur) + " depuis " + connus[0].annee));
     }
     if (formule) boite.appendChild(el("p", { "class": "formule" }, formule));
     var W = 200, H = 128, haut = 18, bas = 20;
@@ -282,7 +281,7 @@
 
   // C. Pont du résultat d'exploitation (cascade horizontale)
   function pont(ent, annees) {
-    var b = bloc("D'où vient la variation du résultat d'exploitation ?", "Chaque barre montre ce qu'un poste a ajouté (bleu) ou retiré (rouge) au résultat d'exploitation d'un exercice à l'autre.");
+    var b = bloc("D'où vient la variation du résultat d'exploitation ?", "Chaque barre montre ce qu'un poste a ajouté (vert) ou retiré (rouge) au résultat d'exploitation d'un exercice à l'autre. Totaux en gris.");
     var transitions = annees.slice(1);
     var choix = el("div", { "class": "choix petit", role: "group", "aria-label": "Choisir la période" });
     var zone = el("div", { "class": "graphe-large" });
@@ -462,7 +461,7 @@
   // Entonnoir : du chiffre d'affaires au résultat d'exploitation
   function entonnoir(ent, a1) {
     var s = ent.analyse.sig[a1], ca = s.chiffre_affaires;
-    var b = bloc("Du chiffre d'affaires au résultat (" + a1 + ")");
+    var b = bloc("Sur 100 € vendus en " + a1 + ", " + nf1.format(s.rex_publie / ca * 100) + " € de résultat d'exploitation");
     var etapes = [["Chiffre d'affaires", ca], ["Valeur ajoutée", s.valeur_ajoutee], ["EBE", s.ebe], ["Résultat d'exploitation", s.rex_publie]];
     var petit = window.innerWidth < 600, W = petit ? 340 : 460, row = 62, H = etapes.length * row, lab = petit ? 112 : 150, zone = W - lab - 8;
     var svg = svgEl("svg", { viewBox: "0 0 " + W + " " + H, role: "img", "aria-label": "Du chiffre d'affaires au résultat d'exploitation en " + a1 });
@@ -685,7 +684,7 @@
   }
 
   /* ---------- Fiche entreprise : rapport en 5 pages ---------- */
-  var pageActive = 0;
+  var pageActive = 0, MAJ = null;
   function fiche(ent, ents, choisir) {
     var f = $("fiche");
     f.innerHTML = "";
@@ -699,7 +698,8 @@
     var titre = el("div", { "class": "dash-titre" });
     titre.appendChild(el("p", { "class": "dash-surtitre" }, "Analyse financière · comptes publics"));
     titre.appendChild(el("h3", null, ent.nom));
-    titre.appendChild(el("p", { "class": "dash-sous" }, ent.secteur + " · " + ent.ville + " · exercices " + annees.join(", ")));
+    titre.appendChild(el("p", { "class": "dash-sous" }, ent.secteur + " · " + ent.ville + " · exercices " + annees.join(", ") +
+      (MAJ ? " · données mises à jour le " + dateFr(MAJ) + " " + MAJ.slice(0, 4) : "")));
     tete.appendChild(titre);
     var onglets = el("div", { "class": "dash-onglets", role: "tablist", "aria-label": "Pages du rapport" });
     var noms = ["Vue d'ensemble", "Compte de résultat", "Analyse des écarts", "Simulation", "Lecture et questions"];
@@ -749,7 +749,7 @@
     var mKey = ent.type === "distribution" ? "taux_marge_commerciale" : "taux_marge_sur_matieres";
     jg.appendChild(jauge(ent.type === "distribution" ? "Marge commerciale" : "Marge sur matières", R[a1][mKey].valeur, R[a0][mKey].valeur, 0, 1, a1, a0, R[a1][mKey].formule, "k2"));
     jg.appendChild(jauge("Valeur ajoutée / CA", S[a1].taux.valeur_ajoutee, S[a0].taux.valeur_ajoutee, 0, 0.4, a1, a0, "Valeur ajoutée / chiffre d'affaires", "k3"));
-    jg.appendChild(jauge("Masse salariale / CA", R[a1].poids_masse_salariale.valeur, R[a0].poids_masse_salariale.valeur, 0, 0.3, a1, a0, R[a1].poids_masse_salariale.formule, "k4"));
+    jg.appendChild(jauge("Masse salariale / CA", R[a1].poids_masse_salariale.valeur, R[a0].poids_masse_salariale.valeur, 0, 0.3, a1, a0, R[a1].poids_masse_salariale.formule, "k7"));
     jg.appendChild(jauge("Résultat d'exploitation / CA", R[a1].marge_exploitation.valeur, R[a0].marge_exploitation.valeur, -0.05, 0.1, a1, a0, R[a1].marge_exploitation.formule, "k5"));
     p1.appendChild(jg);
     var g = el("div", { "class": "graphes t12" });
@@ -761,7 +761,7 @@
       var p = ent.exercices[a].postes.resultat_exploitation;
       return { annee: a, valeur: p ? p.montant : null, sources: sourcesRatio(ent, a, ["resultat_exploitation"]) };
     }), "M€", "k5"));
-    var COUL = { marge_exploitation: "k4", poids_masse_salariale: "k3", bfr_jours_ca: "k6" };
+    var COUL = { marge_exploitation: "k5", poids_masse_salariale: "k7", bfr_jours_ca: "k6" };
     ent.marges_affichees.concat(["marge_exploitation", "poids_masse_salariale", "bfr_jours_ca"]).forEach(function (m) {
       var r0 = R[annees[0]][m];
       g.appendChild(graphe(NOMS[m], r0.formule, annees.map(function (a) {
@@ -1103,6 +1103,7 @@
 
   function initAnalyse(data, slugInitial) {
     var ents = data.entreprises;
+    MAJ = data.genere_le || null;
     $("choix").hidden = true;
     function selectionner(slug) {
       var e = ents.filter(function (x) { return x.slug === slug; })[0] || ents[0];
