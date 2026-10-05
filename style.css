@@ -367,3 +367,4 @@ footer { padding: 28px 0 40px; font-size: 0.875rem; color: var(--muted); }
 .f-usages h3 + ul, .f-usages h3 + p { margin-bottom: 12px; }
 .f-usages h3:not(:first-child) { margin-top: 8px; }
 @media (min-width: 1000px) { .cas-grille.cas-trois { grid-template-columns: repeat(3, 1fr); } }
+.offre-ba { margin-top: 12px; border-left: 4px solid var(--p1); }
