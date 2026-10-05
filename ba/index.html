@@ -6,100 +6,189 @@
 <meta name="robots" content="noindex, nofollow">
 <title>Paul Delahousse — business analyst / AMOA</title>
 <meta name="description" content="Business analyst / AMOA à Orléans : recueil des besoins, spécifications fonctionnelles, user stories, recette. Cas pratiques et parcours.">
-<link rel="stylesheet" href="../style.css?v=20261005c">
+<meta name="theme-color" content="#0D2236">
+<link rel="stylesheet" href="ba.css?v=20261005d">
+<link rel="preload" as="image" href="paul.webp">
+<script>document.documentElement.classList.add("js")</script>
 </head>
 <body>
-<nav class="barre-haut" aria-label="Navigation">
-  <div class="wrap barre-contenu">
-    <a class="marque" href="./">Paul Delahousse <span>· business analyst / AMOA</span></a>
-    <span class="liens"><a href="#parcours">Parcours</a><a href="#cas">Cas pratiques</a><a href="#methode">Méthode</a><a href="#contact">Contact</a></span>
+<nav class="nav" id="nav" aria-label="Navigation">
+  <div class="wrap nav-in">
+    <a class="marque" href="./"><span class="mono">PD</span><span>Paul Delahousse<small>Business analyst / AMOA</small></span></a>
+    <span class="nav-liens"><a href="#services">Services</a><a href="#methode">Méthode</a><a href="#cas">Réalisations</a><a href="#parcours">Parcours</a><a class="btn btn-plein btn-petit" href="#contact">Me contacter</a></span>
   </div>
 </nav>
-<div class="wrap">
-  <div class="hero">
-    <header class="bandeau">
-      <p class="surtitre">Business analyst / AMOA · Orléans</p>
-      <h1>Paul Delahousse</h1>
-      <p class="accroche">5 ans côté métier en grande consommation. Aujourd'hui, je traduis les besoins métier en solutions.</p>
-      <p class="muted">Recueil des besoins, spécifications fonctionnelles, user stories, recette. SQL et Power BI pour dialoguer avec les équipes techniques.</p>
-      <p class="actions">
-        <a class="bouton" href="#cas">Voir les cas pratiques</a>
-        <a class="bouton secondaire" id="lien-cv-haut" href="CV_Paul_Delahousse_business_analyst.pdf">Télécharger mon CV</a>
-      </p>
-      <p class="contact-ligne"><a href="mailto:paul.delahousse@outlook.com?subject=Contact%20%E2%80%94%20business%20analyst">paul.delahousse@outlook.com</a> · <a href="tel:+33660437827">06 60 43 78 27</a> · <a href="https://www.linkedin.com/in/paul-delahousse" rel="noopener">LinkedIn</a></p>
-      <p class="perso" id="perso" hidden></p>
-    </header>
-    <section aria-labelledby="t-atouts">
-      <h2 id="t-atouts">Ce que j'apporte à un projet</h2>
-      <ul class="atouts">
-        <li><b>Le regard métier</b> : 5 ans au contact des équipes commerciales, marketing et supply, et des clients de la grande distribution.</li>
-        <li><b>Les livrables BA</b> : user stories avec critères d'acceptation, backlog priorisé, scénarios de recette Gherkin.</li>
-        <li><b>La donnée</b> : SQL, Power BI et Excel pour vérifier un besoin dans les chiffres plutôt que le supposer.</li>
-        <li><b>L'agilité</b> : certifié PSM I (Scrum.org).</li>
-      </ul>
-      <div class="carte offre-ba">
-        <h3>Une user story relue sous 48 heures</h3>
-        <p>Envoyez-moi une user story ou un extrait de backlog anonymisé. Sous 48 heures, je vous renvoie les ambiguïtés, les critères d'acceptation manquants, trois questions à poser au métier et des scénarios de test Gherkin.</p>
-        <a href="mailto:paul.delahousse@outlook.com?subject=User%20story%20relue%20sous%2048%20h">Envoyer une user story</a>
-      </div>
-    </section>
-  </div>
 
-  <section id="parcours" aria-labelledby="t-parcours">
-    <h2 id="t-parcours">Parcours : du terrain commercial à la business analyse</h2>
-    <div class="parcours-grille">
-      <div class="tuile parcours-frise">
-        <ol class="chrono">
-          <li class="chrono-item actuel"><p class="chrono-periode">2026</p><h3>Transition vers la business analyse et la donnée</h3>
-            <p class="chrono-sous">Formation continue et projets personnels</p>
+<header class="hero">
+  <div class="wrap">
+    <div class="hero-grille">
+      <div>
+        <p class="dispo"><span class="point" aria-hidden="true"></span>En recherche active · Orléans et alentours</p>
+        <p class="role">Business analyst / AMOA</p>
+        <h1>Je traduis les besoins métier en <span class="degrade">solutions claires, priorisées et testées.</span></h1>
+        <p class="chapo">5 ans côté métier en grande consommation, au contact des équipes commerciales, marketing et supply. Aujourd'hui, je recueille les besoins, je les formalise en user stories et je prépare la recette.</p>
+        <p class="actions">
+          <a class="btn btn-plein" href="#cas">Voir mes réalisations <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          <a class="btn btn-clair" id="lien-cv-haut" href="CV_Paul_Delahousse_business_analyst.pdf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg> Télécharger mon CV</a>
+        </p>
+        <p class="contacts"><a href="mailto:paul.delahousse@outlook.com?subject=Contact%20%E2%80%94%20business%20analyst"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>paul.delahousse@outlook.com</a><a href="tel:+33660437827"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>06 60 43 78 27</a><a href="https://www.linkedin.com/in/paul-delahousse" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 10v7M8 7v.01M12 17v-4a2 2 0 0 1 4 0v4M12 10v7"/></svg>LinkedIn</a></p>
+      </div>
+      <div class="portrait">
+        <div class="portrait-cadre"><img src="paul.webp" width="640" height="800" alt="Portrait de Paul Delahousse"></div>
+        <div class="puce-flot us" aria-hidden="true"><b>User story · US-1.1</b><i>En tant que</i> prospect, <i>je souhaite</i> simuler ma capacité d'emprunt <i>afin d'</i>évaluer mon projet.</div>
+        <div class="puce-flot gk" aria-hidden="true"><b>Recette · TS-002</b><span class="k">Given</span> le simulateur<br><span class="k">When</span> il clique « Calculer »<br><span class="k">Then</span> l'indicateur est ORANGE</div>
+        <div class="puce-flot psm" aria-hidden="true"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="9" r="6"/><path d="M8.5 14L7 22l5-3 5 3-1.5-8"/></svg></span><span><b>PSM I</b><span>Scrum.org · 2026</span></span></div>
+      </div>
+    </div>
+    <div class="confiance">
+      <p>5 ans d'expérience métier chez</p>
+      <ul><li>Mondelez International</li><li>Buitoni <span>(Mondelez)</span></li><li>Tricotage des Vosges</li></ul>
+    </div>
+  </div>
+</header>
+
+<section class="chiffres" aria-label="Chiffres clés">
+  <div class="wrap"><ul><li class="rv" style="--c:#1F4E79;--c2:#8CC4E8;--d:0.00s"><strong>5 ans</strong><span>côté métier en grande consommation, au contact des équipes et des clients</span></li><li class="rv" style="--c:#2E86AB;--c2:#7CC6E6;--d:0.08s"><strong>5 services</strong><span>coordonnés sur un projet transverse, du besoin au déploiement national</span></li><li class="rv" style="--c:#3BA99C;--c2:#7DD3C0;--d:0.16s"><strong>+300 k€</strong><span>de valeur incrémentale sur ce projet</span></li><li class="rv" style="--c:#E07A22;--c2:#F5B57A;--d:0.24s"><strong>4</strong><span>certifications obtenues en 2026, dont PSM I (Scrum.org)</span></li></ul></div>
+</section>
+
+<main>
+  <section class="section" id="services" aria-labelledby="t-services">
+    <div class="wrap">
+      <div class="entete rv"><p class="sur">Ce que j'apporte</p><h2 id="t-services">Le regard métier, et les livrables d'un business analyst</h2>
+        <p>Du premier entretien jusqu'à la recette : comprendre le besoin, l'écrire sans ambiguïté, le vérifier dans les données et dans l'outil livré.</p></div>
+      <div class="services">
+<article class="service rv" style="--c:#2E86AB;--d:0.00s"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></div><h3>Cadrage et recueil des besoins</h3><p>Analyse de l&#x27;existant, entretiens et ateliers, irritants chiffrés. Je pars du terrain et des utilisateurs, pas de l&#x27;outil.</p><ul class="etiquettes"><li>Analyse de l&#x27;existant</li><li>Entretiens</li><li>Ateliers</li></ul></article>
+<article class="service rv" style="--c:#6A4C93;--d:0.08s"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg></div><h3>Spécifications et backlog</h3><p>EPICs, user stories avec critères d&#x27;acceptation, règles de gestion, maquettes fonctionnelles, priorisation MoSCoW.</p><ul class="etiquettes"><li>User stories</li><li>Règles de gestion</li><li>MoSCoW</li></ul></article>
+<article class="service rv" style="--c:#3BA99C;--d:0.16s"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg></div><h3>Recette et qualité</h3><p>Plan de tests fonctionnels, scénarios Gherkin, matrice de couverture, jeux de données de test. Je vérifie avant de livrer.</p><ul class="etiquettes"><li>Gherkin</li><li>Matrice de couverture</li><li>Jeux de test</li></ul></article>
+<article class="service rv" style="--c:#E07A22;--d:0.24s"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></div><h3>Données et pilotage</h3><p>SQL et Power BI pour vérifier un besoin dans les chiffres, et des indicateurs pour suivre l&#x27;adoption après le déploiement.</p><ul class="etiquettes"><li>SQL</li><li>Power BI</li><li>Indicateurs d&#x27;adoption</li></ul></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section alt" id="methode" aria-labelledby="t-methode">
+    <div class="wrap">
+      <div class="entete rv"><p class="sur">Méthode</p><h2 id="t-methode">De l'existant à la mise en production, en cinq étapes</h2>
+        <p>Chaque étape est illustrée par le cas pratique de crédit immobilier (données fictives), disponible en entier plus bas.</p></div>
+      <ol class="etapes">
+<li class="etape rv" style="--c:#1F4E79;--d:0.00s"><span class="num">1</span><h3>Comprendre l&#x27;existant</h3><p>Cartographier le processus actuel et chiffrer ce qui bloque.</p><p class="preuve">Dans le cas crédit immobilier : processus en <b>7 étapes</b>, 40 % de dossiers incomplets.</p></li>
+<li class="etape rv" style="--c:#2E86AB;--d:0.08s"><span class="num">2</span><h3>Recueillir les besoins</h3><p>Entretiens individuels et ateliers avec chaque partie prenante.</p><p class="preuve">Dans le cas crédit immobilier : <b>15 entretiens</b> et 3 ateliers simulés, 5 départements.</p></li>
+<li class="etape rv" style="--c:#6A4C93;--d:0.16s"><span class="num">3</span><h3>Spécifier</h3><p>User stories, critères d&#x27;acceptation, règles de gestion, maquettes.</p><p class="preuve">Dans le cas crédit immobilier : <b>3 EPICs</b> et 12 user stories.</p></li>
+<li class="etape rv" style="--c:#3BA99C;--d:0.24s"><span class="num">4</span><h3>Prioriser et planifier</h3><p>Arbitrer avec le métier, découper en livraisons.</p><p class="preuve">Dans le cas crédit immobilier : priorisation MoSCoW, <b>10 sprints</b>.</p></li>
+<li class="etape rv" style="--c:#E07A22;--d:0.32s"><span class="num">5</span><h3>Recetter et mesurer</h3><p>Tester chaque règle, puis suivre les indicateurs après le déploiement.</p><p class="preuve">Dans le cas crédit immobilier : <b>12 scénarios</b> Gherkin, indicateurs de suivi.</p></li>
+      </ol>
+      <div class="extraits">
+        <div class="extrait rv">
+          <div class="extrait-tete"><span><b>User story US-1.1</b> · Simulation de crédit instantanée</span><span class="pastilles" aria-hidden="true"><i></i><i></i><i></i></span></div>
+          <div class="extrait-corps">
+            <p class="us-texte"><em>En tant que</em> prospect, <em>je souhaite</em> simuler ma capacité d'emprunt en 2 minutes maximum sans création de compte <em>afin d'</em>évaluer la faisabilité de mon projet immobilier avant tout engagement avec la banque.</p>
+            <p class="us-meta"><span>Epic 1 · Portail client</span><span>Priorité P0 · Must Have</span><span>5 points</span></p>
+            <ul class="us-criteres"><li>Formulaire de 6 champs obligatoires au maximum</li><li>Saisie validée en temps réel, avec des messages d'erreur explicites</li><li>Résultats affichés en moins de 2 secondes</li></ul>
+          </div>
+        </div>
+        <div class="extrait sombre rv" style="--d:.1s">
+          <div class="extrait-tete"><span><b>Scénario TS-002</b> · Taux d'endettement limite</span><span class="pastilles" aria-hidden="true"><i></i><i></i><i></i></span></div>
+<pre class="code"><span class="c"># Cas alternatif : règle métier à la limite des 33 %</span>
+<span class="k">Given</span> le client accède au simulateur de crédit
+<span class="k">When</span>  il saisit : Revenus <span class="s">2 800 €</span>, Charges <span class="s">700 €</span>,
+      Apport <span class="s">30 000 €</span>, Projet <span class="s">200 000 €</span>, Durée <span class="s">25 ans</span>
+<span class="k">And</span>   il clique sur « Calculer »
+<span class="k">Then</span>  le taux d'endettement calculé est de <span class="s">32 %</span>
+<span class="k">And</span>   l'indicateur de faisabilité est <span class="s">ORANGE</span>
+<span class="k">And</span>   les boutons « Créer mon dossier » et
+      « Prendre RDV conseiller » sont actifs</pre>
+        </div>
+      </div>
+      <p class="note" style="margin-top:14px">Extraits du cas crédit immobilier (données fictives), pages 9 et 29.</p>
+    </div>
+  </section>
+
+  <section class="section" id="cas" aria-labelledby="t-cas">
+    <div class="wrap">
+      <div class="entete rv"><p class="sur">Réalisations</p><h2 id="t-cas">Trois cas construits de bout en bout</h2>
+        <p>Un cas de business analyse, un CRM réellement construit et vérifié, un tableau de bord. Ce sont des exercices sur <b>données fictives</b>, pas des missions réalisées en entreprise.</p></div>
+      <div class="cas-liste">
+<article class="cas rv" style="--c:#6A4C93"><a class="cas-visuel" href="cas-ba-credit-immobilier.pdf" aria-label="Lire le cas : Refonte du processus de souscription d&#x27;un crédit immobilier"><div class="navigateur"><img src="ba-simulation.webp" width="1200" height="798" loading="lazy" alt="Maquette fonctionnelle : simulateur de capacité d'emprunt"></div><div class="telephone"><img src="ba-suivi-dossier.webp" width="560" height="1180" loading="lazy" alt="Maquette mobile : suivi du dossier en 7 étapes"></div></a><div class="cas-texte"><p class="tags"><span class="tag fort">Analyse fonctionnelle</span><span class="tag">données fictives</span></p><h3>Refonte du processus de souscription d&#x27;un crédit immobilier</h3><p class="probleme"><b>Le problème :</b> un parcours en 7 étapes, papier et ressaisies, 18 jours en moyenne et 40 % de dossiers incomplets.</p><ul class="livrables"><li>Analyse de l&#x27;existant et irritants chiffrés</li><li>Recueil des besoins : entretiens et ateliers simulés</li><li>User stories avec critères d&#x27;acceptation, règles de gestion et maquettes</li><li>Backlog priorisé MoSCoW, roadmap, plan de recette et indicateurs de suivi</li></ul><div class="mesures"><div><strong>54</strong><span>pages de livrables</span></div><div><strong>12</strong><span>user stories</span></div><div><strong>12</strong><span>scénarios de test</span></div><div><strong>10</strong><span>sprints planifiés</span></div></div><p class="bas"><a class="btn btn-petit" href="cas-ba-credit-immobilier.pdf">Lire le cas <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a><small>PDF, 54 pages</small></p></div></article>
+<article class="cas rv" style="--c:#1F4E79"><a class="cas-visuel" href="cas-crm-salesforce.pdf" aria-label="Lire le cas : Sortir une force de vente terrain d&#x27;Excel avec Salesforce"><div class="navigateur haut"><img src="crm-adoption.webp" width="1200" height="1351" loading="lazy" alt="Tableau de bord d'adoption construit dans Salesforce"></div></a><div class="cas-texte"><p class="tags"><span class="tag fort">CRM</span><span class="tag">données fictives</span></p><h3>Sortir une force de vente terrain d&#x27;Excel avec Salesforce</h3><p class="probleme"><b>Le problème :</b> visites et opérations promotionnelles suivies dans des fichiers Excel ; rien ne signale une opération négociée puis oubliée.</p><ul class="livrables"><li>Modèle de données et qualité des données (doublons, champs de synthèse)</li><li>Automatisations configurées sans code : relances, alertes, contrôles</li><li>Rapports et tableaux de bord d&#x27;adoption et de performance</li><li>Recette par requête et arbitrages documentés</li></ul><div class="mesures"><div><strong>7</strong><span>automatisations</span></div><div><strong>8</strong><span>rapports</span></div><div><strong>2</strong><span>tableaux de bord</span></div><div><strong>8</strong><span>arbitrages écrits</span></div></div><p class="bas"><a class="btn btn-petit" href="cas-crm-salesforce.pdf">Lire le cas <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a><small>PDF, 27 pages</small></p></div></article>
+<article class="cas rv" style="--c:#C9851B"><a class="cas-visuel" href="../cas-power-bi-lubrifiants.pdf" aria-label="Voir le tableau de bord : Tableau de bord Power BI : ventes de lubrifiants"><div class="navigateur"><img src="powerbi-tableau.webp" width="1400" height="746" loading="lazy" alt="Tableau de bord Power BI : volume et marge par zone"></div></a><div class="cas-texte"><p class="tags"><span class="tag fort">Données</span><span class="tag">données fictives</span></p><h3>Tableau de bord Power BI : ventes de lubrifiants</h3><p class="probleme"><b>La question :</b> où se font le volume et la marge, par zone, emballage et produit, et comment ils évoluent par rapport à l'année précédente.</p><ul class="livrables"><li>Indicateurs clés et évolution sur un an</li><li>Détail par zone, pays et emballage</li><li>Filtres par produit, zone et catégorie</li></ul><div class="mesures trois"><div><strong>14</strong><span>indicateurs clés</span></div><div><strong>3</strong><span>axes d&#x27;analyse</span></div><div><strong>1</strong><span>page de pilotage</span></div></div><p class="bas"><a class="btn btn-petit" href="../cas-power-bi-lubrifiants.pdf">Voir le tableau de bord <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a><small>PDF, 1 page</small></p></div></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section alt" aria-labelledby="t-offre">
+    <div class="wrap">
+      <div class="offre rv">
+        <div>
+          <p class="sur">Pour juger sur pièce</p>
+          <h2 id="t-offre">Une user story relue sous 48 heures</h2>
+          <p>Envoyez-moi une user story ou un extrait de backlog anonymisé. Sous 48 heures, je vous renvoie :</p>
+          <ol><li>les ambiguïtés</li><li>les critères d'acceptation manquants</li><li>trois questions à poser au métier</li><li>des scénarios de test Gherkin</li></ol>
+        </div>
+        <a class="btn btn-plein" href="mailto:paul.delahousse@outlook.com?subject=User%20story%20relue%20sous%2048%20h">Envoyer une user story <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="parcours" aria-labelledby="t-parcours">
+    <div class="wrap">
+      <div class="entete rv"><p class="sur">Parcours</p><h2 id="t-parcours">Du terrain commercial à la business analyse</h2></div>
+      <div class="parcours">
+        <ol class="ligne-temps">
+          <li class="poste actuel rv"><p class="periode">2026</p><h3>Transition vers la business analyse et la donnée</h3>
+            <p class="ou">Formation continue et projets personnels</p>
             <p>En 2026, j'ai structuré ma reconversion : formation en données (SQL, Python, Power BI), un cas pratique de business analyse mené de bout en bout et un CRM construit sur Salesforce.</p>
             <ol class="frise">
-<li class="d-sql"><p class="frise-mois">Janvier – février</p><p class="frise-titre">SQL : trois parcours validés</p><p class="frise-texte">Requêtes métier, jointures, fonctions de fenêtrage, conception de bases de données, reporting.</p><p class="frise-liens"><a href="https://www.datacamp.com/statement-of-accomplishment/track/b2954713bcf47606adf86395728bf1c26174f147" rel="noopener">Attestation « Analyste de données associé en SQL »</a><a href="https://www.datacamp.com/statement-of-accomplishment/track/7f18c92183131297e05d563a1ec64a7b65d7102e" rel="noopener">Attestation « SQL pour les analystes commerciaux »</a><a href="https://www.datacamp.com/statement-of-accomplishment/track/72934d9ff8d862470309f7d355c5117a73896176" rel="noopener">Attestation « Principes fondamentaux de SQL »</a></p></li>
-<li class="d-stats"><p class="frise-mois">Mars</p><p class="frise-titre">Statistiques et analyse avec Python</p><p class="frise-texte">pandas, statistiques descriptives, échantillonnage, analyse exploratoire.</p></li>
-<li class="d-excel"><p class="frise-mois">Avril</p><p class="frise-titre">Excel, Power Query, puis Power BI</p><p class="frise-texte">Préparation et visualisation des données. Cas pratique : un tableau de bord Power BI (données fictives).</p><p class="frise-liens"><a href="https://www.datacamp.com/statement-of-accomplishment/track/5e262b0f8882d80b4f0819928ed3495bbc2f408d" rel="noopener">Attestation « Principes de base de Power BI »</a></p></li>
-<li class="d-pbi"><p class="frise-mois">Mai</p><p class="frise-titre">Parcours métier Power BI et cas d&#x27;analyse fonctionnelle</p><p class="frise-texte">Parcours « Analyste de données dans Power BI » validé. Cas pratique : refonte d&#x27;un processus de souscription de crédit immobilier (données fictives).</p><p class="frise-liens"><a href="https://www.datacamp.com/statement-of-accomplishment/track/d11b9e83e3bf4a6b7c935522fb17b5a67e0843f1" rel="noopener">Attestation « Analyste de données dans Power BI »</a></p></li>
-<li class="d-pbi"><p class="frise-mois">Juin</p><p class="frise-titre">Power BI avancé</p><p class="frise-texte">DAX, modélisation, analyse de tendances, conception de rapports, déploiement.</p></li>
-<li class="d-sql"><p class="frise-mois">Septembre</p><p class="frise-titre">Cas pratique : un CRM Salesforce de bout en bout</p><p class="frise-texte">Modèle de données, qualité des données, automatisations, rapports et tableaux de bord, recette (entreprise et données fictives).</p></li>
+<li class="d-sql"><p class="mois">Janvier – février</p><p class="titre">SQL : trois parcours validés</p><p class="texte">Requêtes métier, jointures, fonctions de fenêtrage, conception de bases de données, reporting.</p><p class="liens"><a href="https://www.datacamp.com/statement-of-accomplishment/track/b2954713bcf47606adf86395728bf1c26174f147" rel="noopener">Attestation « Analyste de données associé en SQL »</a><a href="https://www.datacamp.com/statement-of-accomplishment/track/7f18c92183131297e05d563a1ec64a7b65d7102e" rel="noopener">Attestation « SQL pour les analystes commerciaux »</a><a href="https://www.datacamp.com/statement-of-accomplishment/track/72934d9ff8d862470309f7d355c5117a73896176" rel="noopener">Attestation « Principes fondamentaux de SQL »</a></p></li>
+<li class="d-stats"><p class="mois">Mars</p><p class="titre">Statistiques et analyse avec Python</p><p class="texte">pandas, statistiques descriptives, échantillonnage, analyse exploratoire.</p></li>
+<li class="d-excel"><p class="mois">Avril</p><p class="titre">Excel, Power Query, puis Power BI</p><p class="texte">Préparation et visualisation des données. Cas pratique : un tableau de bord Power BI (données fictives).</p><p class="liens"><a href="https://www.datacamp.com/statement-of-accomplishment/track/5e262b0f8882d80b4f0819928ed3495bbc2f408d" rel="noopener">Attestation « Principes de base de Power BI »</a></p></li>
+<li class="d-pbi"><p class="mois">Mai</p><p class="titre">Parcours métier Power BI et cas d&#x27;analyse fonctionnelle</p><p class="texte">Parcours « Analyste de données dans Power BI » validé. Cas pratique : refonte d&#x27;un processus de souscription de crédit immobilier (données fictives).</p><p class="liens"><a href="https://www.datacamp.com/statement-of-accomplishment/track/d11b9e83e3bf4a6b7c935522fb17b5a67e0843f1" rel="noopener">Attestation « Analyste de données dans Power BI »</a></p></li>
+<li class="d-pbi"><p class="mois">Juin</p><p class="titre">Power BI avancé</p><p class="texte">DAX, modélisation, analyse de tendances, conception de rapports, déploiement.</p></li>
+<li class="d-crm"><p class="mois">Septembre</p><p class="titre">Cas pratique : un CRM Salesforce de bout en bout</p><p class="texte">Modèle de données, qualité des données, automatisations, rapports et tableaux de bord, recette (entreprise et données fictives).</p></li>
             </ol>
           </li>
-<li class="chrono-item"><p class="chrono-periode">2023 – 2025</p><h3>Chef de secteur</h3><p class="chrono-sous">Tricotage des Vosges</p><ul class="chrono-puces"><li>70 comptes BtoB sur 13 départements : doublement du chiffre d&#x27;affaires du secteur en 2 ans, 7 nouveaux comptes ouverts.</li><li>Reporting mensuel des indicateurs à la direction, analyse des écarts et plans d&#x27;action.</li><li>Plans merchandising sur mesure : cadrage des attentes, présentation et validation des solutions, suivi après déploiement.</li></ul></li>
-<li class="chrono-item"><p class="chrono-periode">2021 – 2023</p><h3>Chef de secteur</h3><p class="chrono-sous">Mondelez International</p><ul class="chrono-puces"><li>Projet transverse « Produits à moins de 2 € » avec 5 services (marketing, produit, supply, finance, commerce) : recueil des besoins, coordination, déploiement régional puis national, +300 k€ de valeur incrémentale.</li><li>Suivi des indicateurs de 23 comptes grands clients (8,4 M€ de CA) : écarts, plans d&#x27;action, reporting à la direction.</li><li>Management de 2 collaboratrices.</li></ul></li>
-<li class="chrono-item"><p class="chrono-periode">2021</p><h3>Assistant Catman (analyse de données)</h3><p class="chrono-sous">Buitoni / Mondelez</p><ul class="chrono-puces"><li>Recueil des besoins des équipes commerciales et marketing pour des outils de reporting (Power BI, Excel avancé).</li><li>Analyse des panels Nielsen et Kantar : repérage des anomalies de données, résolution avec les équipes techniques.</li><li>Formation des équipes aux outils déployés, supports et documentation fonctionnelle.</li></ul></li>
+<li class="poste rv"><p class="periode">2023 – 2025</p><h3>Chef de secteur</h3><p class="ou">Tricotage des Vosges</p><ul><li>70 comptes BtoB sur 13 départements : doublement du chiffre d&#x27;affaires du secteur en 2 ans, 7 nouveaux comptes ouverts.</li><li>Reporting mensuel des indicateurs à la direction, analyse des écarts et plans d&#x27;action.</li><li>Plans merchandising sur mesure : cadrage des attentes, présentation et validation des solutions, suivi après déploiement.</li></ul></li>
+<li class="poste rv"><p class="periode">2021 – 2023</p><h3>Chef de secteur</h3><p class="ou">Mondelez International</p><ul><li>Projet transverse « Produits à moins de 2 € » avec 5 services (marketing, produit, supply, finance, commerce) : recueil des besoins, coordination, déploiement régional puis national, +300 k€ de valeur incrémentale.</li><li>Suivi des indicateurs de 23 comptes grands clients (8,4 M€ de CA) : écarts, plans d&#x27;action, reporting à la direction.</li><li>Management de 2 collaboratrices.</li></ul></li>
+<li class="poste rv"><p class="periode">2021</p><h3>Assistant Catman (analyse de données)</h3><p class="ou">Buitoni / Mondelez</p><ul><li>Recueil des besoins des équipes commerciales et marketing pour des outils de reporting (Power BI, Excel avancé).</li><li>Analyse des panels Nielsen et Kantar : repérage des anomalies de données, résolution avec les équipes techniques.</li><li>Formation des équipes aux outils déployés, supports et documentation fonctionnelle.</li></ul></li>
         </ol>
-      </div>
-      <div class="tuile f-usages">
-        <h3>Certifications obtenues</h3>
-        <ul><li class='d-sql'>PSM I — Scrum.org (2026)</li><li class='d-sql'>Data Analyst DA101/DA201 — DataCamp (2026)</li><li class='d-sql'>Parcours Analyste de données dans Power BI — DataCamp (2026)</li><li class='d-sql'>dbt Fundamentals — dbt Labs (2026)</li></ul>
-        <h3>Langues</h3>
-        <p class="small">Français (langue maternelle), anglais bilingue (C1), allemand et espagnol avancés.</p>
-        <h3>Formation</h3>
-        <p class="small">IESEG School of Management, programme grande école, Bac+5, grade de Master (2016 – 2021). Échanges à Berlin (1 an) et Guadalajara (4 mois).</p>
+        <aside class="fiche rv">
+          <h3>Certifications obtenues</h3>
+          <ul class="certifs"><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="9" r="6"/><path d="M8.5 14L7 22l5-3 5 3-1.5-8"/></svg><div>PSM I<span>Scrum.org · 2026</span></div></li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="9" r="6"/><path d="M8.5 14L7 22l5-3 5 3-1.5-8"/></svg><div>Data Analyst DA101 / DA201<span>DataCamp · 2026</span></div></li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="9" r="6"/><path d="M8.5 14L7 22l5-3 5 3-1.5-8"/></svg><div>Parcours Analyste de données dans Power BI<span>DataCamp · 2026</span></div></li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="9" r="6"/><path d="M8.5 14L7 22l5-3 5 3-1.5-8"/></svg><div>dbt Fundamentals<span>dbt Labs · 2026</span></div></li></ul>
+          <h3>Méthodes et outils</h3>
+          <ul class="outils"><li>User stories</li><li>Gherkin</li><li>MoSCoW</li><li>Scrum</li><li>SQL</li><li>Power BI (DAX)</li><li>Excel et Power Query</li><li>Python (pandas)</li><li>dbt</li><li>Salesforce</li></ul>
+          <h3>Langues</h3>
+          <p>Français (langue maternelle), anglais bilingue (C1), allemand et espagnol avancés.</p>
+          <h3>Formation</h3>
+          <p>IESEG School of Management, programme grande école, Bac+5, grade de Master (2016 – 2021). Échanges à Berlin (1 an) et Guadalajara (4 mois).</p>
+        </aside>
       </div>
     </div>
   </section>
 
-  <section id="cas" aria-labelledby="t-cas">
-    <h2 id="t-cas">Cas pratiques</h2>
-    <p class="muted small">Trois cas construits de bout en bout, sur des <b>données fictives</b>. Ce sont des exercices, pas des missions réalisées en entreprise.</p>
-    <div class="cas-grille cas-trois">
-<article class="carte cas-carte"><p><span class="tag">données fictives</span> <span class="tag">Analyse fonctionnelle</span></p><h3>Refonte du processus de souscription d&#x27;un crédit immobilier</h3><p class="small">Analyse de l&#x27;existant, recueil des besoins (entretiens et ateliers simulés), 3 EPICs et 12 user stories priorisées MoSCoW, roadmap sur 10 sprints, plan de recette en 12 scénarios Gherkin, indicateurs de suivi après déploiement.</p><p><a class="bouton" href="cas-ba-credit-immobilier.pdf">Lire le cas (PDF, 54 pages)</a></p></article>
-<article class="carte cas-carte"><p><span class="tag">données fictives</span> <span class="tag">CRM</span></p><h3>Sortir une force de vente terrain d&#x27;Excel avec Salesforce</h3><p class="small">Un CRM réellement construit et vérifié dans Salesforce pour une entreprise inventée : modèle de données, qualité des données, 7 automatisations, 8 rapports et 2 tableaux de bord, arbitrages documentés, recette.</p><p><a class="bouton" href="cas-crm-salesforce.pdf">Lire le cas (PDF, 27 pages)</a></p></article>
-<article class="carte cas-carte"><p><span class="tag">données fictives</span> <span class="tag">Données</span></p><h3>Tableau de bord Power BI : ventes de lubrifiants</h3><p class="small">Volume et marge par zone, emballage et produit, comparaison avec l&#x27;année précédente.</p><p><a class="bouton" href="../cas-power-bi-lubrifiants.pdf">Voir le tableau de bord (PDF, 1 page)</a></p></article>
+  <section class="section alt" id="rigueur" aria-labelledby="t-rigueur">
+    <div class="wrap">
+      <div class="entete rv"><p class="sur">Rigueur</p><h2 id="t-rigueur">Comment je teste avant de livrer</h2>
+        <p>Le CRM Salesforce a été construit avec l'aide de l'IA, jamais sans vérification. Voici des erreurs repérées pendant ce travail, et ce qui a changé ensuite.</p></div>
+      <div class="journal" id="journal"></div>
     </div>
   </section>
 
-  <section id="methode" aria-labelledby="t-methode">
-    <h2 id="t-methode">Comment je teste avant de livrer</h2>
-    <p class="muted small">Le CRM Salesforce a été construit avec l'aide de l'IA, jamais sans vérification. Voici des erreurs repérées pendant ce travail, et ce qui a changé ensuite.</p>
-    <div class="journal" id="journal"></div>
+  <section class="section contact" id="contact" aria-labelledby="t-contact">
+    <div class="wrap">
+      <p class="sur rv">Contact</p>
+      <h2 id="t-contact" class="rv">Un poste, un projet, une question ?</h2>
+      <p class="chapo rv">Le plus simple : un e-mail ou un appel. Mon CV et les trois cas pratiques se téléchargent depuis cette page.</p>
+      <div class="contact-cartes">
+        <a class="contact-carte rv" href="mailto:paul.delahousse@outlook.com?subject=Contact%20%E2%80%94%20business%20analyst"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></span><b>E-mail</b><span>paul.delahousse@outlook.com</span></a>
+        <a class="contact-carte rv" style="--d:.08s" href="tel:+33660437827"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg></span><b>Téléphone</b><span>06 60 43 78 27</span></a>
+        <a class="contact-carte rv" style="--d:.16s" href="https://www.linkedin.com/in/paul-delahousse" rel="noopener"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 10v7M8 7v.01M12 17v-4a2 2 0 0 1 4 0v4M12 10v7"/></svg></span><b>LinkedIn</b><span>Profil et parcours</span></a>
+      </div>
+      <p class="actions rv"><a class="btn btn-ligne" id="lien-cv" href="CV_Paul_Delahousse_business_analyst.pdf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg> Télécharger mon CV (PDF)</a></p>
+    </div>
   </section>
+</main>
 
-  <footer id="contact">
-    <p><a class="bouton" id="lien-cv" href="CV_Paul_Delahousse_business_analyst.pdf">Télécharger mon CV (PDF)</a></p>
-    <p><a href="mailto:paul.delahousse@outlook.com?subject=Contact%20%E2%80%94%20business%20analyst">paul.delahousse@outlook.com</a> · <a href="tel:+33660437827">06 60 43 78 27</a> · <a href="https://www.linkedin.com/in/paul-delahousse" rel="noopener">LinkedIn</a></p>
-    <p class="small">Aucun cookie, aucun traceur.</p>
-  </footer>
-</div>
-<script src="ba.js?v=20261005c"></script>
+<footer class="pied">
+  <div class="wrap"><span>© 2026 Paul Delahousse · Business analyst / AMOA · Orléans</span><span>Aucun cookie, aucun traceur.</span></div>
+</footer>
+<script src="ba.js?v=20261005d"></script>
 </body>
 </html>
