@@ -357,3 +357,13 @@ footer { padding: 28px 0 40px; font-size: 0.875rem; color: var(--muted); }
 @media (min-width: 1000px) { .parcours-grille > .f-usages { position: sticky; top: 68px; } }
 .sim-seuil p { margin: 0 0 6px; } .sim-seuil p:last-child { margin: 0; }
 .sim-question { padding-top: 6px; border-top: 1px solid var(--grid); }
+
+/* ---------- Page business analyst (/ba/) ---------- */
+.atouts { list-style: none; margin: 0; padding: 0; }
+.atouts li { position: relative; padding: 0 0 10px 18px; font-size: 0.9375rem; }
+.atouts li::before { content: ""; position: absolute; left: 0; top: 8px; width: 8px; height: 8px; border-radius: 2px; background: var(--p1); }
+.chrono-puces { margin: 4px 0 0; padding-left: 18px; font-size: 0.9375rem; }
+.chrono-puces li { margin-bottom: 4px; }
+.f-usages h3 + ul, .f-usages h3 + p { margin-bottom: 12px; }
+.f-usages h3:not(:first-child) { margin-top: 8px; }
+@media (min-width: 1000px) { .cas-grille.cas-trois { grid-template-columns: repeat(3, 1fr); } }
