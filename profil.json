@@ -438,12 +438,13 @@
   "attestation": ""
  },
  "certifications": [
-  "Power BI — DataCamp (2026)",
-  "Data Analyst DA101/DA201 — DataCamp (2025)",
-  "PSM I — Scrum.org (2025)",
-  "dbt Fundamentals (2025)"
+  "Parcours Analyste de données dans Power BI — DataCamp (2026)",
+  "Data Analyst DA101/DA201 — DataCamp (2026)",
+  "PSM I — Scrum.org (2026)",
+  "dbt Fundamentals (2026)"
  ],
  "telephone": "06 60 43 78 27",
  "compteur_goatcounter": "pauldelahousse",
- "_compteur": "Code du compte GoatCounter (sans cookie). Vide = compteur désactivé."
+ "_compteur": "Code du compte GoatCounter (sans cookie). Vide = compteur désactivé.",
+ "_certifications": "Toutes les certifications ont été obtenues en 2026 (précision de Paul du 05/10/2026)."
 }
