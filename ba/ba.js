@@ -1,7 +1,7 @@
 /* Page business analyst (/ba/) : journal des erreurs du cas CRM, compteur sans cookie. */
 (function () {
   "use strict";
-  var VERSION = "20261005b";
+  var VERSION = "20261005c";
   // Entrées du journal liées au cas CRM Salesforce, retenues pour la page BA
   var IDS = ["A3", "A4", "B2", "B4", "C3"];
   var CODE_GC = "pauldelahousse";
