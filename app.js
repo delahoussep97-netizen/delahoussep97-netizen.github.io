@@ -35,7 +35,7 @@
       .replace(/([+\-−]?\d[\d\u202f\u00a0 ]*(?:,\d+)?\s?(?:M€|k€|%|pt|jours|j\b|€))/g, "<strong>$1</strong>");
     return n;
   }
-  var VERSION = "20261005c";
+  var VERSION = "20261006a";
   function charger(url) {
     return fetch(url + "?v=" + VERSION).then(function (r) { if (!r.ok) throw new Error(url); return r.json(); });
   }
@@ -894,29 +894,47 @@
     $("nom").textContent = p.nom;
     $("role").textContent = p.role;
     $("accroche").textContent = p.accroche;
-    $("sous-accroche").textContent = p.sous_accroche;
+    if ($("sous-accroche")) $("sous-accroche").textContent = p.sous_accroche;
     var sujet = "Contact" + (perso ? " — réf. " + perso.code : "");
     var mail = "mailto:" + p.email + "?subject=" + encodeURIComponent(sujet);
-    [$("contact-haut"), $("contact-bas")].forEach(function (z) {
-      z.appendChild(el("a", { href: mail }, p.email));
-      if (p.telephone) {
-        z.appendChild(document.createTextNode(" · "));
-        z.appendChild(el("a", { href: "tel:+33" + p.telephone.replace(/\s/g, "").slice(1) }, p.telephone));
-      }
-      z.appendChild(document.createTextNode(" · "));
-      z.appendChild(el("a", { href: p.linkedin, rel: "noopener" }, "LinkedIn"));
+    var tel = p.telephone ? "tel:+33" + p.telephone.replace(/\s/g, "").slice(1) : null;
+    var moyens = [["mail", mail, "E-mail", p.email], tel ? ["tel", tel, "Téléphone", p.telephone] : null, ["in", p.linkedin, "LinkedIn", "Profil et parcours"]].filter(Boolean);
+    moyens.forEach(function (m) {
+      var a = el("a", { href: m[1] });
+      if (m[0] === "in") a.setAttribute("rel", "noopener");
+      a.innerHTML = icone(m[0]);
+      a.appendChild(document.createTextNode(m[0] === "in" ? "LinkedIn" : m[3]));
+      $("contact-haut").appendChild(a);
+      var c = el("a", { href: m[1], "class": "ac-contact-carte" });
+      if (m[0] === "in") c.setAttribute("rel", "noopener");
+      var ic = el("span", { "class": "ac-ico" }); ic.innerHTML = icone(m[0]); c.appendChild(ic);
+      c.appendChild(el("b", null, m[2]));
+      c.appendChild(el("span", null, m[3]));
+      $("contact-bas").appendChild(c);
     });
     $("lien-cv").setAttribute("href", p.cv);
     if ($("lien-cv-haut")) $("lien-cv-haut").setAttribute("href", p.cv);
     $("certifs").textContent = "Certifications obtenues : " + p.certifications.join(" · ") + ".";
     var o = $("offres");
-    ["immersion", "diagnostic_48h"].forEach(function (k) {
+    ["diagnostic_48h", "immersion"].forEach(function (k) {
       var x = p.offres[k];
       if (!x || !x.afficher) return;
-      var c = el("div", { "class": "carte" });
-      c.appendChild(el("h3", null, x.titre));
-      c.appendChild(el("p", null, x.texte));
-      if (k === "diagnostic_48h") c.appendChild(el("a", { href: "mailto:" + p.email + "?subject=" + encodeURIComponent("Diagnostic 48 h" + (perso ? " — réf. " + perso.code : "")) }, "Envoyer un extrait"));
+      var c = el("div", { "class": "ac-offre-bloc" + (k === "immersion" ? " ac-offre-2" : "") });
+      var t = el("div", { "class": "ac-offre-texte" });
+      t.appendChild(el("p", { "class": "ac-sur" }, k === "diagnostic_48h" ? "Pour juger sur pièce" : "Pour commencer sans risque"));
+      t.appendChild(el("h2", null, x.titre));
+      t.appendChild(el("p", null, x.texte));
+      c.appendChild(t);
+      if (k === "diagnostic_48h") {
+        var et = el("ol", { "class": "ac-etapes48" });
+        [["Vous envoyez", "un extrait anonymisé de votre reporting"], ["Je le lis", "ce qui se voit, ce qui n'apparaît pas"], ["Sous 48 heures", "vous recevez trois questions"]].forEach(function (e, i) {
+          var li = el("li"); li.appendChild(el("i", null, String(i + 1)));
+          li.appendChild(el("b", null, e[0])); li.appendChild(el("span", null, e[1])); et.appendChild(li);
+        });
+        c.appendChild(et);
+        var a = el("a", { "class": "ac-btn ac-btn-plein", href: "mailto:" + p.email + "?subject=" + encodeURIComponent("Diagnostic 48 h" + (perso ? " — réf. " + perso.code : "")) }, "Envoyer un extrait");
+        c.appendChild(a);
+      }
       o.appendChild(c);
     });
     if (p.mission_association && p.mission_association.afficher) {
@@ -1027,8 +1045,8 @@
       var d = el("article", { "class": "entree" });
       d.appendChild(el("h3", null, e.titre));
       var dl = el("dl");
-      [["Contexte", e.contexte], ["Faux", e.faux], ["Repéré", e.repere], ["Changé", e.change]].forEach(function (x) {
-        dl.appendChild(el("dt", null, x[0]));
+      [["Contexte", e.contexte, null], ["Faux", e.faux, "faux"], ["Repéré", e.repere, null], ["Changé", e.change, "change"]].forEach(function (x) {
+        dl.appendChild(el("dt", x[2] ? { "class": x[2] } : null, x[0]));
         dl.appendChild(el("dd", null, x[1]));
       });
       d.appendChild(dl);
@@ -1079,6 +1097,161 @@
       fiche(e, ents, selectionner);
     }
     selectionner(slugInitial);
+    return function (slug) {
+      selectionner(slug);
+      var a = $("analyse");
+      if (a && a.scrollIntoView) a.scrollIntoView({ behavior: REDUIT ? "auto" : "smooth" });
+    };
+  }
+
+  /* ---------- Accueil : vitrine, ruban, cascade ---------- */
+  var REDUIT = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var ICONES = {
+    mail: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',
+    tel: '<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/>',
+    "in": '<rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 10v7M8 7v.01M12 17v-4a2 2 0 0 1 4 0v4M12 10v7"/>'
+  };
+  function icone(n) {
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + ICONES[n] + "</svg>";
+  }
+  function signe1(v, suffixe) { return (v > 0 ? "+" : v < 0 ? "−" : "") + nf1.format(Math.abs(v)) + (suffixe || ""); }
+
+  /* Les chiffres de la vitrine viennent des SIG recalculés : dernier exercice publié de chaque entreprise. */
+  function resumeVitrine(e) {
+    var sig = e.analyse.sig, ans = Object.keys(sig).sort(), a = ans[ans.length - 1], p = ans[ans.length - 2], x = sig[a];
+    return {
+      slug: e.slug, nom: e.nom, ville: e.ville, a: a, p: p,
+      ca: ans.map(function (y) { return sig[y].chiffre_affaires; }), ans: ans,
+      ev: (x.chiffre_affaires / sig[p].chiffre_affaires - 1) * 100,
+      va: x.valeur_ajoutee / x.chiffre_affaires * 100, ebe: x.ebe / x.chiffre_affaires * 100, rex: x.rex_calcule / x.chiffre_affaires * 100,
+      q: e.lecture.questions[0]
+    };
+  }
+  function initVitrine(data, ouvrir) {
+    var z = $("vitrine");
+    if (!z) return;
+    var R = data.entreprises.map(resumeVitrine), i = 0, minuterie = null, frappe = null, enPause = REDUIT, visible = true;
+    var puces = $("v-puces");
+    R.forEach(function (r, k) {
+      var b = el("button", { type: "button", "aria-pressed": "false" }, r.nom);
+      b.addEventListener("click", function () { arreter(true); montrer(k); });
+      puces.appendChild(b);
+    });
+    function spark(v) {
+      var mn = Math.min.apply(null, v) * 0.95, mx = Math.max.apply(null, v) * 1.02, n = v.length;
+      var pts = v.map(function (y, k) { return [6 + k * (108 / (n - 1)), 30 - (y - mn) / (mx - mn) * 26]; });
+      var d = pts.map(function (q, k) { return (k ? "L" : "M") + q[0].toFixed(1) + " " + q[1].toFixed(1); }).join(" ");
+      $("v-spark").innerHTML = '<path d="' + d + ' L114 34 L6 34 Z" class="ac-v-aire"/><path d="' + d + '" class="ac-v-trait"/>' +
+        pts.map(function (q, k) { return '<circle cx="' + q[0] + '" cy="' + q[1] + '" r="' + (k === n - 1 ? 3.2 : 2) + '" class="' + (k === n - 1 ? "ac-v-fin" : "ac-v-pt") + '"/>'; }).join("");
+    }
+    function ecrire(n, txt) {
+      if (frappe) clearTimeout(frappe);
+      if (REDUIT) { n.textContent = txt; return; }
+      var k = 0; n.textContent = "";
+      (function suite() { n.textContent = txt.slice(0, ++k); if (k < txt.length) frappe = setTimeout(suite, 14); })();
+    }
+    function montrer(k) {
+      i = k; var r = R[k];
+      puces.querySelectorAll("button").forEach(function (b, j) { b.setAttribute("aria-pressed", String(j === k)); });
+      $("v-nom").textContent = r.nom;
+      $("v-lieu").textContent = r.ville + " · exercice " + r.a;
+      $("v-ca").textContent = nf1.format(r.ca[r.ca.length - 1] / 1e6) + " M€";
+      var ev = $("v-ev"); ev.textContent = signe1(r.ev, " %"); ev.className = r.ev < 0 ? "ac-neg" : "ac-pos";
+      $("v-ev2").textContent = r.a + " vs " + r.p;
+      $("v-va").textContent = nf1.format(r.va) + " %";
+      $("v-ent-t").textContent = "Sur 100 € vendus en " + r.a;
+      [["v-e1", r.va], ["v-e2", r.ebe], ["v-e3", r.rex]].forEach(function (x) {
+        var b = $(x[0]);
+        b.style.transition = "none"; b.style.width = "0"; b.getBoundingClientRect(); b.style.transition = "";
+        b.style.width = Math.min(100, Math.max(0, x[1]) / 20 * 100) + "%";
+        var v = $(x[0] + "v"); v.textContent = signe1(x[1]).replace("+", "") + " €"; v.className = x[1] < 0 ? "ac-neg" : "";
+      });
+      spark(r.ca);
+      ecrire($("v-q"), r.q);
+      $("v-lien").textContent = "Voir l'analyse complète de " + r.nom + " →";
+    }
+    function lancer() { if (!enPause && visible && !minuterie) minuterie = setInterval(function () { montrer((i + 1) % R.length); }, 6500); }
+    function arreter(definitif) {
+      if (minuterie) clearInterval(minuterie); minuterie = null;
+      if (definitif) { enPause = true; majPause(); }
+    }
+    function majPause() { $("v-pause").setAttribute("aria-pressed", String(enPause)); $("v-pause").textContent = enPause ? "Lecture" : "Pause"; }
+    $("v-pause").addEventListener("click", function () { enPause = !enPause; majPause(); if (enPause) arreter(); else { montrer((i + 1) % R.length); lancer(); } });
+    $("v-lien").addEventListener("click", function (ev) { ev.preventDefault(); arreter(true); ouvrir(R[i].slug); });
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(function (es) { visible = es[0].isIntersecting; if (visible) lancer(); else arreter(); }).observe(z);
+    }
+    if (REDUIT) $("v-pause").hidden = true;
+    majPause();
+    montrer(0);
+    lancer();
+  }
+
+  /* Ruban : un constat chiffré par entreprise, calculé, pas rédigé. */
+  function initRuban(data) {
+    var z = $("ruban");
+    if (!z) return;
+    var t = data.entreprises.map(resumeVitrine).map(function (r) {
+      return "<span><b>" + echapper(r.nom) + "</b> · CA " + signe1(r.ev, " %") + " en " + r.a + " · valeur ajoutée " + nf1.format(r.va) + " % du CA</span>";
+    }).join("");
+    z.innerHTML = '<div class="ac-ruban-piste">' + t + t + "</div>";
+  }
+
+  /* Cascade du résultat d'exploitation, exercice précédent → dernier exercice, poste par poste (pont publié). */
+  function initCascadeAccueil(data, ouvrir, slug) {
+    var e = data.entreprises.filter(function (x) { return x.slug === slug; })[0];
+    if (!e || !e.analyse.ponts) return;
+    var ans = Object.keys(e.analyse.ponts).sort(), a = ans[ans.length - 1], P = e.analyse.ponts[a];
+    var prec = String(+a - 1);
+    var COURT = { "Valeur ajoutée (ventes − achats − charges externes)": "Valeur ajoutée", "Subventions d'exploitation": "Subventions",
+      "Impôts et taxes": "Impôts et taxes", "Charges de personnel": "Personnel", "Dotations aux amortissements et provisions": "Dotations",
+      "Autres produits et charges (reprises, cessions…)": "Autres" };
+    var B = [["Résultat " + prec, P.depart, true]].concat(P.etapes.map(function (s) { return [COURT[s.libelle] || s.libelle, s.variation, false]; }))
+      .concat([["Résultat " + a, P.arrivee, true]]);
+    var W = 640, H = 270, g = 46, haut = 26, bas = 210, n = B.length, pas = (W - g - 10) / n, bw = Math.min(46, pas * 0.62);
+    var cum = 0, plafond = 0, plancher = 0;
+    B.forEach(function (b) { if (b[2]) cum = b[1]; else cum += b[1]; plafond = Math.max(plafond, cum, b[2] ? b[1] : 0); plancher = Math.min(plancher, cum); });
+    var echelle = (bas - haut) / (plafond - plancher || 1), y0 = bas + plancher * echelle;
+    function Y(v) { return y0 - v * echelle; }
+    var svg = $("casc-svg");
+    svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+    svg.setAttribute("aria-label", "Résultat d'exploitation de " + e.nom + ", de " + prec + " à " + a + ", poste par poste");
+    var o = '<line x1="' + g + '" y1="' + Y(0).toFixed(1) + '" x2="' + W + '" y2="' + Y(0).toFixed(1) + '" class="ac-c-axe"/>';
+    cum = 0;
+    B.forEach(function (b, k) {
+      var de, a2, cls;
+      if (b[2]) { de = 0; a2 = b[1]; cls = "tot"; cum = b[1]; } else { de = cum; a2 = cum + b[1]; cls = b[1] >= 0 ? "hausse" : "baisse"; cum = a2; }
+      var x = g + k * pas + (pas - bw) / 2, yh = Y(Math.max(de, a2)), h = Math.max(Math.abs(a2 - de) * echelle, 2);
+      var d = REDUIT ? "" : ' style="animation-delay:' + (k * 0.18).toFixed(2) + 's"';
+      o += '<rect x="' + x.toFixed(1) + '" y="' + yh.toFixed(1) + '" width="' + bw.toFixed(1) + '" height="' + h.toFixed(1) + '" rx="2" class="ac-c-barre ' + cls + (b[1] < 0 && !b[2] ? " vers-bas" : "") + '"' + d + "/>";
+      o += '<text x="' + (x + bw / 2).toFixed(1) + '" y="' + (yh - 6).toFixed(1) + '" class="ac-c-val"' + d + ">" + (b[2] ? nf1.format(b[1] / 1e6) : signe1(b[1] / 1e6)) + "</text>";
+      var mots = b[0].split(" "), l1 = mots.length > 2 ? mots.slice(0, -2).join(" ") : mots[0], l2 = mots.length > 2 ? mots.slice(-2).join(" ") : mots.slice(1).join(" ");
+      o += '<text x="' + (x + bw / 2).toFixed(1) + '" y="' + (bas + 18) + '" class="ac-c-lib">' + echapper(l1) + "</text>";
+      if (l2) o += '<text x="' + (x + bw / 2).toFixed(1) + '" y="' + (bas + 31) + '" class="ac-c-lib">' + echapper(l2) + "</text>";
+    });
+    o += '<text x="' + g + '" y="12" class="ac-c-unite">en M€</text>';
+    svg.innerHTML = o;
+    var hausses = B.filter(function (b) { return !b[2] && b[1] > 0; }).sort(function (x, y) { return y[1] - x[1]; });
+    var baisses = B.filter(function (b) { return !b[2] && b[1] < 0; }).sort(function (x, y) { return x[1] - y[1]; });
+    var CHARGES = { "Impôts et taxes": 1, "Personnel": 1, "Dotations": 1 };
+    function dire(b) {
+      var n = b[0] === "Autres" ? "autres produits et charges" : b[0].toLowerCase();
+      if (CHARGES[b[0]]) n += b[1] > 0 ? " en baisse" : " en hausse";
+      return n + " (" + signe1(b[1] / 1e6, " M€") + ")";
+    }
+    $("casc-titre").textContent = "D'où vient la hausse du résultat d'exploitation de " + e.nom + " en " + a + " ?";
+    $("casc-texte").textContent = "Il passe de " + nf1.format(P.depart / 1e6) + " M€ à " + nf1.format(P.arrivee / 1e6) + " M€. " +
+      (hausses.length ? "Les principaux apports : " + hausses.slice(0, 3).map(dire).join(", ") + ". " : "") +
+      (baisses.length ? "En sens inverse : " + baisses.slice(0, 1).map(dire).join(", ") + "." : "");
+    $("casc-source").textContent = "Source : comptes " + prec + " et " + a + " déposés au greffe. Vert : favorable au résultat ; rouge : défavorable.";
+    $("casc-lien").textContent = "Voir l'analyse complète de " + e.nom + " →";
+    $("casc-lien").addEventListener("click", function (ev) { ev.preventDefault(); ouvrir(e.slug); });
+    $("cascade-accueil").hidden = false;
+    if (!REDUIT && "IntersectionObserver" in window) {
+      svg.classList.add("en-attente");
+      var obs = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { svg.classList.remove("en-attente"); svg.classList.add("joue"); obs.disconnect(); } }, { threshold: 0.3 });
+      obs.observe(svg);
+    }
   }
 
   /* Compteur de visites sans cookie (GoatCounter) : pages vues, code de candidature, clics utiles. */
@@ -1125,7 +1298,10 @@
       var perso = code && d[3][code] ? Object.assign({ code: code }, d[3][code]) : null;
       initProfil(d[0], perso);
       initChiffres(d[1]);
-      initAnalyse(d[1], params.get("e") || (perso && perso.entreprise) || d[1].entreprises[0].slug);
+      var ouvrir = initAnalyse(d[1], params.get("e") || (perso && perso.entreprise) || d[1].entreprises[0].slug);
+      initVitrine(d[1], ouvrir);
+      initRuban(d[1]);
+      initCascadeAccueil(d[1], ouvrir, "antartic");
       initParcours(d[0].transition_2026, d[0].parcours, d[1].entreprises.length);
       initJournal(d[2]);
       // Tout code simple est compté (lettres, chiffres, tiret) ; candidatures.json ne sert qu'à la phrase personnalisée

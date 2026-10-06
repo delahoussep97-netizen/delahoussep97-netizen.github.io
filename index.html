@@ -5,99 +5,170 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Paul Delahousse — contrôle de gestion</title>
 <meta name="description" content="Contrôle de gestion et données : analyse des comptes publics de six entreprises du Loiret, chaque chiffre relié à sa source.">
-<link rel="stylesheet" href="style.css?v=20261005c">
+<meta name="theme-color" content="#0D2236">
+<link rel="stylesheet" href="style.css?v=20261006a">
+<link rel="stylesheet" href="accueil.css?v=20261006a">
 </head>
 <body>
-<nav class="barre-haut" aria-label="Navigation">
-  <div class="wrap barre-contenu">
-    <a class="marque" href="#">Paul Delahousse <span>· contrôle de gestion &amp; données</span></a>
-    <span class="liens"><a href="#parcours">Parcours</a><a href="#analyse">Analyses</a><a href="#cas">Cas pratiques</a><a href="#ia">Méthode</a><a href="#contact">Contact</a></span>
+<nav class="ac-nav" aria-label="Navigation">
+  <div class="ac-wrap ac-nav-in">
+    <a class="ac-marque" href="#"><span class="ac-mono">PD</span><span>Paul Delahousse<small>Contrôle de gestion &amp; données</small></span></a>
+    <span class="ac-liens"><a href="#analyse">Analyses</a><a href="#services">Services</a><a href="#parcours">Parcours</a><a href="#cas">Cas pratiques</a><a class="ac-btn ac-btn-plein ac-btn-petit" href="#contact">Me contacter</a></span>
   </div>
 </nav>
-<div class="wrap">
 
-  <div class="hero">
-    <!-- 1. Bandeau : le terrain commercial d'abord -->
-    <header class="bandeau">
-      <p class="surtitre">Contrôle de gestion &amp; données · Orléans</p>
-      <h1 id="nom">Paul Delahousse</h1>
-      <p class="accroche" id="accroche"></p>
-      <p class="muted" id="sous-accroche"></p>
-      <p class="actions">
-        <a class="bouton" href="#analyse">Voir les 6 analyses</a>
-        <a class="bouton secondaire" id="lien-cv-haut" href="#">Télécharger mon CV</a>
+<!-- 1. Haut de page : la promesse, et le tableau de bord en vitrine -->
+<header class="ac-hero">
+  <div class="ac-wrap ac-hero-grille">
+    <div class="ac-hero-texte">
+      <p class="ac-dispo"><span class="ac-point" aria-hidden="true"></span>En recherche active · Orléans et alentours</p>
+      <p class="ac-role"><span id="nom">Paul Delahousse</span> · contrôle de gestion &amp; données</p>
+      <h1>Je fais le lien entre la performance commerciale <span class="ac-degrade">et les coûts.</span></h1>
+      <p class="ac-chapo" id="accroche"></p>
+      <p class="ac-actions">
+        <a class="ac-btn ac-btn-plein" href="#analyse">Voir les 6 analyses <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <a class="ac-btn ac-btn-clair" id="lien-cv-haut" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg> Télécharger mon CV</a>
       </p>
+      <p class="ac-contacts" id="contact-haut"></p>
       <p class="role" id="role" hidden></p>
-      <p class="contact-ligne" id="contact-haut"></p>
-      <p class="perso" id="perso" hidden></p>
-    </header>
-
-    <!-- 2. L'offre, visible sans défiler -->
-    <section id="offre" aria-labelledby="t-offre">
-      <h2 id="t-offre">Pour commencer sans risque</h2>
-      <div class="offres" id="offres"></div>
-    </section>
+      <p class="ac-perso" id="perso" hidden></p>
+    </div>
+    <div class="ac-vitrine" id="vitrine" role="region" aria-label="Aperçu du tableau de bord">
+      <div class="ac-v-tete"><div><b id="v-nom">Six entreprises du Loiret</b><span id="v-lieu">comptes déposés au greffe</span></div>
+        <button type="button" class="ac-v-pause" id="v-pause" aria-pressed="false">Pause</button></div>
+      <div class="ac-v-puces" id="v-puces" role="group" aria-label="Choisir une entreprise"></div>
+      <div class="ac-v-corps">
+        <div class="ac-v-kpi" style="--k:#1F4E79"><small>Chiffre d'affaires</small><strong id="v-ca">—</strong><svg id="v-spark" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true"></svg></div>
+        <div class="ac-v-kpi" style="--k:#F28F3B"><small>Évolution sur un an</small><strong id="v-ev">—</strong><span id="v-ev2"></span></div>
+        <div class="ac-v-kpi" style="--k:#2E86AB"><small>Valeur ajoutée / CA</small><strong id="v-va">—</strong><span>richesse créée par euro vendu</span></div>
+        <div class="ac-v-ent"><p class="ac-v-titre" id="v-ent-t">Sur 100 € vendus</p>
+          <div class="ac-v-ligne"><span>Valeur ajoutée</span><div class="ac-v-piste"><span id="v-e1" style="background:#2E86AB"></span></div><em id="v-e1v"></em></div>
+          <div class="ac-v-ligne"><span>Excédent brut d'exploitation</span><div class="ac-v-piste"><span id="v-e2" style="background:#6A4C93"></span></div><em id="v-e2v"></em></div>
+          <div class="ac-v-ligne"><span>Résultat d'exploitation</span><div class="ac-v-piste"><span id="v-e3" style="background:#3BA99C"></span></div><em id="v-e3v"></em></div>
+        </div>
+        <div class="ac-v-question"><b>La question que je poserais</b><span id="v-q"></span></div>
+      </div>
+      <p class="ac-v-pied"><span>Source : comptes déposés au greffe</span><a href="#analyse" id="v-lien">Voir l'analyse complète →</a></p>
+    </div>
   </div>
+  <div class="ac-ruban" id="ruban" role="marquee" aria-label="Un constat par entreprise"></div>
+</header>
 
-  <!-- 1 bis. Parcours : 2026 (transition vers le contrôle de gestion), puis les postes -->
-  <section id="parcours" aria-labelledby="t-parcours">
-    <h2 id="t-parcours">Parcours : du terrain commercial au contrôle de gestion</h2>
-    <div class="parcours-grille" id="parcours-contenu"></div>
-  </section>
+<!-- Chiffres clés -->
+<section class="ac-chiffres" aria-label="Le travail en chiffres">
+  <div class="ac-wrap"><div id="chiffres" class="ac-chiffres-grille"></div></div>
+</section>
 
-  <section class="chiffres" id="chiffres" aria-label="Le travail en chiffres"></section>
-
-  <!-- 3. Analyse sur comptes publics -->
-  <section id="analyse" aria-labelledby="t-analyse">
-    <h2 id="t-analyse">Six entreprises du Loiret, lues dans leurs comptes publics</h2>
-    <p class="muted small">Comptes déposés au greffe, trois exercices. Chaque montant a été saisi avec sa page, chaque ratio est recalculé par script. Une donnée absente est affichée « non publiée », jamais estimée. Des questions, pas de jugement.</p>
-    <div class="choix" id="choix" role="group" aria-label="Choisir une entreprise"></div>
-    <div id="fiche" aria-live="polite"></div>
-  </section>
-
-  <!-- 4. Cas pratiques : données fictives, accessibles directement -->
-  <section id="cas" aria-labelledby="t-cas">
-    <h2 id="t-cas">Cas pratiques</h2>
-    <p class="muted small">Deux cas construits de bout en bout, sur des <b>données fictives</b>. Ce sont des exercices, pas des expériences professionnelles.</p>
-    <div class="cas-grille">
-      <article class="carte cas-carte">
-        <p><span class="tag">données fictives</span></p>
-        <h3>Contrôle de gestion d'une région de magasins</h3>
-        <p class="small">Région fictive, 6 points de vente : P&amp;L à cinq niveaux, cascade des écarts, ROI promotionnel, tableaux de bord point de vente / région / siège, trame de revue mensuelle.</p>
-        <p><a class="bouton" href="cas-controle-de-gestion-retail.pdf">Lire le cas (PDF, 29 pages)</a></p>
-      </article>
-      <article class="carte cas-carte">
-        <p><span class="tag">données fictives</span></p>
-        <h3>Tableau de bord Power BI : ventes de lubrifiants</h3>
-        <p class="small">Volume et marge par zone, emballage et produit, comparaison avec l'année précédente. Données fictives de l'exercice.</p>
-        <p><a class="bouton" href="cas-power-bi-lubrifiants.pdf">Voir le tableau de bord (PDF, 1 page)</a></p>
-      </article>
+<main>
+  <!-- 2. Services, avec une cascade réelle en exemple -->
+  <section class="ac-section" id="services" aria-labelledby="t-services">
+    <div class="ac-wrap">
+      <div class="ac-entete"><p class="ac-sur">Ce que j'apporte</p><h2 id="t-services">Des chiffres fiables, lus avec le regard du terrain</h2>
+        <p>Cinq ans au contact des clients et des équipes commerciales en grande consommation, puis une année consacrée aux chiffres : je sais d'où vient un écart, et à qui poser la question.</p></div>
+      <p class="ac-glisser" aria-hidden="true">Faites glisser →</p>
+      <div class="ac-services">
+        <article class="ac-service" style="--c:#1F4E79"><div class="ac-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></div><h3>Analyse des écarts</h3><p>Volume, prix, coûts : d'où vient l'écart entre le réalisé, le budget et l'année précédente.</p></article>
+        <article class="ac-service" style="--c:#2E8B80"><div class="ac-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div><h3>Tableaux de bord</h3><p>Power BI et Excel : peu d'indicateurs, chacun relié à sa source et à une décision.</p></article>
+        <article class="ac-service" style="--c:#C9651A"><div class="ac-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9 10h4.5a1.5 1.5 0 0 1 0 3h-3a1.5 1.5 0 0 0 0 3H15"/></svg></div><h3>Marges et rentabilité</h3><p>Par client, produit ou point de vente, du chiffre d'affaires jusqu'au résultat.</p></article>
+        <article class="ac-service" style="--c:#6A4C93"><div class="ac-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg></div><h3>Fiabilisation</h3><p>Chaque chiffre recalculé et contrôlé avant d'être présenté, chaque erreur notée.</p></article>
+      </div>
+      <figure class="ac-cascade" id="cascade-accueil" hidden>
+        <figcaption><p class="ac-sur">Exemple tiré des analyses</p><h3 id="casc-titre">Exemple de cascade</h3><p id="casc-texte"></p><a href="#analyse" id="casc-lien">Voir l'analyse complète →</a></figcaption>
+        <div class="ac-cascade-graphe"><svg id="casc-svg" role="img"></svg><p class="ac-note" id="casc-source"></p></div>
+      </figure>
     </div>
   </section>
 
-  <!-- 5. Mission association : masquée tant qu'elle n'existe pas -->
-  <section id="mission" aria-labelledby="t-mission" hidden>
-    <h2 id="t-mission">Mission bénévole en contrôle de gestion</h2>
-    <p id="mission-texte"></p>
-    <p id="mission-attestation"></p>
+  <!-- 3. Parcours : 2026 (transition vers le contrôle de gestion), puis les postes -->
+  <section class="ac-section ac-alt" id="parcours" aria-labelledby="t-parcours">
+    <div class="ac-wrap">
+      <div class="ac-entete ac-entete-photo">
+        <img class="ac-photo" src="paul.webp" width="640" height="800" alt="Portrait de Paul Delahousse">
+        <div><p class="ac-sur">Parcours</p><h2 id="t-parcours">Du terrain commercial au contrôle de gestion</h2>
+          <p>Cinq ans côté terrain, chez Buitoni, Mondelez puis Tricotage des Vosges : j'ai vu les chiffres depuis le terrain. En 2026, j'ai appris à les construire.</p></div>
+      </div>
+      <div class="parcours-grille" id="parcours-contenu"></div>
+    </div>
   </section>
 
-  <!-- 6. Méthode : comment je fiabilise mes chiffres (en fin de page) -->
-  <section id="ia" aria-labelledby="t-ia">
-    <h2 id="t-ia">Comment je fiabilise mes chiffres</h2>
-    <p class="muted small">Chaque chiffre de l'analyse ci-dessus a été saisi, recalculé et contrôlé. J'utilise l'IA comme outil pour aller plus vite, jamais sans vérification. Voici les erreurs détectées pendant ce travail, et comment elles ont été corrigées.</p>
-    <div class="journal" id="journal"></div>
+  <!-- 4. Analyse sur comptes publics -->
+  <section class="ac-section" id="analyse" aria-labelledby="t-analyse">
+    <div class="ac-wrap">
+      <div class="ac-entete"><p class="ac-sur">Analyses</p><h2 id="t-analyse">Six entreprises du Loiret, lues dans leurs comptes publics</h2>
+        <p>Comptes déposés au greffe, trois exercices. Chaque montant a été saisi avec sa page, chaque ratio est recalculé par script. Une donnée absente est affichée « non publiée », jamais estimée. Des questions, pas de jugement.</p></div>
+      <div class="choix" id="choix" role="group" aria-label="Choisir une entreprise"></div>
+      <div id="fiche" aria-live="polite"></div>
+    </div>
   </section>
 
-  <!-- 7. CV + contact -->
-  <footer id="contact">
-    <p><a class="bouton" id="lien-cv" href="#">Télécharger mon CV (PDF)</a></p>
-    <p id="contact-bas"></p>
-    <p class="small" id="certifs"></p>
-    <p class="small">Aucun cookie, aucun traceur. Sources des comptes : dépôts au greffe consultés via Pappers ; contrôle croisé avec les ratios INPI publiés sur data.economie.gouv.fr.</p>
-  </footer>
-</div>
+  <!-- 5. Cas pratiques : données fictives, accessibles directement -->
+  <section class="ac-section ac-alt" id="cas" aria-labelledby="t-cas">
+    <div class="ac-wrap">
+      <div class="ac-entete"><p class="ac-sur">Cas pratiques</p><h2 id="t-cas">Deux cas construits de bout en bout</h2>
+        <p>Sur des <b>données fictives</b> : ce sont des exercices, pas des expériences professionnelles.</p></div>
+      <div class="ac-cas-liste">
+        <article class="ac-cas" style="--c:#1F4E79">
+          <a class="ac-cas-visuel" href="cas-controle-de-gestion-retail.pdf" aria-label="Lire le cas : contrôle de gestion d'une région de magasins"><span class="ac-navigateur"><img src="apercu-cas-retail.webp" width="1200" height="676" loading="lazy" alt="Tableau de bord hebdomadaire de la région, extrait du cas"></span></a>
+          <div class="ac-cas-texte">
+            <p class="ac-tags"><span class="ac-tag-fort">Contrôle de gestion</span> <span class="tag">données fictives</span></p>
+            <h3>Contrôle de gestion d'une région de magasins</h3>
+            <p>Région fictive, 6 points de vente : P&amp;L à cinq niveaux, cascade des écarts, ROI promotionnel, tableaux de bord point de vente / région / siège, trame de revue mensuelle.</p>
+            <div class="ac-mesures"><div><strong>29</strong><span>pages</span></div><div><strong>6</strong><span>points de vente</span></div><div><strong>3</strong><span>tableaux de bord</span></div></div>
+            <p class="ac-cas-bas"><a class="ac-btn ac-btn-petit ac-btn-c" href="cas-controle-de-gestion-retail.pdf">Lire le cas (PDF, 29 pages)</a></p>
+          </div>
+        </article>
+        <article class="ac-cas" style="--c:#C9851B">
+          <a class="ac-cas-visuel" href="cas-power-bi-lubrifiants.pdf" aria-label="Voir le tableau de bord Power BI"><span class="ac-navigateur"><img src="apercu-power-bi.webp" width="1400" height="746" loading="lazy" alt="Tableau de bord Power BI : volume et marge par zone"></span></a>
+          <div class="ac-cas-texte">
+            <p class="ac-tags"><span class="ac-tag-fort">Power BI</span> <span class="tag">données fictives</span></p>
+            <h3>Tableau de bord Power BI : ventes de lubrifiants</h3>
+            <p>Volume et marge par zone, emballage et produit, comparaison avec l'année précédente.</p>
+            <div class="ac-mesures"><div><strong>14</strong><span>indicateurs clés</span></div><div><strong>3</strong><span>axes d'analyse</span></div><div><strong>1</strong><span>page de pilotage</span></div></div>
+            <p class="ac-cas-bas"><a class="ac-btn ac-btn-petit ac-btn-c" href="cas-power-bi-lubrifiants.pdf">Voir le tableau de bord (PDF, 1 page)</a></p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. Offre : diagnostic sous 48 heures (et immersion quand elle sera validée) -->
+  <section class="ac-section" id="offre" aria-label="Diagnostic sous 48 heures">
+    <div class="ac-wrap"><div class="ac-offre" id="offres"></div></div>
+  </section>
+
+  <!-- 7. Mission association : masquée tant qu'elle n'existe pas -->
+  <section class="ac-section" id="mission" aria-labelledby="t-mission" hidden>
+    <div class="ac-wrap">
+      <h2 id="t-mission">Mission bénévole en contrôle de gestion</h2>
+      <p id="mission-texte"></p>
+      <p id="mission-attestation"></p>
+    </div>
+  </section>
+
+  <!-- 8. Méthode : comment je fiabilise mes chiffres (en fin de page) -->
+  <section class="ac-section ac-alt" id="ia" aria-labelledby="t-ia">
+    <div class="ac-wrap">
+      <div class="ac-entete"><p class="ac-sur">Méthode</p><h2 id="t-ia">Comment je fiabilise mes chiffres</h2>
+        <p>Chaque chiffre de l'analyse ci-dessus a été saisi, recalculé et contrôlé. J'utilise l'IA comme outil pour aller plus vite, jamais sans vérification. Voici les erreurs détectées pendant ce travail, et comment elles ont été corrigées.</p></div>
+      <p class="ac-glisser" aria-hidden="true">Faites glisser →</p>
+      <div class="journal" id="journal"></div>
+    </div>
+  </section>
+</main>
+
+<!-- 9. CV + contact -->
+<footer class="ac-contact" id="contact">
+  <div class="ac-wrap">
+    <p class="ac-sur">Contact</p>
+    <h2>Un poste, une question, un reporting à relire ?</h2>
+    <p class="ac-chapo-contact">Le plus simple : un e-mail ou un appel. Mon CV et les deux cas pratiques se téléchargent depuis cette page.</p>
+    <div class="ac-contact-cartes" id="contact-bas"></div>
+    <p class="ac-actions ac-centre"><a class="ac-btn ac-btn-ligne" id="lien-cv" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg> Télécharger mon CV (PDF)</a></p>
+    <p class="ac-note" id="certifs"></p>
+    <p class="ac-note">Aucun cookie, aucun traceur. Sources des comptes : dépôts au greffe consultés via Pappers ; contrôle croisé avec les ratios INPI publiés sur data.economie.gouv.fr.</p>
+  </div>
+</footer>
 <div class="bulle" id="bulle" role="tooltip" hidden></div>
-<script src="app.js?v=20261005c"></script>
+<script src="app.js?v=20261006a"></script>
 </body>
 </html>
