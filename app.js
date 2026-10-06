@@ -35,7 +35,7 @@
       .replace(/([+\-−]?\d[\d\u202f\u00a0 ]*(?:,\d+)?\s?(?:M€|k€|%|pt|jours|j\b|€))/g, "<strong>$1</strong>");
     return n;
   }
-  var VERSION = "20261006a";
+  var VERSION = "20261006b";
   function charger(url) {
     return fetch(url + "?v=" + VERSION).then(function (r) { if (!r.ok) throw new Error(url); return r.json(); });
   }
@@ -915,6 +915,14 @@
     $("lien-cv").setAttribute("href", p.cv);
     if ($("lien-cv-haut")) $("lien-cv-haut").setAttribute("href", p.cv);
     $("certifs").textContent = "Certifications obtenues : " + p.certifications.join(" · ") + ".";
+    var d48 = p.offres.diagnostic_48h;
+    if (d48 && d48.afficher && $("diag-haut")) {
+      var z48 = $("diag-haut");
+      z48.appendChild(el("b", null, d48.titre + " : "));
+      z48.appendChild(document.createTextNode("envoyez un extrait anonymisé de votre reporting, je vous renvoie trois questions. "));
+      z48.appendChild(el("a", { href: "mailto:" + p.email + "?subject=" + encodeURIComponent("Diagnostic 48 h" + (perso ? " — réf. " + perso.code : "")) }, "Envoyer un extrait →"));
+      z48.hidden = false;
+    }
     var o = $("offres");
     ["diagnostic_48h", "immersion"].forEach(function (k) {
       var x = p.offres[k];
@@ -989,7 +997,11 @@
         if (liens.childNodes.length) m.appendChild(liens);
         frise.appendChild(m);
       });
-      li.appendChild(frise);
+      var plie = el("details", { "class": "chrono-mois" });
+      if (!(window.matchMedia && window.matchMedia("(max-width: 600px)").matches)) plie.setAttribute("open", "");
+      plie.appendChild(el("summary", null, "L'année 2026 mois par mois"));
+      plie.appendChild(frise);
+      li.appendChild(plie);
 
       // Liste complète, avec attestations
       var det = el("details", { "class": "chrono-detail" });
@@ -1104,7 +1116,7 @@
     };
   }
 
-  /* ---------- Accueil : vitrine, ruban, cascade ---------- */
+  /* ---------- Accueil : vitrine, cascade ---------- */
   var REDUIT = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var ICONES = {
     mail: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',
@@ -1185,16 +1197,6 @@
     majPause();
     montrer(0);
     lancer();
-  }
-
-  /* Ruban : un constat chiffré par entreprise, calculé, pas rédigé. */
-  function initRuban(data) {
-    var z = $("ruban");
-    if (!z) return;
-    var t = data.entreprises.map(resumeVitrine).map(function (r) {
-      return "<span><b>" + echapper(r.nom) + "</b> · CA " + signe1(r.ev, " %") + " en " + r.a + " · valeur ajoutée " + nf1.format(r.va) + " % du CA</span>";
-    }).join("");
-    z.innerHTML = '<div class="ac-ruban-piste">' + t + t + "</div>";
   }
 
   /* Cascade du résultat d'exploitation, exercice précédent → dernier exercice, poste par poste (pont publié). */
@@ -1300,7 +1302,6 @@
       initChiffres(d[1]);
       var ouvrir = initAnalyse(d[1], params.get("e") || (perso && perso.entreprise) || d[1].entreprises[0].slug);
       initVitrine(d[1], ouvrir);
-      initRuban(d[1]);
       initCascadeAccueil(d[1], ouvrir, "antartic");
       initParcours(d[0].transition_2026, d[0].parcours, d[1].entreprises.length);
       initJournal(d[2]);

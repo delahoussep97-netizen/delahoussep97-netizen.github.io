@@ -6,8 +6,8 @@
 <title>Paul Delahousse — contrôle de gestion</title>
 <meta name="description" content="Contrôle de gestion et données : analyse des comptes publics de six entreprises du Loiret, chaque chiffre relié à sa source.">
 <meta name="theme-color" content="#0D2236">
-<link rel="stylesheet" href="style.css?v=20261006a">
-<link rel="stylesheet" href="accueil.css?v=20261006a">
+<link rel="stylesheet" href="style.css?v=20261006b">
+<link rel="stylesheet" href="accueil.css?v=20261006b">
 </head>
 <body>
 <nav class="ac-nav" aria-label="Navigation">
@@ -29,6 +29,7 @@
         <a class="ac-btn ac-btn-plein" href="#analyse">Voir les 6 analyses <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
         <a class="ac-btn ac-btn-clair" id="lien-cv-haut" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg> Télécharger mon CV</a>
       </p>
+      <p class="ac-diag-ligne" id="diag-haut" hidden></p>
       <p class="ac-contacts" id="contact-haut"></p>
       <p class="role" id="role" hidden></p>
       <p class="ac-perso" id="perso" hidden></p>
@@ -51,7 +52,6 @@
       <p class="ac-v-pied"><span>Source : comptes déposés au greffe</span><a href="#analyse" id="v-lien">Voir l'analyse complète →</a></p>
     </div>
   </div>
-  <div class="ac-ruban" id="ruban" role="marquee" aria-label="Un constat par entreprise"></div>
 </header>
 
 <!-- Chiffres clés -->
@@ -169,6 +169,6 @@
   </div>
 </footer>
 <div class="bulle" id="bulle" role="tooltip" hidden></div>
-<script src="app.js?v=20261006a"></script>
+<script src="app.js?v=20261006b"></script>
 </body>
 </html>
