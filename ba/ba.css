@@ -201,7 +201,7 @@ p { margin: 0; }
 .cas-visuel:hover { text-decoration: none; }
 .navigateur { position: relative; border-radius: 12px; overflow: hidden; background: #fff; box-shadow: 0 20px 50px rgba(16, 32, 52, .22); border: 1px solid rgba(16, 32, 52, .1); transition: transform .35s ease; }
 .cas-visuel:hover .navigateur { transform: translateY(-4px) scale(1.01); }
-.navigateur::before { content: ""; display: block; height: 26px; background: #EEF1F5 radial-gradient(circle at 14px 13px, #E2554F 4px, transparent 4.5px) no-repeat, radial-gradient(circle at 30px 13px, #F2C14E 4px, transparent 4.5px) no-repeat, radial-gradient(circle at 46px 13px, #3BA99C 4px, transparent 4.5px) no-repeat; background-color: #EEF1F5; border-bottom: 1px solid #DCE1E8; }
+.navigateur::before { content: ""; display: block; height: 26px; background-color: #EEF1F5; background-image: radial-gradient(circle at 14px 13px, #E2554F 4px, transparent 4.5px), radial-gradient(circle at 30px 13px, #F2C14E 4px, transparent 4.5px), radial-gradient(circle at 46px 13px, #3BA99C 4px, transparent 4.5px); background-repeat: no-repeat; border-bottom: 1px solid #DCE1E8; }
 .navigateur img { width: 100%; }
 .navigateur.haut img { max-height: 360px; object-fit: cover; object-position: top; }
 .telephone { position: absolute; right: 22px; bottom: -40px; width: 150px; border-radius: 22px; overflow: hidden; border: 6px solid #13202F; background: #fff; box-shadow: 0 24px 50px rgba(16, 32, 52, .35); transition: transform .35s ease; }
