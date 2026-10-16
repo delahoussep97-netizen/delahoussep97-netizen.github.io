@@ -15,7 +15,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0B1A2B">
 <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20rx='7'%20fill='%230B1A2B'/%3E%3Crect%20x='8'%20y='17'%20width='4'%20height='8'%20rx='1'%20fill='%23F28F3B'/%3E%3Crect%20x='14'%20y='12'%20width='4'%20height='13'%20rx='1'%20fill='%23ffffff'/%3E%3Crect%20x='20'%20y='7'%20width='4'%20height='18'%20rx='1'%20fill='%23ffffff'/%3E%3C/svg%3E">
-<link rel="stylesheet" href="pbi.css?v=20261016a">
+<link rel="stylesheet" href="pbi.css?v=20261016c">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -65,7 +65,7 @@
     <div class="hero-txt">
       <p class="role">Consultant Power BI — pilotage commercial et financier</p>
       <h1>Des chiffres commerciaux et financiers fiables, lisibles par la direction.</h1>
-      <p class="chapo">Cinq ans sur le terrain commercial, en grande consommation et en retail (Mondelez, Buitoni, Tricotage des Vosges), avant Power BI. Je lis vos indicateurs comme un responsable commercial ou financier, pas seulement comme un technicien.</p>
+      <p class="chapo">Un profil commercial à forte dominante analyse de données : cinq ans en grande consommation et en retail (Nestlé, Mondelez, Tricotage des Vosges), où les chiffres ont toujours été au cœur du métier. Je lis vos indicateurs comme un responsable commercial ou financier, pas seulement comme un technicien.</p>
       <a class="btn cta" href="#contact">Échanger sur votre projet</a>
       <ul class="statut" aria-label="Conditions d'intervention">
         <li><span class="point" aria-hidden="true"></span>Disponible</li>
@@ -211,22 +211,22 @@
 <section class="section section-alt" id="experiences" aria-labelledby="t-experiences">
   <div class="int">
     <p class="surtitre">Expériences</p>
-    <h2 id="t-experiences">Cinq ans côté commercial, avant Power BI</h2>
+    <h2 id="t-experiences">Cinq ans côté commercial, les chiffres en main</h2>
     <ol class="postes">
       <li>
         <p class="periode">2023 – 2025</p>
         <div><h3>Chef de secteur</h3><p class="employeur">Tricotage des Vosges / Olympia &amp; Bleuforêt</p>
-        <p>Suivi du budget de secteur et reporting mensuel, analyse réalisé / objectif sur 70 comptes BtoB.</p></div>
+        <p>Chiffre d'affaires du secteur doublé en 2 ans sur 70 comptes BtoB ; budget de secteur, reporting mensuel et analyse réalisé / objectif.</p></div>
       </li>
       <li>
         <p class="periode">2021 – 2023</p>
         <div><h3>Chef de secteur</h3><p class="employeur">Mondelez International</p>
-        <p>8,4 M€ de chiffre d'affaires suivis sur 23 comptes : indicateurs et rentabilité par compte, chaque mois.</p></div>
+        <p>8,4 M€ de chiffre d'affaires suivis sur 23 comptes, rentabilité par compte chaque mois ; +300 k€ de valeur incrémentale avec l'initiative nationale « Produits à moins de 2 € ».</p></div>
       </li>
       <li>
         <p class="periode">2021</p>
         <div><h3>Assistant Catman</h3><p class="employeur">Buitoni / Mondelez — deux stages de 6 mois</p>
-        <p>ROI promotionnel, marges produits et coûts dans Power BI et Excel ; panels Nielsen/Kantar.</p></div>
+        <p>Contrôle de gestion commercial : ROI promotionnel, marges produits et coûts dans Power BI et Excel ; business reviews Carrefour et Auchan, panels Nielsen/Kantar.</p></div>
       </li>
     </ol>
   </div>
@@ -277,7 +277,50 @@
       <div class="champ"><label for="f-nom">Nom</label><input id="f-nom" name="nom" autocomplete="name" required></div>
       <div class="champ"><label for="f-entreprise">Entreprise</label><input id="f-entreprise" name="entreprise" autocomplete="organization"></div>
       <div class="champ"><label for="f-email">Email</label><input id="f-email" name="email" type="email" autocomplete="email" required></div>
-      <div class="champ"><label for="f-besoin">Votre besoin</label><textarea id="f-besoin" name="besoin" rows="5" required></textarea></div>
+      <div class="champ"><label for="f-besoin">Votre besoin</label><textarea id="f-besoin" name="besoin" rows="4" required></textarea></div>
+
+      <details class="plus" id="plus">
+        <summary><span>Préciser votre projet</span><small>Facultatif · environ une minute · pour une première réponse plus précise</small></summary>
+        <div class="plus-corps">
+          <div class="champ"><label for="q-role">Vous êtes</label>
+            <select id="q-role" data-question="Vous êtes"><option value="">—</option><option>Dirigeant ou dirigeante</option><option>Direction financière ou contrôle de gestion</option><option>Direction commerciale</option><option>ESN ou intermédiaire</option><option>Autre</option></select></div>
+          <div class="champ"><label for="q-projet">Votre projet</label>
+            <select id="q-projet" data-question="Projet"><option value="">—</option><option>Migration de reportings Excel vers Power BI</option><option>Tableau de bord de pilotage commercial</option><option>Tableau de bord de pilotage financier</option><option>Je ne sais pas encore</option></select></div>
+          <fieldset class="champ cases" data-question="Données aujourd'hui">
+            <legend>Vos données aujourd'hui</legend>
+            <label><input type="checkbox" value="Fichiers Excel"> Fichiers Excel</label>
+            <label><input type="checkbox" value="ERP (Sage, Cegid, EBP…)"> ERP (Sage, Cegid, EBP…)</label>
+            <label><input type="checkbox" value="CRM (Salesforce, HubSpot…)"> CRM (Salesforce, HubSpot…)</label>
+            <label><input type="checkbox" value="SharePoint ou OneDrive"> SharePoint ou OneDrive</label>
+            <label><input type="checkbox" value="Autre"> Autre</label>
+          </fieldset>
+          <div class="champ"><label for="q-pbi">Power BI chez vous</label>
+            <select id="q-pbi" data-question="Power BI"><option value="">—</option><option>Déjà utilisé</option><option>Licences disponibles, pas encore utilisé</option><option>Pas encore</option><option>Je ne sais pas</option></select></div>
+          <div class="champ"><label for="q-lecteurs">Qui lira les rapports</label>
+            <select id="q-lecteurs" data-question="Lecteurs des rapports"><option value="">—</option><option>La direction seulement</option><option>2 à 10 personnes</option><option>Plus de 10 personnes</option></select></div>
+          <div class="champ"><label for="q-echeance">Échéance souhaitée</label>
+            <select id="q-echeance" data-question="Échéance"><option value="">—</option><option>Moins d'un mois</option><option>1 à 3 mois</option><option>Plus tard</option><option>Pas encore définie</option></select></div>
+          <div class="champ"><label for="q-mode">Mode d'intervention</label>
+            <select id="q-mode" data-question="Mode d'intervention"><option value="">—</option><option>Forfait en direct</option><option>Régie via une ESN ou un intermédiaire</option><option>À définir ensemble</option></select></div>
+          <div class="champ"><label for="q-rappel">Je préfère être recontacté</label>
+            <select id="q-rappel" data-question="Recontact"><option value="">—</option><option>Par email</option><option>Par téléphone</option></select></div>
+          <div class="champ" id="champ-tel" hidden><label for="q-tel">Votre téléphone</label><input id="q-tel" type="tel" autocomplete="tel" data-question="Téléphone"></div>
+
+          <div class="vocal" id="vocal" hidden>
+            <p class="vocal-titre">Message vocal <small>(facultatif)</small></p>
+            <p class="vocal-aide">Plus simple que d'écrire : expliquez votre besoin à voix haute, jusqu'à 3 minutes.</p>
+            <div class="vocal-actions">
+              <button type="button" class="btn-sec" id="v-enreg"><span class="rond" aria-hidden="true"></span>Enregistrer</button>
+              <button type="button" class="btn-sec" id="v-stop" hidden>Arrêter</button>
+              <span class="v-temps" id="v-temps" aria-live="polite"></span>
+            </div>
+            <audio id="v-audio" controls hidden></audio>
+            <button type="button" class="lien-btn" id="v-suppr" hidden>Supprimer l'enregistrement</button>
+            <p class="vocal-note">L'enregistrement reste sur votre appareil. À l'envoi, il est téléchargé : il suffit de le joindre au message qui s'ouvre.</p>
+          </div>
+        </div>
+      </details>
+
       <button class="btn cta" type="submit">Échanger sur votre projet</button>
       <p class="note">Le bouton ouvre votre messagerie avec le message prêt à envoyer. Rien n'est enregistré sur ce site.</p>
     </form>
@@ -293,12 +336,12 @@
       <summary>Mentions légales</summary>
       <p><strong>Éditeur :</strong> Paul Delahousse, Orléans (45) · <a href="mailto:paul.delahousse@outlook.com">paul.delahousse@outlook.com</a>.</p>
       <p><strong>Hébergement :</strong> GitHub Pages, GitHub Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, États-Unis.</p>
-      <p><strong>Données personnelles :</strong> le formulaire ouvre votre propre messagerie ; aucune donnée n'est conservée par ce site. La mesure d'audience (GoatCounter) ne dépose aucun cookie et ne collecte aucune donnée personnelle.</p>
+      <p><strong>Données personnelles :</strong> le formulaire ouvre votre propre messagerie ; aucune donnée n'est conservée par ce site. Le message vocal facultatif est enregistré dans votre navigateur, n'est envoyé à aucun serveur, et n'est transmis que si vous le joignez vous-même à votre email. La mesure d'audience (GoatCounter) ne dépose aucun cookie et ne collecte aucune donnée personnelle.</p>
       <p><strong>Cas pratiques :</strong> projets personnels ; les entreprises, magasins et chiffres présentés sont fictifs, sauf mention contraire.</p>
     </details>
   </div>
 </footer>
 
-<script src="pbi.js?v=20261016a"></script>
+<script src="pbi.js?v=20261016c"></script>
 </body>
 </html>
